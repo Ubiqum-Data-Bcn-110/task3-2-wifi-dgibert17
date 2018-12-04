@@ -1,0 +1,136 @@
+---
+title: "Wifi location"
+author: "David Gibert Bosque"
+date: "December 3, 2018"
+output: html_document
+---
+```{r include=FALSE}
+rm(list = ls())
+```
+
+```{r include=FALSE}
+### LIBRARIES ###
+library(dplyr)
+```
+
+```{r}
+### LOADING DATA ###
+setwd("C:/Users/David/Google Drive/Github/task3-2-wifi-dgibert17")
+
+df.train = read.csv("training.csv")
+df.val = read.csv("validation.csv")
+
+sum(names(df.train) == names(df.val))
+```
+*Ambos DF tienen los mismos atributos*
+
+
+
+the validation fingerprints were
+taken 3 months later than the training ones, and some
+WAPs disappeared and new ones were introduced.
+
+From the 520 detected WAPs in the UJIIndoorLoc
+database, 312 of them were detected in training and
+validation phases. 153 WAPs were only detected in
+the training phase, and 55 new WAPs appeared in the
+validation phase
+
+
+
+
+Como se quitaron WAPs, en el validation test habra WAPs cuyos valores sean todo 100, porque al no estar, obviamente no podran ser registrados por un dispositivo.
+
+Por tanto, primero quitaremos los WAPs del validation que sean inutiles, luego igualaremos el DF de training con los mismos atributos del validation.
+```{r}
+WAPnotDetected.val = as.character()
+
+for (i in 1:which(names(df.val)=="WAP520")){
+  if (sum(df.val[i]) == 100*nrow(df.val)){
+    #cat("El", names(df.val[i]), "no ha sido detectado por ningun dispositivo en el validation\n")
+    WAPnotDetected.val = c(WAPnotDetected.val, names(df.val[i]))
+  }
+}
+
+WAPnotDetected.tr = as.character()
+
+for (i in 1:which(names(df.train)=="WAP520")){
+  if (sum(df.train[i]) == 100*nrow(df.train)){
+    #cat("El", names(df.train[i]), "no ha sido detectado por ningun dispositivo en el training\n")
+    WAPnotDetected.tr = c(WAPnotDetected.tr, names(df.train[i]))
+  }
+}
+
+# df.WAPnotDetected.val = df.val[, c(WAPnotDetected.val, names(df.val[521:529]))]
+
+# cat("El", round(length(WAPnotDetected.val)/520*100),"% de los WAPs no han sido detectados por ningun dispositivo en el training. La universidad esta perdiendo dinero con estos hardware. (Hay que comprobar si ocurre lo mismo para el test).")
+```
+
+## Visualizamos cuales son los WAPs del validation set que no son detectados por almenos un dispositivo y los quitamos del DF.
+```{r}
+WAPnotDetected.val
+which(names(df.val) %in% WAPnotDetected.val) #Estos son los indices de los atributos que no son detectados en el validation set, por lo que quitaremos estos atributos del validation set.
+
+df.val = df.val[, -which(names(df.val) %in% WAPnotDetected.val)]
+df.train = df.train[, -which(names(df.train) %in% WAPnotDetected.tr)]
+```
+
+## Buscamos cuales son los atributos que comparten ambos DFs. El intersect. Asi, despues podremos coger los indices de los atributos del intersect y seleccionarlos para cada uno de los dos DFs, por lo que ambos quedaran con la misma info.
+```{r}
+tr.in.val.idxs = which(names(df.train) %in% names(df.val))
+df.train = df.train[, tr.in.val.idxs]
+
+val.in.tr.idxs = which(names(df.val) %in% names(df.train))
+df.val = df.val[, val.in.tr.idxs]
+
+sum(names(df.train) == names(df.val))
+```
+
+## Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.
+```{r}
+### CREATING TRAIN BUILDINGS ###
+
+df.trainB0 = df.train %>%
+  filter(BUILDINGID == 0)
+
+df.trainB1 = df.train %>%
+  filter(BUILDINGID == 1)
+
+df.trainB2 = df.train %>%
+  filter(BUILDINGID == 2)
+```
+
+```{r}
+### CREATING VALIDATION BUILDINGS ###
+
+df.valB0 = df.val %>%
+  filter(BUILDINGID == 0)
+
+df.valB1 = df.val %>%
+  filter(BUILDINGID == 1)
+
+df.valB2 = df.val %>%
+  filter(BUILDINGID == 2)
+```
+
+## Comprobamos que el WAP001 es detectado almenos en un edificio tanto en training como en validation sets.
+```{r}
+table(df.trainB0$WAP001)
+table(df.trainB1$WAP001)
+table(df.trainB2$WAP001)
+
+
+table(df.valB0$WAP001)
+table(df.valB1$WAP001)
+table(df.valB2$WAP001)
+```
+*Esto indica que podemos eliminar los datos del WAP001 del edificio 1 y 2. Sabemos que ese WAP pertenece al edificio 0 y no esta detectado por ningun dispositivo en otro edificio.*
+
+```{r}
+plot(x=df.trainB0$LONGITUDE, y=df.trainB0$LATITUDE)
+```
+
+
+
+
+
