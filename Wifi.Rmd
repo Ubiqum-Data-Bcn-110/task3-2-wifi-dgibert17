@@ -11,6 +11,7 @@ rm(list = ls())
 ```{r include=FALSE}
 ### LIBRARIES ###
 library(dplyr)
+library(ggplot2)
 ```
 
 ```{r}
@@ -86,7 +87,57 @@ df.val = df.val[, val.in.tr.idxs]
 sum(names(df.train) == names(df.val))
 ```
 
-## Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.
+
+## Ahora vamos a buscar si hay capturas en TRAINING que no han sido detectadas por ningun WAP o si han sido detectadas unicamente por 1 WAP, las cuales podremos quitar del DF y estudiarlas en un DF diferente, para ver si tienen algo en comun.
+```{r}
+DEVICEnotDetected.tr = c()
+DEVICEdetected1WAP.tr = c()
+
+for (i in 1:nrow(df.train)){
+  if (sum(df.train[i, 1:last(grep(pattern = "WAP", names(df.train)))]) == 100*last(grep(pattern = "WAP", names(df.train)))){
+    #print(rownames(df.train[i,]))
+    DEVICEnotDetected.tr = c(DEVICEnotDetected.tr, as.numeric(rownames(df.train[i,])))
+  } else if (sum(df.train[i, 1:last(grep(pattern = "WAP", names(df.train)))] != 100) == 1){
+    #print(rownames(df.train[i,]))
+    DEVICEdetected1WAP.tr = c(DEVICEdetected1WAP.tr, as.numeric(rownames(df.train[i,])))
+  }
+}
+
+# names(df.train[first(grep("[^WAP0-9]", names(df.train)))])
+
+df.DEVICESnotDetected.tr = df.train[DEVICEnotDetected.tr, 313:length(names(df.train))]
+df.DEVICEdetected1WAP.tr = df.train[DEVICEdetected1WAP.tr, 313:length(names(df.train))]
+
+DEVICESrm.tr = sort(c(DEVICEnotDetected.tr, DEVICEdetected1WAP.tr))
+
+df.train = df.train[-DEVICESrm.tr, ]
+```
+*Ahora el DF TRAINING solo contiene rows con capturas (dispositivos) que han detectado como minimo 2 WAPs.*
+
+## Ahora vamos a buscar si hay capturas en VALIDATION que no han sido detectadas por ningun WAP o si han sido detectadas unicamente por 1 WAP, las cuales podremos quitar del DF y estudiarlas en un DF diferente, para ver si tienen algo en comun.
+```{r}
+DEVICEnotDetected.val = c()
+DEVICEdetected1WAP.val = c()
+
+for (i in 1:nrow(df.val)){
+  if (sum(df.val[i, 1:last(grep(pattern = "WAP", names(df.val)))]) == 100*last(grep(pattern = "WAP", names(df.val)))){
+    #print(rownames(df.val[i,]))
+    DEVICEnotDetected.val = c(DEVICEnotDetected.val, as.numeric(rownames(df.val[i,])))
+  } else if (sum(df.val[i, 1:last(grep(pattern = "WAP", names(df.val)))] != 100) == 1){
+    #print(rownames(df.val[i,]))
+    DEVICEdetected1WAP.val = c(DEVICEdetected1WAP.val, as.numeric(rownames(df.val[i,])))
+  }
+}
+
+DEVICEnotDetected.val
+DEVICEdetected1WAP.val
+
+df.val = df.val[-DEVICEdetected1WAP.val, ]
+```
+*No hay ningun dispositivo en el VALIDATION que no haya sido detectado por ningun WAP. Todos han sido detectados por almenos 1 WAP. Ademas, solo hay un dispositivo que haya sido detectado por unicamente 1 WAP, el cual tambien quitamos.*
+
+## Dividiremos los datos de training por edificio, para visualizar la forma de los edificios a partir de la localizacion (latitud y longitud) de las capturas. Tambien creamos los edificios para el validation, de momento por razones de visualizacion. Mas adelante ya veremos para que mas. Si que tendra sentido visualizar la distribucion del validation sobre el training por edificio (incluso por planta) despues de hacer la prediccion de edificio y planta, para ver la distancia entre el valor real y el predicho de una manera visual.
+#### Podria tener sentido: Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.
 ```{r}
 ### CREATING TRAIN BUILDINGS ###
 
@@ -98,9 +149,8 @@ df.trainB1 = df.train %>%
 
 df.trainB2 = df.train %>%
   filter(BUILDINGID == 2)
-```
 
-```{r}
+
 ### CREATING VALIDATION BUILDINGS ###
 
 df.valB0 = df.val %>%
@@ -112,6 +162,51 @@ df.valB1 = df.val %>%
 df.valB2 = df.val %>%
   filter(BUILDINGID == 2)
 ```
+
+## Obervamos la distribucion de las capturas del training que crean la forma de los edificios del campus.
+```{r}
+ggplot(data = df.train, mapping = aes(x = LONGITUDE, y = LATITUDE, color = as.factor(BUILDINGID))) +
+  geom_point()
+
+ggplot(data = df.trainB0, mapping = aes(x = LONGITUDE, y = LATITUDE)) +
+  geom_point(color = "Red")
+
+ggplot(data = df.trainB1, mapping = aes(x = LONGITUDE, y = LATITUDE)) +
+  geom_point(color = "DarkGreen")
+
+ggplot(data = df.trainB2, mapping = aes(x = LONGITUDE, y = LATITUDE)) +
+  geom_point(color = "Blue")
+```
+
+## Obervamos tambien la distribucion de las capturas del validation.
+```{r}
+ggplot(data = df.val, mapping = aes(x = LONGITUDE, y = LATITUDE, color = as.factor(BUILDINGID))) +
+  geom_point()
+
+ggplot(data = df.valB0, mapping = aes(x = LONGITUDE, y = LATITUDE)) +
+  geom_point(color = "Red")
+
+ggplot(data = df.valB1, mapping = aes(x = LONGITUDE, y = LATITUDE)) +
+  geom_point(color = "DarkGreen")
+
+ggplot(data = df.valB2, mapping = aes(x = LONGITUDE, y = LATITUDE)) +
+  geom_point(color = "Blue")
+```
+*Parece que la distribucion de las observaciones del validation es buena ya que crea la forma del edifico como tal. Aunque estos son los valores reales o conocidos, lo interesante sera hacer el mismo plot de la distribucion de las observaciones cuando hayamos hecho la prediccion sobre el building, floor...*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Comprobamos que el WAP001 es detectado almenos en un edificio tanto en training como en validation sets.
 ```{r}
@@ -126,9 +221,7 @@ table(df.valB2$WAP001)
 ```
 *Esto indica que podemos eliminar los datos del WAP001 del edificio 1 y 2. Sabemos que ese WAP pertenece al edificio 0 y no esta detectado por ningun dispositivo en otro edificio.*
 
-```{r}
-plot(x=df.trainB0$LONGITUDE, y=df.trainB0$LATITUDE)
-```
+
 
 
 
