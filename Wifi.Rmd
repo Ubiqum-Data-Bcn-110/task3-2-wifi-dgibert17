@@ -11,7 +11,17 @@ rm(list = ls())
 ```{r include=FALSE}
 ### LIBRARIES ###
 library(dplyr)
+library(Metrics)
+library(rpart)
+library(rpart.plot)
+library(fastDummies)
 library(ggplot2)
+library(elasticnet)
+library(lars)
+library(caret)
+library(AppliedPredictiveModeling)
+library(e1071)
+library(pls)
 library(plotly)
 ```
 
@@ -25,6 +35,13 @@ df.val = read.csv("validation.csv")
 sum(names(df.train) == names(df.val))
 ```
 *Ambos DF tienen los mismos atributos, aunque en el validation no hay registros para SPACEID, RELATIVEPOSITION ni USERID.*
+
+## Creamos DF con valores reales de VALIDATION y igualamos a 0 los valores correspondientes en el DF de VALIDATION original, para hacerlo de la manera mas real posible. Ademas, despues podremos comparar los errores de prediccion.
+```{r}
+real.values = df.val[,521:529]
+df.val[,521:529] = 0
+summary(df.val[,521:529]) #Nos aseguramos que los atributos son = 0
+```
 
 
 
@@ -138,6 +155,51 @@ df.val = df.val[-DEVICEdetected1WAP.val, ]
 ```
 *No hay ningun dispositivo en el VALIDATION que no haya sido detectado por ningun WAP (obviamente, ya que si no es detectado por WAPs no aparecera en esta base de datos). Todos han sido detectados por almenos 1 WAP. Ademas, solo hay un dispositivo que haya sido detectado por unicamente 1 WAP, el cual tambien quitamos.*
 
+
+
+## Buscamos si en TRAINING y VALIDATION hay capturas y WAPs que tengan algun valor entre 0 y -30.
+```{r}
+# BUSCAMOS EN TRAINING
+
+cptr30 = c()
+WAPs30 = c()
+
+for (i in 1:nrow(df.train[,1:312])){
+  for (j in 1:ncol(df.train[,1:312])){
+    if (df.train[i,j] <= 0 & df.train[i,j] >= -30){
+      cptr30 = c(cptr30,i)
+      WAPs30 = c(WAPs30,j)
+    }
+  }
+}
+
+cptr30 = unique(as.vector(cptr30))
+WAPs30 = unique(as.vector(WAPs30))
+
+df.cptr30 = df.train[cptr30,]
+df.WAPs30 = df.train[,WAPs30]
+
+############################
+# HACER LOOP PARA CONTAR LA CANTIDAD DE VALORES ENTRE 0 Y -30 POR CADA WAP, ESTO PUEDE INDICARNOS WAPS QUE NO FUNCIONAN BIEN.
+
+# COMPROBAR SI LAS CAPTURAS QUE TIENEN RSSI ENTRE 0 Y -30 ES POR EL PHONEID O SI POR EJEMPLO ES POR LA ZONA DONDE ESTA EL DISPOSITIVO (ESTO ES MUY PROBABLE YA QUE HABIA UN USUARIO QUE HABIA HECHO MUCHAS CAPTURAS EN LA MISMA ZONA (LATITUD Y LONGITUD) Y TODAS TENIAN VALORES RAROS DE ESTOS.)
+
+# COMPARAR LOS WAPS Y CAPTURAS DEL VALIDATION CON EL PASO ANTERIOR, PARA ASEGURAR QUE LA ZONA TIENE MALA COBERTURA O QUE ERA CUESTION DEL USUARIO...
+
+# CONFUSION MATRIX PARA KNN
+
+# PLOTEAR LOCALIZACIONES DEL SAMPLE (IGNACIO DICE QUE LE ECHE UN VISTAZO)
+############################
+
+
+# BUSCAMOS EN VALIDATION
+
+```
+
+
+
+
+
 ## Dividiremos los datos de training por edificio, para visualizar la forma de los edificios a partir de la localizacion (latitud y longitud) de las capturas. Tambien creamos los edificios para el validation, de momento por razones de visualizacion. Mas adelante ya veremos para que mas. Si que tendra sentido visualizar la distribucion del validation sobre el training por edificio (incluso por planta) despues de hacer la prediccion de edificio y planta, para ver la distancia entre el valor real y el predicho de una manera visual.
 
 #### Podria tener sentido: Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.
@@ -173,18 +235,6 @@ df.trainB1 = df.train %>%
   filter(BUILDINGID == 1)
 
 df.trainB2 = df.train %>%
-  filter(BUILDINGID == 2)
-
-
-### CREATING VALIDATION BUILDINGS ###
-
-df.valB0 = df.val %>%
-  filter(BUILDINGID == 0)
-
-df.valB1 = df.val %>%
-  filter(BUILDINGID == 1)
-
-df.valB2 = df.val %>%
   filter(BUILDINGID == 2)
 ```
 
@@ -234,6 +284,61 @@ plot_ly(data = df.trainB2, x = ~LONGITUDE, y = ~LATITUDE, z = ~factor(FLOOR),
          )
 ```
 
+## KNN para BUILDING a partir de una muestra pequeña.
+```{r warning=FALSE}
+building.vec = createDataPartition(y = df.train$BUILDINGID, times = 2, p = 0.05) #Particion proporcional
+
+df.BUILDINGID.tr = df.train[building.vec$Resample1, c(1:312,316)]
+df.BUILDINGID.tr$BUILDINGID = factor(df.BUILDINGID.tr$BUILDINGID)
+df.BUILDINGID.test = df.train[building.vec$Resample2, c(1:312)]
+
+prop.table(table(df.BUILDINGID.tr$BUILDINGID)) #Prop.table para TRAINING
+prop.table(table(df.train$BUILDINGID)) #Prop.table para SAMPLE
+
+ctrl = trainControl(method = "repeatedcv",
+                    number = 3,
+                    repeats = 10)
+
+knn.Fit = train(BUILDINGID~.,
+                method = "knn",
+                preProcess = c("center","scale"),
+                trControl = ctrl,
+                data = df.BUILDINGID.tr)
+knn.Fit
+
+knn.pred = predict(knn.Fit, df.BUILDINGID.test)
+accuracy(actual = df.train[building.vec$Resample2, "BUILDINGID"], predicted = knn.pred)
+
+#Cuantas observaciones hay por edificio predichas y cuantas hay en realidad.
+table(knn.pred)
+table(df.train[building.vec$Resample2, "BUILDINGID"])
+
+#Cuantos dispositivos se han clasificado mal por cada edificio.
+abs(table(knn.pred) - table(df.train[building.vec$Resample2, "BUILDINGID"]))
+```
+
+## PLS to predict LONGITUDE & LATITUDE because REGRESSION issue.
+```{r}
+# df.BUILDINGID.tr = df.train[,c(1:312,316)]
+# df.BUILDINGID.val = df.val[,1:312]
+# 
+# pls.Fit = plsr(BUILDINGID~., data = df.BUILDINGID.tr, validation = "CV")
+# pls.pred = predict(pls.Fit, df.BUILDINGID.val, ncomp = 1:4)
+# 
+# validationplot(pls.Fit, val.type="RMSEP")
+# validationplot(pls.Fit, val.type="R2")
+# 
+# 
+# pls.RMSEP = RMSEP(pls.Fit, estimate="CV")
+# plot(pls.RMSEP, main="RMSEP PLS Solubility", xlab="components")
+# min_comp = which.min(pls.RMSEP$val)
+# points(min_comp, min(pls.RMSEP$val), pch=1, col="red", cex=1.5)
+# min_comp
+# 
+# plot(pls.Fit, ncomp=4, asp=1, line=TRUE)
+```
+
+
 
 
 
@@ -249,11 +354,6 @@ plot_ly(data = df.trainB2, x = ~LONGITUDE, y = ~LATITUDE, z = ~factor(FLOOR),
 table(df.trainB0$WAP001)
 table(df.trainB1$WAP001)
 table(df.trainB2$WAP001)
-
-
-table(df.valB0$WAP001)
-table(df.valB1$WAP001)
-table(df.valB2$WAP001)
 ```
 *Esto indica que podemos eliminar los datos del WAP001 del edificio 1 y 2. Sabemos que ese WAP pertenece al edificio 0 y no esta detectado por ningun dispositivo en otro edificio.*
 
