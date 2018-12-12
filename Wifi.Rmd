@@ -155,8 +155,6 @@ df.val = df.val[-DEVICEdetected1WAP.val, ]
 ```
 *No hay ningun dispositivo en el VALIDATION que no haya sido detectado por ningun WAP (obviamente, ya que si no es detectado por WAPs no aparecera en esta base de datos). Todos han sido detectados por almenos 1 WAP. Ademas, solo hay un dispositivo que haya sido detectado por unicamente 1 WAP, el cual tambien quitamos.*
 
-
-
 ## Buscamos si en TRAINING y VALIDATION hay capturas y WAPs que tengan algun valor entre 0 y -30.
 ```{r}
 # BUSCAMOS EN TRAINING
@@ -178,23 +176,46 @@ WAPs30 = unique(as.vector(WAPs30))
 
 df.cptr30 = df.train[cptr30,]
 df.WAPs30 = df.train[,WAPs30]
-
-############################
-# HACER LOOP PARA CONTAR LA CANTIDAD DE VALORES ENTRE 0 Y -30 POR CADA WAP, ESTO PUEDE INDICARNOS WAPS QUE NO FUNCIONAN BIEN.
-
-# COMPROBAR SI LAS CAPTURAS QUE TIENEN RSSI ENTRE 0 Y -30 ES POR EL PHONEID O SI POR EJEMPLO ES POR LA ZONA DONDE ESTA EL DISPOSITIVO (ESTO ES MUY PROBABLE YA QUE HABIA UN USUARIO QUE HABIA HECHO MUCHAS CAPTURAS EN LA MISMA ZONA (LATITUD Y LONGITUD) Y TODAS TENIAN VALORES RAROS DE ESTOS.)
-
-# COMPARAR LOS WAPS Y CAPTURAS DEL VALIDATION CON EL PASO ANTERIOR, PARA ASEGURAR QUE LA ZONA TIENE MALA COBERTURA O QUE ERA CUESTION DEL USUARIO...
-
-# CONFUSION MATRIX PARA KNN
-
-# PLOTEAR LOCALIZACIONES DEL SAMPLE (IGNACIO DICE QUE LE ECHE UN VISTAZO)
-############################
-
-
-# BUSCAMOS EN VALIDATION
-
 ```
+En el DF training existen 472 capturas que tienen valores entre 0 y -30, lo cual es irreal.
+56 WAPs tienen algun valor en ese rango.
+AL BUSCAR CON UN LOOP EN EL VALIDATION, ENCONTRAMOS QUE NO HAY NINGUNA CAPTURA NI NINGUN WAP QUE TENGA VALOR ENTRE 0 Y -30. Esto nos hace pensar que algun problema ha habido al hacer el training, seguramente por los dispositivos. Estudiaremos su comportamiento y seguramente quitemos esos datos para entrenar el modelo.
+
+## Estudiamos las capturas que tienen registros de valores entre -30 y 0 RSSI.
+```{r}
+df.cptr30 = df.cptr30[,c(315:316, 319:320)]
+table(df.cptr30$FLOOR)
+table(df.cptr30$BUILDINGID)
+table(df.cptr30$USERID) #El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.
+
+df.cptr30$FLOOR = as.factor(df.cptr30$FLOOR)
+df.cptr30$BUILDINGID = as.factor(df.cptr30$BUILDINGID)
+
+df.cptr30 %>%
+  filter(USERID == 6) %>%
+  summary()
+
+df.cptr30 %>%
+  filter(USERID == 14) %>%
+  summary()
+```
+El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.
+Los lugares donde ocurren estos errores de medicion en el DF training son la planta 3 y 4 del edificio 2 mayoritariamente. La planta 4 es la mas problematica.
+El USERID 14 utiliza un Samsung mini GT-S6500 con Android 2.3.6 Gingerbread, una version de Android ya muy antigua para un dispositivo moderno como era el año del estudio, lo cual podria estar produciendo errores.
+Aun asi, el USERID 6 utiliza un Google Nexus 4 con Android 4.2.2 Kitkat que era la ultima version de Android en ese momento y este movil tiene muchos problemas de registros.
+Podria ser que los moviles tuvieran problemas con el chip de Wifi. Tendremos que estudiar si hay mas observaciones en el training que pertenezcan al edificio 2 planta 3 y 4. Si las hay, ningun problema, si no hay, entonces la zona puede ser el problema (baja cobertura) si en el Validation hay registros.
+
+## Comprobamos cuantas capturas tenemos por cada planta quitando previamente las 472 capturas con problemas de registro de RSSI.
+```{r}
+vec.cptr30 = as.integer(row.names(df.cptr30))
+table(df.train[-vec.cptr30,]$FLOOR)
+
+df.train = df.train[-vec.cptr30, ]
+```
+Recordamos que solo el edificio 2 tiene 4 plantas. Aunque tiene muchos menos registros que las demas plantas, puede que sean suficientes para entrenar un modelo. Esto podria afectar al kappa.
+
+
+
 
 
 
@@ -204,28 +225,6 @@ df.WAPs30 = df.train[,WAPs30]
 
 #### Podria tener sentido: Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.
 ```{r}
-### CREATING TRAIN BUILDINGS - LOOP ###
-
-# df.trainB0 = data.frame(matrix(nrow = 0, ncol = length(names(df.train))))
-# df.trainB1 = data.frame(matrix(nrow = 0, ncol = length(names(df.train))))
-# df.trainB2 = data.frame(matrix(nrow = 0, ncol = length(names(df.train))))
-# 
-# colnames(df.trainB0) = names(df.train)
-# colnames(df.trainB1) = names(df.train)
-# colnames(df.trainB2) = names(df.train)
-# 
-# 
-# for (i in 1:nrow(df.train)){
-#   if (df.train[i, "BUILDINGID"] == 0){
-#     df.trainB0 = rbind(df.trainB0, df.train[i,])
-#   } else if (df.train[i, "BUILDINGID"] == 1) {
-#     df.trainB1 = rbind(df.trainB1, df.train[i,])
-#   } else {
-#     df.trainB2 = rbind(df.trainB2, df.train[i,])
-#   }
-# }
-
-
 ### CREATING TRAIN BUILDINGS - PIPES ###
 
 df.trainB0 = df.train %>%
@@ -340,6 +339,13 @@ abs(table(knn.pred) - table(df.train[building.vec$Resample2, "BUILDINGID"]))
 
 
 
+
+
+############################
+# CONFUSION MATRIX PARA KNN
+
+# PLOTEAR LOCALIZACIONES DEL SAMPLE (IGNACIO DICE QUE LE ECHE UN VISTAZO)
+############################
 
 
 
