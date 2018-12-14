@@ -1,0 +1,132 @@
+---
+title: "models_floor_allDF"
+author: "David Gibert Bosque"
+date: "December 14, 2018"
+output: html_document
+---
+```{r include=FALSE}
+rm(list = ls())
+```
+
+```{r include=FALSE}
+### LIBRARIES ###
+library(dplyr)
+library(Metrics)
+library(rpart)
+library(doParallel)
+library(rpart.plot)
+library(fastDummies)
+library(ggplot2)
+library(elasticnet)
+library(lars)
+library(caret)
+library(AppliedPredictiveModeling)
+library(e1071)
+library(pls)
+library(plotly)
+```
+
+```{r include=FALSE}
+## LOADING DATA
+setwd("C:/Users/David/Google Drive/Github/task3-2-wifi-dgibert17")
+
+load(file = "training.Rdata")
+load(file = "validation.Rdata")
+
+# cl <- makeCluster(3)
+# doParallel:::registerDoParallel(cl)
+```
+
+#### PREDICCIONES SOBRE FLOOR - DF ENTERO
+## KNN para floor
+```{r}
+# df.val$BUILDINGID = svmRad.pred.building #Cambiamos los valores reales por los predichos por SVMRAD que es el que mejor prediccion hacia.
+
+floor.vec = createDataPartition(y = df.train$FLOOR, p = 0.05)
+
+# Training data
+# floor.tr = df.train[floor.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), which(names(df.train) == "FLOOR"))]
+floor.tr = df.train[floor.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), 315, 316)]
+
+floor.tr$FLOOR = factor(floor.tr$FLOOR)
+
+# Test data
+# VALIDATION DF
+
+# Tabla de proporciones para ver que la proporcion de observaciones por BUILDING es la misma en el DF original que en el building.tr
+# prop.table(table(df.train$BF))
+# prop.table(table(building.tr$BF))
+
+ctrl = trainControl(method = "repeatedcv",
+                    number = 3,
+                    repeats = 10)
+
+knn.fit.floor = train(FLOOR~.,
+                method = "knn",
+                trControl = ctrl,
+                data = floor.tr)
+knn.fit.floor
+
+knn.pred.floor = predict(knn.fit.floor, df.val)
+accuracy(actual = df.val$FLOOR, predicted = knn.pred.floor)
+
+#Cuantas observaciones hay predichas por edificio y cuantas hay en realidad en total.
+table(knn.pred.floor)
+table(df.val$FLOOR)
+
+#Cuantos dispositivos se han clasificado mal por cada edificio.
+abs(table(knn.pred.floor) - table(df.val$FLOOR))
+```
+
+## SVM para floor
+```{r warning=FALSE}
+svmLin.fit.floor <- train(FLOOR~.,
+                    method = "svmLinear",
+                    trControl = ctrl,
+                    data = floor.tr
+                   )
+svmLin.fit.floor
+
+svmLin.pred.floor = predict(svmLin.fit.floor, df.val)
+accuracy(actual = df.val$FLOOR, predicted = svmLin.pred.floor)
+
+
+svmRad.fit.floor <- train(FLOOR~.,
+                    method = "svmRadial",
+                    trControl = ctrl,
+                    data = floor.tr
+                   )
+svmRad.fit.floor
+
+svmRad.pred.floor = predict(svmRad.fit.floor, df.val)
+accuracy(actual = df.val$FLOOR, predicted = svmRad.pred.floor)
+
+
+#Cuantas observaciones hay predichas por edificio y cuantas hay en realidad en total.
+table(svmRad.pred.floor)
+table(df.val$FLOOR)
+
+#Cuantos dispositivos se han clasificado mal por cada edificio.
+abs(table(svmRad.pred.floor) - table(df.val$FLOOR))
+```
+
+## RF para floor
+```{r}
+rf.fit.floor = train(FLOOR~.,
+                  data = floor.tr,
+                  method = "rf",
+                  ntree = 40,
+                  trControl = ctrl,
+                  allowParallel = TRUE
+                  )
+
+rf.pred.floor = predict(rf.fit.floor, df.val)
+accuracy(actual = df.val$FLOOR, predicted = rf.pred.floor)
+
+#Cuantas observaciones hay predichas por edificio y cuantas hay en realidad en total.
+table(rf.pred.floor)
+table(df.val$FLOOR)
+
+#Cuantos dispositivos se han clasificado mal por cada edificio.
+abs(table(rf.pred.floor) - table(df.val$FLOOR))
+```
