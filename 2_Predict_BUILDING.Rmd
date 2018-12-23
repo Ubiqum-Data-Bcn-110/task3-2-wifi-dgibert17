@@ -1,0 +1,117 @@
+---
+title: "Building prediction"
+author: "David Gibert Bosque"
+date: "December 18, 2018"
+output: html_document
+---
+```{r include=FALSE}
+rm(list = ls())
+```
+
+#### CARGA DE LIBRERIAS Y DATOS
+```{r include=FALSE}
+library(dplyr)
+library(caret)
+library(randomForest)
+
+### LOADING DATA ###
+setwd("C:/Users/David/Google Drive/Github/task3-2-wifi-dgibert17")
+
+load(file = "training.Rdata")
+load(file = "validation.Rdata")
+```
+
+#### FORMATO DE LOS DATOS
+```{r}
+df.val$FLOOR = factor(df.val$FLOOR)
+df.val$BUILDINGID = factor(df.val$BUILDINGID)
+
+df.train$FLOOR = factor(df.train$FLOOR)
+df.train$BUILDINGID = factor(df.train$BUILDINGID)
+```
+
+
+#### CREACION DE PARTICIONES DE DATOS PARA BUILDING (SAMPLES)
+```{r}
+building.vec = createDataPartition(y = df.train$BUILDINGID, times = 5, p = 0.2)
+
+# Training data
+building.tr = df.train[building.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), which(names(df.train) == "BUILDINGID"))]
+building.tr$BUILDINGID = factor(building.tr$BUILDINGID)
+
+#Proporcion de datos en TRAIN y SAMPLE
+prop.table(table(df.train$BUILDINGID))
+prop.table(table(building.tr$BUILDINGID))
+```
+
+#### PREDICCION DE BUILDING - KNN
+```{r warning=FALSE}
+# knn.fit.building = train(BUILDINGID~.,
+#                 method = "knn",
+#                 data = building.tr)
+# 
+# knn.pred.building = predict(knn.fit.building, df.val)
+# 
+# confusionMatrix(data = factor(knn.pred.building), reference = df.val$BUILDINGID)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(knn.pred.building) - table(df.val$BUILDINGID))
+```
+
+#### PREDICCION DE BUILDING - SVM (Linear & Radial)
+```{r warning=FALSE}
+# svmLin.fit.building <- train(BUILDINGID~.,
+#                     method = "svmLinear",
+#                     data = building.tr
+#                    )
+# 
+# svmLin.pred.building = predict(svmLin.fit.building, df.val)
+# accuracy(actual = df.val$BUILDINGID, predicted = svmLin.pred.building)
+# 
+# confusionMatrix(data = factor(svmLin.pred.building), reference = df.val$BUILDINGID)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(svmLin.pred.building) - table(df.val$BUILDINGID))
+# 
+# 
+# 
+# 
+# svmRad.fit.building <- train(BUILDINGID~.,
+#                     method = "svmRadial",
+#                     data = building.tr
+#                    )
+# 
+# svmRad.pred.building = predict(svmRad.fit.building, df.val)
+# accuracy(actual = df.val$BUILDINGID, predicted = svmRad.pred.building)
+# 
+# confusionMatrix(data = factor(svmRad.pred.building), reference = df.val$BUILDINGID)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(svmRad.pred.building) - table(df.val$BUILDINGID))
+```
+
+#### PREDICCION DE BUILDING - RF
+```{r}
+# bestmtry = tuneRF(x = building.tr, y = building.tr$BUILDINGID, ntreeTry = 200, plot = T)
+
+rf.fit.building = randomForest(x = building.tr, y = building.tr$BUILDINGID, ntree = 250, mtry = 50)
+rf.pred.building = predict(rf.fit.building, df.val)
+confusionMatrix(data = factor(rf.pred.building), reference = df.val$BUILDINGID)
+
+#Cuantos dispositivos se han clasificado mal por cada Planta
+abs(table(rf.pred.building) - table(df.val$BUILDINGID))
+```
+*Usamos los valores predichos en RF porque es ACCURACY 1 y es muy rapido de calcular.*
+
+#### MODIFICAMOS LOS VALORES DE BUILDING EN VALIDATION POR LOS VALORES PREDICHOS
+```{r}
+df.val$BUILDINGID = factor(rf.pred.building)
+```
+
+#### GUARDAMOS EL DF VALIDATION CON LOS DATOS DE BUILDING NUEVOS PARA PREDECIR POSTERIORMENTE FLOOR
+```{r}
+save(df.val, file = "validation.Rdata")
+```
+
+
+

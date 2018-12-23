@@ -83,7 +83,7 @@ for (i in 1:which(names(df.train)=="WAP520")){
 }
 ```
 
-## Visualizamos cuales son los WAPs del validation y training set que no son detectados por almenos un dispositivo y los quitamos de los DFs.
+## Quitamos de los DFs los WAPs que no son detectados por almenos un dispositivo.
 ```{r}
 WAPnotDetected.val
 which(names(df.val) %in% WAPnotDetected.val) #Estos son los indices de los atributos que no son detectados en el validation set, por lo que quitaremos estos atributos del validation set.
@@ -286,26 +286,10 @@ plot_ly(data = df.trainB2, x = ~LONGITUDE, y = ~LATITUDE, z = ~factor(FLOOR),
 
 ## Guardamos DFs para usarlos en el siguiente script
 ```{r}
+real.values.val = data.frame(df.val)
+real.values.val = real.values.val[,c(1:316)]
+
+save(real.values.val, file = "real_values_validation.Rdata")
 save(df.train, file = "training.Rdata")
 save(df.val, file = "validation.Rdata")
 ```
-
-
-
-
-
-
-## Comprobamos que el WAP001 es detectado almenos en un edificio tanto en training como en validation sets. Esto podria ser util para intentar detectar que WAPs pertenecen a cada edificio y asi poder hacer modelos predictivos en funcion del edificio. Esto es factibe si y solo si un dispositivo es detectado por WAPs del mismo edificio, no por WAPs de diferentes edificios. Cuando haga esto, puedo estudiarlo y ver si, en caso de que esto ultimo se de, se podria manejar de alguna manera.
-```{r}
-table(df.trainB0$WAP001)
-table(df.trainB1$WAP001)
-table(df.trainB2$WAP001)
-```
-*Esto indica que podemos eliminar los datos del WAP001 del edificio 1 y 2. Sabemos que ese WAP pertenece al edificio 0 y no esta detectado por ningun dispositivo en otro edificio.*
-
-
-
-
-
-
-

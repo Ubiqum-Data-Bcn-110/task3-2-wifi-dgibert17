@@ -1,0 +1,378 @@
+---
+title: "Process 1"
+author: "David Gibert Bosque"
+date: "December 17, 2018"
+output: html_document
+---
+#### SUMMARY
+1)      Carga de datos limpios y preparados para ser analizados.
+
+2)      Predecir BUILDING con rango 0 a 3 categorico.
+  2.1)  Añadir datos building predichos a dataset VALIDATION.
+  
+3)      Predecir FLOOR con rango de 0 a 4 categorico.
+  3.1)  Añadir datos floor predichos a dataset VALIDATION.
+  
+4)      Predecir LONG - LAT. Uno antes que otro, cual?...
+
+#### CARGA DE LIBRERIAS Y DATOS
+```{r include=FALSE}
+rm(list = ls())
+```
+
+```{r include=FALSE}
+### LIBRARIES ###
+library(dplyr)
+library(Metrics)
+library(rpart)
+library(randomForest)
+library(doParallel)
+library(rpart.plot)
+library(fastDummies)
+library(ggplot2)
+library(elasticnet)
+library(lars)
+library(forecTheta)
+library(caret)
+library(AppliedPredictiveModeling)
+library(e1071)
+library(pls)
+library(plotly)
+```
+
+```{r include=FALSE}
+## LOADING DATA
+setwd("C:/Users/David/Google Drive/Github/task3-2-wifi-dgibert17")
+
+load(file = "training.Rdata")
+load(file = "validation.Rdata")
+
+df.val$BUILDINGID = factor(df.val$BUILDINGID)
+df.val$FLOOR = factor(df.val$FLOOR)
+
+# cl <- makeCluster(3)
+# doParallel:::registerDoParallel(cl)
+```
+
+#### CREACION DE PARTICIONES DE DATOS PARA BUILDING (SAMPLES)
+```{r}
+building.vec = createDataPartition(y = df.train$BUILDINGID, times = 5, p = 0.1)
+
+# Training data
+building.tr = df.train[building.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), which(names(df.train) == "BUILDINGID"))]
+building.tr$BUILDINGID = factor(building.tr$BUILDINGID)
+
+#Proporcion de datos en TRAIN y SAMPLE
+prop.table(table(df.train$BUILDINGID))
+prop.table(table(building.tr$BUILDINGID))
+```
+
+#### PREDICCION DE BUILDING - KNN
+```{r warning=FALSE}
+# knn.fit.building = train(BUILDINGID~.,
+#                 method = "knn",
+#                 data = building.tr)
+# 
+# knn.pred.building = predict(knn.fit.building, df.val)
+# 
+# confusionMatrix(data = factor(knn.pred.building), reference = df.val$BUILDINGID)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(knn.pred.building) - table(df.val$BUILDINGID))
+```
+
+#### PREDICCION DE BUILDING - SVM (Linear & Radial)
+```{r warning=FALSE}
+# svmLin.fit.building <- train(BUILDINGID~.,
+#                     method = "svmLinear",
+#                     data = building.tr
+#                    )
+# 
+# svmLin.pred.building = predict(svmLin.fit.building, df.val)
+# accuracy(actual = df.val$BUILDINGID, predicted = svmLin.pred.building)
+# 
+# confusionMatrix(data = factor(svmLin.pred.building), reference = df.val$BUILDINGID)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(svmLin.pred.building) - table(df.val$BUILDINGID))
+# 
+# 
+# 
+# 
+# svmRad.fit.building <- train(BUILDINGID~.,
+#                     method = "svmRadial",
+#                     data = building.tr
+#                    )
+# 
+# svmRad.pred.building = predict(svmRad.fit.building, df.val)
+# accuracy(actual = df.val$BUILDINGID, predicted = svmRad.pred.building)
+# 
+# confusionMatrix(data = factor(svmRad.pred.building), reference = df.val$BUILDINGID)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(svmRad.pred.building) - table(df.val$BUILDINGID))
+```
+
+#### PREDICCION DE BUILDING - RF
+```{r}
+# bestmtry = tuneRF(x = building.tr, y = building.tr$BUILDINGID, ntreeTry = 200, plot = T)
+
+rf.fit.building = randomForest(x = building.tr, y = building.tr$BUILDINGID, ntree = 250, mtry = 50)
+rf.pred.building = predict(rf.fit.building, df.val)
+confusionMatrix(data = factor(rf.pred.building), reference = df.val$BUILDINGID)
+
+#Cuantos dispositivos se han clasificado mal por cada Planta
+abs(table(rf.pred.building) - table(df.val$BUILDINGID))
+```
+*Usamos los valores predichos en RF porque es ACCURACY 1 y es muy rapido de calcular.*
+
+#### CREAMOS UN DF NUEVO CON LAS PREDICCIONES DE LOS ATRIBUTOS
+```{r}
+real.values.val = data.frame(df.val)
+df.val$BUILDINGID = factor(rf.pred.building)
+```
+
+#### CREACION DE PARTICIONES DE DATOS PARA FLOOR (SAMPLES)
+```{r}
+floor.vec = createDataPartition(y = df.train$FLOOR, times = 5, p = 0.05)
+
+# Training data
+floor.tr = df.train[floor.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), which(names(df.train) == "BUILDINGID"), which(names(df.train) == "FLOOR"))]
+floor.tr$FLOOR = factor(floor.tr$FLOOR)
+floor.tr$BUILDINGID = factor(floor.tr$BUILDINGID)
+
+#Proporcion de datos en TRAIN y SAMPLE
+prop.table(table(df.train$FLOOR))
+prop.table(table(floor.tr$FLOOR))
+```
+
+#### PREDICCION DE FLOOR - KNN
+```{r warning=FALSE}
+# knn.fit.floor = train(FLOOR~.,
+#                 method = "knn",
+#                 data = floor.tr)
+# 
+# knn.pred.floor = predict(knn.fit.floor, df.val)
+# 
+# confusionMatrix(data = factor(knn.pred.floor), reference = df.val$FLOOR)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(knn.pred.floor) - table(df.val$FLOOR))
+```
+
+#### PREDICCION DE FLOOR - SVM (Linear & Radial)
+```{r warning=FALSE}
+# svmLin.fit.floor <- train(FLOOR~.,
+#                     method = "svmLinear",
+#                     data = floor.tr
+#                    )
+# 
+# svmLin.pred.floor = predict(svmLin.fit.floor, df.val)
+# 
+# confusionMatrix(data = factor(svmLin.pred.floor), reference = df.val$FLOOR)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(svmLin.pred.floor) - table(df.val$FLOOR))
+# 
+# 
+# 
+# 
+# svmRad.fit.floor <- train(FLOOR~.,
+#                     method = "svmRadial",
+#                     data = floor.tr
+#                    )
+# 
+# svmRad.pred.floor = predict(svmRad.fit.floor, df.val)
+# 
+# confusionMatrix(data = factor(svmRad.pred.floor), reference = df.val$FLOOR)
+# 
+# #Cuantos dispositivos se han clasificado mal por cada edificio.
+# abs(table(svmRad.pred.floor) - table(df.val$FLOOR))
+```
+
+#### PREDICCION DE FLOOR - RF
+```{r}
+# bestmtry = tuneRF(x = floor.tr[,1:313], y = floor.tr$FLOOR, ntreeTry = 200, plot = T,stepFactor = 1.5, improve = 1e-5)
+
+rf.fit.floor = randomForest(x = floor.tr[,1:313], y = floor.tr$FLOOR, ntree = 200, mtry = 37)
+rf.pred.floor = predict(rf.fit.floor, df.val)
+confusionMatrix(data = factor(rf.pred.floor), reference = df.val$FLOOR)
+
+#Cuantos dispositivos se han clasificado mal por cada Planta
+abs(table(rf.pred.floor) - table(df.val$FLOOR))
+```
+
+#### AÑADIMOS AL DF VALIDATION LAS PREDICCIONES DE FLOOR
+```{r}
+df.val$FLOOR = factor(rf.pred.floor)
+```
+
+#### CREACION DE PARTICIONES DE DATOS PARA LONGITUDE Y LATITUDE (SAMPLES)
+```{r}
+regression.vec = createDataPartition(y = df.train$FLOOR, times = 5, p = 0.05)
+
+# Training data
+longitude.tr = df.train[regression.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), which(names(df.train) == "BUILDINGID"), which(names(df.train) == "FLOOR"), which(names(df.train) == "LONGITUDE"))]
+longitude.tr$FLOOR = factor(longitude.tr$FLOOR)
+longitude.tr$BUILDINGID = factor(longitude.tr$BUILDINGID)
+
+
+
+latitude.tr = df.train[regression.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), which(names(df.train) == "BUILDINGID"), which(names(df.train) == "FLOOR"), which(names(df.train) == "LATITUDE"))]
+latitude.tr$FLOOR = factor(latitude.tr$FLOOR)
+latitude.tr$BUILDINGID = factor(latitude.tr$BUILDINGID)
+```
+
+
+#### PREDICCION DE LONGITUDE - LINEAR MODEL
+```{r warning=FALSE}
+lm.fit.long = lm(formula = LONGITUDE~., data = longitude.tr)
+lm.pred.long = predict(lm.fit.long, newdata = df.val)
+
+rmse(actual = df.val$LONGITUDE, predicted = lm.pred.long)
+mae(actual = df.val$LONGITUDE, predicted = lm.pred.long)
+```
+
+#### PREDICCION DE LATITUDE - LINEAR MODEL
+```{r warning=FALSE}
+lm.fit.lat = lm(formula = LATITUDE~., data = latitude.tr)
+lm.pred.lat = predict(lm.fit.lat, newdata = df.val)
+
+rmse(actual = df.val$LATITUDE, predicted = lm.pred.lat)
+mae(actual = df.val$LATITUDE, predicted = lm.pred.lat)
+```
+
+#### PREDICCION DE LONGITUDE - RANDOM FOREST
+```{r}
+# bestmtry = tuneRF(x = longitude.tr, y = longitude.tr$LONGITUDE, ntreeTry = 200, plot = T,stepFactor = 1.5, improve = 1e-5)
+
+rf.fit.long = randomForest(x = longitude.tr, y = longitude.tr$LONGITUDE, ntree = 200, mtry = 235)
+rf.pred.long = predict(rf.fit.long, df.val)
+
+rmse(actual = df.val$LONGITUDE, predicted = rf.pred.long)
+mae(actual = df.val$LONGITUDE, predicted = rf.pred.long)
+```
+
+#### PREDICCION DE LATITUDE - RANDOM FOREST
+```{r}
+# bestmtry = tuneRF(x = latitude.tr, y = latitude.tr$LATITUDE, ntreeTry = 200, plot = T,stepFactor = 1.5, improve = 1e-5)
+
+rf.fit.lat = randomForest(x = latitude.tr, y = latitude.tr$LATITUDE, ntree = 200, mtry = 235)
+rf.pred.lat = predict(rf.fit.lat, df.val)
+
+rmse(actual = df.val$LATITUDE, predicted = rf.pred.lat)
+mae(actual = df.val$LATITUDE, predicted = rf.pred.lat)
+```
+
+
+#### PREDICCION DE LONGITUDE - KNN
+```{r}
+knn.fit.long = train(LONGITUDE~.,
+                          method = "knn",
+                          data = longitude.tr)
+
+knn.pred.long = predict(knn.fit.long, df.val)
+
+rmse(actual = df.val$LONGITUDE, predicted = knn.pred.long)
+mae(actual = df.val$LONGITUDE, predicted = knn.pred.long)
+```
+
+#### PREDICCION DE LATITUDE - KNN
+```{r}
+knn.fit.lat = train(LATITUDE~.,
+                method = "knn",
+                data = latitude.tr)
+
+knn.pred.lat = predict(knn.fit.lat, df.val)
+
+rmse(actual = df.val$LATITUDE, predicted = knn.pred.lat)
+mae(actual = df.val$LATITUDE, predicted = knn.pred.lat)
+```
+
+#### PREDICCION DE LONGITUDE - SVM
+```{r}
+# svmLin.fit.long <- train(LONGITUDE~.,
+#                     method = "svmLinear",
+#                     data = longitude.tr
+#                    )
+# svmLin.pred.long = predict(svmLin.fit.long, df.val)
+# 
+# rmse(actual = df.val$LONGITUDE, predicted = svmLin.pred.long)
+# mae(actual = df.val$LONGITUDE, predicted = svmLin.pred.long)
+# 
+# 
+# 
+# svmRad.fit.long <- train(LONGITUDE~.,
+#                     method = "svmRadial",
+#                     data = longitude.tr
+#                    )
+# svmRad.pred.long = predict(svmRad.fit.long, df.val)
+# 
+# rmse(actual = df.val$LONGITUDE, predicted = svmRad.pred.long)
+# mae(actual = df.val$LONGITUDE, predicted = svmRad.pred.long)
+```
+
+#### PREDICCION DE LATITUDE - SVM
+```{r}
+# svmLin.fit.lat <- train(LATITUDE~.,
+#                     method = "svmLinear",
+#                     data = latitude.tr
+#                    )
+# svmLin.pred.lat = predict(svmLin.fit.lat, df.val)
+# 
+# rmse(actual = df.val$LATITUDE, predicted = svmLin.pred.lat)
+# mae(actual = df.val$LATITUDE, predicted = svmLin.pred.lat)
+# 
+# 
+# 
+# svmRad.fit.lat <- train(LATITUDE~.,
+#                     method = "svmRadial",
+#                     data = latitude.tr
+#                    )
+# svmRad.pred.lat = predict(svmRad.fit.lat, df.val)
+# 
+# rmse(actual = df.val$LATITUDE, predicted = svmRad.pred.lat)
+# mae(actual = df.val$LATITUDE, predicted = svmRad.pred.lat)
+```
+
+
+#### PREDICCION DE LONGITUDE - NEURAL NETWORK
+```{r}
+library(neuralnet)
+
+max = apply(df.train[,1:312] , 2 , max)
+min = apply(df.train[,1:312] , 2 , min)
+scaled = as.data.frame(scale(df.train[,1:312], center = min, scale = max - min))
+
+n <- names(df.train[,1:312])
+f <- as.formula(paste("LONGITUDE ~", paste(n[!n %in% "LONGITUDE"], collapse = " + ")))
+nn <- neuralnet(f,data = df.train, hidden=c(5,3), linear.output=T)
+pr.nn <- compute(nn,df.val[,c(1:312)])
+
+rmse(actual = df.val$LONGITUDE, predicted = pr.nn$net.result)
+mae(actual = df.val$LONGITUDE, predicted = pr.nn$net.result)
+```
+
+#### PREDICCION DE LATITUDE - NEURAL NETWORK
+```{r}
+max = apply(latitude.tr[,1:312] , 2 , max)
+min = apply(latitude.tr[,1:312] , 2 , min)
+scaled = as.data.frame(scale(latitude.tr[,1:312], center = min, scale = max - min))
+
+n <- names(latitude.tr[,1:312])
+f <- as.formula(paste("LATITUDE ~", paste(n[!n %in% "LATITUDE"], collapse = " + ")))
+nn <- neuralnet(f,data = latitude.tr, hidden=c(5,3), linear.output=T)
+pr.nn <- compute(nn,df.val[,c(1:312)])
+
+rmse(actual = df.val$LATITUDE, predicted = pr.nn$net.result)
+mae(actual = df.val$LATITUDE, predicted = pr.nn$net.result)
+```
+
+#### PREDICCION DE LONGITUDE - RED ELASTICA
+#### PREDICCION DE LONGITUDE - PCA
+#### PREDICCION DE LONGITUDE - PLS
+
+
+
+
+
