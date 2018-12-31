@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="David Gibert Bosque" />
+
+
+<title>Wi-Fi positioning system</title>
+
+<script src="1_data_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="1_data_files/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+<script src="1_data_files/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script src="1_data_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="1_data_files/navigation-1.1/tabsets.js"></script>
+<script src="1_data_files/navigation-1.1/codefolding.js"></script>
+<link href="1_data_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
+<script src="1_data_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
+<link href="1_data_files/readthedown-0.1/readthedown.css" rel="stylesheet" />
+<script src="1_data_files/readthedown-0.1/readthedown.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+</head>
+
+<body>
+
+
+<div id="content" data-toggle="wy-nav-shift">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+<nav id="nav-top" role="navigation" aria-label="top navigation">
+    <a role="button" href="#" data-toggle="wy-nav-top"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
+</nav>
+
+
+<div id="header">
+<h1 class="title">Wi-Fi positioning system</h1>
+</div>
+
+
+<div id="table-of-contents">
+    <h2><a href="#content">Wi-Fi positioning system</a></h2>
+    <div id="text-table-of-contents">
+      <ul>
+      <li><a href="#number-of-captures-by-building">Number of captures by BUILDING</a></li>
+      <li><a href="#non-detected-waps">Non detected WAP’s</a></li>
+      <li><a href="#device-captures-detecting-waps.">Device captures detecting WAP’s.</a></li>
+      <li><a href="#tracing-wrong-rssi-registry-captures.">Tracing wrong RSSI registry captures.</a></li>
+      <li><a href="#taking-a-glance-at-wrong-rssi-registry-captures.">Taking a glance at wrong RSSI registry captures.</a></li>
+      <li><a href="#duplicated-rows.">Duplicated rows.</a></li>
+      <li><a href="#obervamos-la-distribucion-de-las-capturas-del-training-que-crean-la-forma-de-los-edificios-del-campus.">Obervamos la distribucion de las capturas del training que crean la forma de los edificios del campus.</a></li>
+      <li><a href="#guardamos-dfs-para-usarlos-en-el-siguiente-script">Guardamos DFs para usarlos en el siguiente script</a></li>
+      </ul>
+    </div>
+</div>
+
+<div id="main">
+<p><strong>Bold text in English.</strong></p>
+<p><em>Texto en cursiva en Español.</em></p>
+<div id="number-of-captures-by-building" class="section level2">
+<h2>Number of captures by BUILDING</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train<span class="op">$</span>BF =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;B&quot;</span>,df.train<span class="op">$</span>BUILDINGID,<span class="st">&quot;F&quot;</span>,df.train<span class="op">$</span>FLOOR)
+df.train<span class="op">$</span>BF =<span class="st"> </span><span class="kw">as.factor</span>(df.train<span class="op">$</span>BF)
+
+df.val<span class="op">$</span>BF =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;B&quot;</span>,df.val<span class="op">$</span>BUILDINGID,<span class="st">&quot;F&quot;</span>,df.val<span class="op">$</span>FLOOR)
+df.val<span class="op">$</span>BF =<span class="st"> </span><span class="kw">as.factor</span>(df.val<span class="op">$</span>BF)
+
+
+## DISTRIBUTION OF THE DATA ON TRAINING AND VALIDATION
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BUILDINGID), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Training</span><span class="ch">\n</span><span class="st">by Building&quot;</span>)
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.val<span class="op">$</span>BUILDINGID), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Validation</span><span class="ch">\n</span><span class="st">by Building&quot;</span>)</code></pre></div>
+<p><img src="1_data_files/figure-html/unnamed-chunk-4-1.png" width="768" /></p>
+<hr />
+</div>
+<div id="non-detected-waps" class="section level2">
+<h2>Non detected WAP’s</h2>
+<p><strong>Locating WAP’s that have not been detected by any device.</strong></p>
+<p><em>Localizamos los WAPs que no han sido detectados por ningun dispositivo.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">WAPnotDetected.val =<span class="st"> </span><span class="kw">as.character</span>()
+WAPnotDetected.tr =<span class="st"> </span><span class="kw">as.character</span>()
+
+<span class="co"># VALIDATION</span>
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">which</span>(<span class="kw">names</span>(df.val)<span class="op">==</span><span class="st">&quot;WAP520&quot;</span>)){
+  <span class="cf">if</span> (<span class="kw">sum</span>(df.val[i]) <span class="op">==</span><span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">nrow</span>(df.val)){
+    <span class="co">#cat(&quot;El&quot;, names(df.val[i]), &quot;no ha sido detectado por ningun dispositivo en el validation\n&quot;)</span>
+    WAPnotDetected.val =<span class="st"> </span><span class="kw">c</span>(WAPnotDetected.val, <span class="kw">names</span>(df.val[i]))
+  }
+}
+
+<span class="co"># TRAINING</span>
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">which</span>(<span class="kw">names</span>(df.train)<span class="op">==</span><span class="st">&quot;WAP520&quot;</span>)){
+  <span class="cf">if</span> (<span class="kw">sum</span>(df.train[i]) <span class="op">==</span><span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">nrow</span>(df.train)){
+    <span class="co">#cat(&quot;El&quot;, names(df.train[i]), &quot;no ha sido detectado por ningun dispositivo en el training\n&quot;)</span>
+    WAPnotDetected.tr =<span class="st"> </span><span class="kw">c</span>(WAPnotDetected.tr, <span class="kw">names</span>(df.train[i]))
+  }
+}</code></pre></div>
+<hr />
+<p><strong>WAP’s not detected in the VALIDATION set are shown below. We remove them from both datsets.</strong></p>
+<p><em>Se muestran abajo los WAPs no detectados en el VALIDATION set. Los eliminamos de ambos datsets.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">WAPnotDetected.val</code></pre></div>
+<pre><code>##   [1] &quot;WAP002&quot; &quot;WAP005&quot; &quot;WAP006&quot; &quot;WAP007&quot; &quot;WAP079&quot; &quot;WAP133&quot; &quot;WAP157&quot;
+##   [8] &quot;WAP163&quot; &quot;WAP193&quot; &quot;WAP194&quot; &quot;WAP197&quot; &quot;WAP198&quot; &quot;WAP199&quot; &quot;WAP200&quot;
+##  [15] &quot;WAP205&quot; &quot;WAP206&quot; &quot;WAP208&quot; &quot;WAP209&quot; &quot;WAP210&quot; &quot;WAP211&quot; &quot;WAP212&quot;
+##  [22] &quot;WAP213&quot; &quot;WAP214&quot; &quot;WAP218&quot; &quot;WAP219&quot; &quot;WAP220&quot; &quot;WAP221&quot; &quot;WAP228&quot;
+##  [29] &quot;WAP230&quot; &quot;WAP231&quot; &quot;WAP235&quot; &quot;WAP250&quot; &quot;WAP251&quot; &quot;WAP252&quot; &quot;WAP291&quot;
+##  [36] &quot;WAP298&quot; &quot;WAP302&quot; &quot;WAP306&quot; &quot;WAP339&quot; &quot;WAP347&quot; &quot;WAP357&quot; &quot;WAP361&quot;
+##  [43] &quot;WAP363&quot; &quot;WAP366&quot; &quot;WAP367&quot; &quot;WAP368&quot; &quot;WAP369&quot; &quot;WAP370&quot; &quot;WAP371&quot;
+##  [50] &quot;WAP372&quot; &quot;WAP373&quot; &quot;WAP374&quot; &quot;WAP375&quot; &quot;WAP376&quot; &quot;WAP377&quot; &quot;WAP378&quot;
+##  [57] &quot;WAP379&quot; &quot;WAP380&quot; &quot;WAP381&quot; &quot;WAP382&quot; &quot;WAP383&quot; &quot;WAP384&quot; &quot;WAP385&quot;
+##  [64] &quot;WAP386&quot; &quot;WAP387&quot; &quot;WAP388&quot; &quot;WAP389&quot; &quot;WAP390&quot; &quot;WAP391&quot; &quot;WAP392&quot;
+##  [71] &quot;WAP393&quot; &quot;WAP394&quot; &quot;WAP395&quot; &quot;WAP396&quot; &quot;WAP397&quot; &quot;WAP398&quot; &quot;WAP399&quot;
+##  [78] &quot;WAP400&quot; &quot;WAP401&quot; &quot;WAP402&quot; &quot;WAP403&quot; &quot;WAP404&quot; &quot;WAP405&quot; &quot;WAP406&quot;
+##  [85] &quot;WAP407&quot; &quot;WAP408&quot; &quot;WAP409&quot; &quot;WAP410&quot; &quot;WAP411&quot; &quot;WAP412&quot; &quot;WAP413&quot;
+##  [92] &quot;WAP414&quot; &quot;WAP415&quot; &quot;WAP417&quot; &quot;WAP420&quot; &quot;WAP421&quot; &quot;WAP424&quot; &quot;WAP425&quot;
+##  [99] &quot;WAP427&quot; &quot;WAP428&quot; &quot;WAP430&quot; &quot;WAP431&quot; &quot;WAP432&quot; &quot;WAP435&quot; &quot;WAP436&quot;
+## [106] &quot;WAP437&quot; &quot;WAP439&quot; &quot;WAP440&quot; &quot;WAP446&quot; &quot;WAP447&quot; &quot;WAP448&quot; &quot;WAP450&quot;
+## [113] &quot;WAP453&quot; &quot;WAP454&quot; &quot;WAP455&quot; &quot;WAP457&quot; &quot;WAP459&quot; &quot;WAP460&quot; &quot;WAP461&quot;
+## [120] &quot;WAP462&quot; &quot;WAP463&quot; &quot;WAP464&quot; &quot;WAP465&quot; &quot;WAP466&quot; &quot;WAP467&quot; &quot;WAP468&quot;
+## [127] &quot;WAP469&quot; &quot;WAP470&quot; &quot;WAP471&quot; &quot;WAP472&quot; &quot;WAP473&quot; &quot;WAP474&quot; &quot;WAP476&quot;
+## [134] &quot;WAP477&quot; &quot;WAP479&quot; &quot;WAP480&quot; &quot;WAP490&quot; &quot;WAP503&quot; &quot;WAP504&quot; &quot;WAP505&quot;
+## [141] &quot;WAP506&quot; &quot;WAP507&quot; &quot;WAP509&quot; &quot;WAP510&quot; &quot;WAP511&quot; &quot;WAP512&quot; &quot;WAP513&quot;
+## [148] &quot;WAP514&quot; &quot;WAP515&quot; &quot;WAP516&quot; &quot;WAP517&quot; &quot;WAP518&quot; &quot;WAP519&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># which(names(df.val) %in% WAPnotDetected.val) #These are the indices.</span>
+
+df.val =<span class="st"> </span>df.val[, <span class="op">-</span><span class="kw">which</span>(<span class="kw">names</span>(df.val) <span class="op">%in%</span><span class="st"> </span>WAPnotDetected.val)]
+df.train =<span class="st"> </span>df.train[, <span class="op">-</span><span class="kw">which</span>(<span class="kw">names</span>(df.train) <span class="op">%in%</span><span class="st"> </span>WAPnotDetected.tr)]</code></pre></div>
+<hr />
+<p><strong>Looking for the intersect of attributes appearing in both datasets. Attributes in VALIDATION that appear in TRAINING and vice versa. VALIDATION attributes that appear in TRAINING first.</strong></p>
+<p><em>Buscamos la interseccion de los atributos que aparecen en ambos conjuntos de datos. Atributos en VALILDATION que aparecen en TRAINING y viceversa. Los atributos de VALIDATION que aparecen en TRAINING primero.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr.in.val.idxs =<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(df.train) <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(df.val))
+df.train =<span class="st"> </span>df.train[, tr.in.val.idxs]
+
+val.in.tr.idxs =<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(df.val) <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(df.train))
+df.val =<span class="st"> </span>df.val[, val.in.tr.idxs]</code></pre></div>
+<hr />
+</div>
+<div id="device-captures-detecting-waps." class="section level2">
+<h2>Device captures detecting WAP’s.</h2>
+<p><strong>Checking if there are any device captures that have not detected any WAP or if only one WAP was detected in TRAINING, to see if something strange happened with them. Those will be removed from the datasets.</strong></p>
+<p><em>Comprobamos si hay capturas de dispositivos que no han detectado ningun WAP o que han detectado unicamente uno en TRAINING, para ver si ocurre algo extraño con ellas. Seran eliminadas del dataset.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DEVICEnotDetected.tr =<span class="st"> </span><span class="kw">c</span>()
+DEVICEdetected1WAP.tr =<span class="st"> </span><span class="kw">c</span>()
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(df.train)){
+  <span class="cf">if</span> (<span class="kw">sum</span>(df.train[i, <span class="dv">1</span><span class="op">:</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.train)))]) <span class="op">==</span><span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.train)))){
+    <span class="co">#print(rownames(df.train[i,]))</span>
+    DEVICEnotDetected.tr =<span class="st"> </span><span class="kw">c</span>(DEVICEnotDetected.tr, <span class="kw">as.numeric</span>(<span class="kw">rownames</span>(df.train[i,])))
+  } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">sum</span>(df.train[i, <span class="dv">1</span><span class="op">:</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.train)))] <span class="op">!=</span><span class="st"> </span><span class="dv">100</span>) <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){
+    <span class="co">#print(rownames(df.train[i,]))</span>
+    DEVICEdetected1WAP.tr =<span class="st"> </span><span class="kw">c</span>(DEVICEdetected1WAP.tr, <span class="kw">as.numeric</span>(<span class="kw">rownames</span>(df.train[i,])))
+  }
+}
+
+<span class="co"># names(df.train[first(grep(&quot;[^WAP0-9]&quot;, names(df.train)))])</span>
+
+df.DEVICESnotDetected.tr =<span class="st"> </span>df.train[DEVICEnotDetected.tr, <span class="dv">313</span><span class="op">:</span><span class="kw">length</span>(<span class="kw">names</span>(df.train))]
+df.DEVICEdetected1WAP.tr =<span class="st"> </span>df.train[DEVICEdetected1WAP.tr, <span class="dv">313</span><span class="op">:</span><span class="kw">length</span>(<span class="kw">names</span>(df.train))]
+
+DEVICESrm.tr =<span class="st"> </span><span class="kw">sort</span>(<span class="kw">c</span>(DEVICEnotDetected.tr, DEVICEdetected1WAP.tr))
+
+df.train =<span class="st"> </span>df.train[<span class="op">-</span>DEVICESrm.tr, ]
+
+<span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.DEVICESnotDetected.tr<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;WAP&#39;s not detected</span><span class="ch">\n</span><span class="st">by device captures by building &amp; floor&quot;</span>)
+
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.DEVICEdetected1WAP.tr<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;1 WAP detected</span><span class="ch">\n</span><span class="st">by device capture by building &amp; floor&quot;</span>)</code></pre></div>
+<p><img src="1_data_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
+<p><strong>The same operation is carried out in the VALIDATION dataset.</strong></p>
+<p><em>La misma operacion es llevada a cabo en el dataset VALIDATION.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DEVICEnotDetected.val =<span class="st"> </span><span class="kw">c</span>()
+DEVICEdetected1WAP.val =<span class="st"> </span><span class="kw">c</span>()
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(df.val)){
+  <span class="cf">if</span> (<span class="kw">sum</span>(df.val[i, <span class="dv">1</span><span class="op">:</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.val)))]) <span class="op">==</span><span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.val)))){
+    <span class="co">#print(rownames(df.val[i,]))</span>
+    DEVICEnotDetected.val =<span class="st"> </span><span class="kw">c</span>(DEVICEnotDetected.val, <span class="kw">as.numeric</span>(<span class="kw">rownames</span>(df.val[i,])))
+  } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">sum</span>(df.val[i, <span class="dv">1</span><span class="op">:</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.val)))] <span class="op">!=</span><span class="st"> </span><span class="dv">100</span>) <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){
+    <span class="co">#print(rownames(df.val[i,]))</span>
+    DEVICEdetected1WAP.val =<span class="st"> </span><span class="kw">c</span>(DEVICEdetected1WAP.val, <span class="kw">as.numeric</span>(<span class="kw">rownames</span>(df.val[i,])))
+  }
+}
+
+DEVICEnotDetected.val</code></pre></div>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DEVICEdetected1WAP.val</code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val =<span class="st"> </span>df.val[<span class="op">-</span>DEVICEdetected1WAP.val, ]</code></pre></div>
+<hr />
+</div>
+<div id="tracing-wrong-rssi-registry-captures." class="section level2">
+<h2>Tracing wrong RSSI registry captures.</h2>
+<p><strong>Locating WAP’s and captures that have RSSI values between 0 and -30 since those records are considered anomalous and we will be removed them from the dataset.</strong></p>
+<p><em>Localizamos WAPs y capturas que tengan valores de RSSI entre 0 y -30 ya que, a priori, esos registros son considerados anomalos y los quitaremos del dataset.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># BUSCAMOS EN TRAINING</span>
+
+cptr30 =<span class="st"> </span><span class="kw">c</span>()
+WAPs30 =<span class="st"> </span><span class="kw">c</span>()
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(df.train[,<span class="dv">1</span><span class="op">:</span><span class="dv">312</span>])){
+  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(df.train[,<span class="dv">1</span><span class="op">:</span><span class="dv">312</span>])){
+    <span class="cf">if</span> (df.train[i,j] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>df.train[i,j] <span class="op">&gt;=</span><span class="st"> </span><span class="op">-</span><span class="dv">30</span>){
+      cptr30 =<span class="st"> </span><span class="kw">c</span>(cptr30,i)
+      WAPs30 =<span class="st"> </span><span class="kw">c</span>(WAPs30,j)
+    }
+  }
+}
+
+cptr30 =<span class="st"> </span><span class="kw">unique</span>(<span class="kw">as.vector</span>(cptr30))
+WAPs30 =<span class="st"> </span><span class="kw">unique</span>(<span class="kw">as.vector</span>(WAPs30))
+
+df.cptr30 =<span class="st"> </span>df.train[cptr30,]
+df.WAPs30 =<span class="st"> </span>df.train[,WAPs30]</code></pre></div>
+<p><strong>In TRAINING there are 472 captures with anomalous values. There are 56 WAP’s that include anomalous values, but these also include normal records, so surely the problem is not the WAP itself, but the captures.</strong></p>
+<p><strong>When exploring in VALIDATION, there is not any RSSI anomalous value record, so there is a problem with the TRAINING captures on which we will take a look next.</strong></p>
+<p><em>En TRAINING existen 472 capturas con valores anomalos. Los WAPs que incluyen valores anomalos son un total de 56, pero estos tambien incluyen registros normales, por lo que seguramente el problema no es el WAP en si, sino las capturas.</em></p>
+<p><em>Al hacer la misma busqueda en el VALIDATION, no se encuentra ningun registro con vallor RSSI con valores anomalos, con lo que existe algun problema con las capturas en TRAINING que estudiaremos a continuacion.</em></p>
+<hr />
+</div>
+<div id="taking-a-glance-at-wrong-rssi-registry-captures." class="section level2">
+<h2>Taking a glance at wrong RSSI registry captures.</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.cptr30<span class="op">$</span>USERID), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">4</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Registry errors</span><span class="ch">\n</span><span class="st">by UserID&quot;</span>) <span class="co">#El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.</span>
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.cptr30<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">5</span>, <span class="dt">name =</span> <span class="st">&quot;Oranges&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Registry errors</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
+<p><img src="1_data_files/figure-html/unnamed-chunk-13-1.png" width="768" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
+
+df.cptr30<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(df.cptr30<span class="op">$</span>FLOOR)
+df.cptr30<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(df.cptr30<span class="op">$</span>BUILDINGID)
+
+df.cptr30 <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(USERID, PHONEID, BF) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(USERID <span class="op">==</span><span class="st"> </span><span class="dv">6</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summary</span>()</code></pre></div>
+<pre><code>##      USERID     PHONEID         BF     
+##  Min.   :6   Min.   :19   B2F3   :202  
+##  1st Qu.:6   1st Qu.:19   B2F4   :195  
+##  Median :6   Median :19   B0F0   :  0  
+##  Mean   :6   Mean   :19   B0F1   :  0  
+##  3rd Qu.:6   3rd Qu.:19   B0F2   :  0  
+##  Max.   :6   Max.   :19   B0F3   :  0  
+##                           (Other):  0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.cptr30 <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(USERID, PHONEID, BF) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(USERID <span class="op">==</span><span class="st"> </span><span class="dv">14</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summary</span>()</code></pre></div>
+<pre><code>##      USERID      PHONEID        BF    
+##  Min.   :14   Min.   :7   B2F3   :45  
+##  1st Qu.:14   1st Qu.:7   B1F0   : 7  
+##  Median :14   Median :7   B0F0   : 0  
+##  Mean   :14   Mean   :7   B0F1   : 0  
+##  3rd Qu.:14   3rd Qu.:7   B0F2   : 0  
+##  Max.   :14   Max.   :7   B0F3   : 0  
+##                           (Other): 0</code></pre>
+<p><strong>The user who has the most measurement errors is USERID 6, followed by 14. The places where most of these measurement errors occur are the 3rd and 4th floors of Building 2.</strong></p>
+<p><strong>The USERID 14 uses a Samsung mini GT-S6500 with Android 2.3.6 Gingerbread, a very old version of Android for a modern device in the year of the study, which could be producing errors. Even so, the USERID 6 uses a Google Nexus 4 with Android 4.2.2 Kitkat that was the latest version of Android at that time and also presents registration problems, although not as many as USERID 14.</strong></p>
+<p><strong>Those captures will be removed to avoid issues.</strong></p>
+<p><em>El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14. Los lugares donde ocurren la mayoria de estos errores de medicion son la planta 3 y 4 del edificio 2.</em></p>
+<p><em>El USERID 14 utiliza un Samsung mini GT-S6500 con Android 2.3.6 Gingerbread, una version de Android ya muy antigua para un dispositivo moderno en el año del estudio, lo cual podria estar produciendo errores. Aun y asi, el USERID 6 utiliza un Google Nexus 4 con Android 4.2.2 Kitkat que era la ultima version de Android en ese momento y tambien presenta problemas de registro, aunque no tantos como USERID 14.</em></p>
+<p><em>Las capturas seran eliminadas para evitar problemas.</em></p>
+<hr />
+<div id="comprobamos-cuantas-capturas-tenemos-por-cada-planta-antes-y-despues-de-quitar-las-472-capturas-con-problemas-de-registro-de-rssi." class="section level3">
+<h3>Comprobamos cuantas capturas tenemos por cada planta antes y despues de quitar las 472 capturas con problemas de registro de RSSI.</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vec.cptr30 =<span class="st"> </span><span class="kw">as.integer</span>(<span class="kw">row.names</span>(df.cptr30))
+
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BF) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.train[<span class="op">-</span>vec.cptr30,]<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Number of deleted records</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
+<p><img src="1_data_files/figure-html/unnamed-chunk-14-1.png" width="768" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train =<span class="st"> </span>df.train[<span class="op">-</span>vec.cptr30, ]</code></pre></div>
+<p><strong>About 450 records with registration problems will be removed, focusing on floors 4th and 5th from 2nd buiding. This could affect the kappa coefficient later on.</strong></p>
+<p><em>Se eliminaran alrededor de 450 capturas con problemas de registro, casi todas de las plantas 4 y 5 del edifico 2. Esto podria afectar al coeficiente kappa mas adelante.</em></p>
+<hr />
+</div>
+</div>
+<div id="duplicated-rows." class="section level2">
+<h2>Duplicated rows.</h2>
+<p><strong>Identifying and removing duplicated TRAINING rows.</strong></p>
+<p><em>Identificamos y quitamos las filas duplicadas del TRAINING.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">duplicated.rows =<span class="st"> </span>df.train[<span class="kw">duplicated</span>(df.train), ]
+<span class="kw">nrow</span>(duplicated.rows)</code></pre></div>
+<pre><code>## [1] 634</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(<span class="kw">table</span>(duplicated.rows<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Number of duplicated rows</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
+<p><img src="1_data_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train =<span class="st"> </span>df.train[<span class="op">!</span><span class="kw">duplicated</span>(df.train), ]</code></pre></div>
+<p><strong>Removing another 219 records from building 1 floor 1 and 374 from building 2 floor 4.</strong></p>
+<p><em>Eliminamos otras 219 capturas del edificio 1 planta 1 y 374 del edificio 2 planta 4.</em></p>
+<hr />
+<div id="dividiremos-los-datos-de-training-por-edificio-para-visualizar-la-forma-de-los-edificios-a-partir-de-la-localizacion-latitud-y-longitud-de-las-capturas.-tambien-creamos-los-edificios-para-el-validation-de-momento-por-razones-de-visualizacion.-mas-adelante-ya-veremos-para-que-mas.-si-que-tendra-sentido-visualizar-la-distribucion-del-validation-sobre-el-training-por-edificio-incluso-por-planta-despues-de-hacer-la-prediccion-de-edificio-y-planta-para-ver-la-distancia-entre-el-valor-real-y-el-predicho-de-una-manera-visual." class="section level3">
+<h3>Dividiremos los datos de training por edificio, para visualizar la forma de los edificios a partir de la localizacion (latitud y longitud) de las capturas. Tambien creamos los edificios para el validation, de momento por razones de visualizacion. Mas adelante ya veremos para que mas. Si que tendra sentido visualizar la distribucion del validation sobre el training por edificio (incluso por planta) despues de hacer la prediccion de edificio y planta, para ver la distancia entre el valor real y el predicho de una manera visual.</h3>
+<div id="podria-tener-sentido-como-un-dispositivo-detecta-de-media-unos-17-waps-tiene-sentido-agrupar-por-edificio-la-informacion-ya-que-asi-podremos-eliminar-muchos-de-los-waps-ya-que-no-tiene-sentido-tener-en-info-de-waps-de-un-edificio-diferente-al-que-se-esta-tomando-la-captura.-incluso-podriamos-filtrar-por-plantas-contiguas-esto-lo-hare-mas-adelante." class="section level4">
+<h4>Podria tener sentido: Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### CREATING TRAIN BUILDINGS - PIPES <span class="al">###</span>
+
+df.trainB0 =<span class="st"> </span>df.train <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)
+
+df.trainB1 =<span class="st"> </span>df.train <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+
+df.trainB2 =<span class="st"> </span>df.train <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</code></pre></div>
+</div>
+</div>
+</div>
+<div id="obervamos-la-distribucion-de-las-capturas-del-training-que-crean-la-forma-de-los-edificios-del-campus." class="section level2">
+<h2>Obervamos la distribucion de las capturas del training que crean la forma de los edificios del campus.</h2>
+</div>
+<div id="guardamos-dfs-para-usarlos-en-el-siguiente-script" class="section level2">
+<h2>Guardamos DFs para usarlos en el siguiente script</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">real.values.val =<span class="st"> </span><span class="kw">data.frame</span>(df.val)
+real.values.val =<span class="st"> </span>real.values.val[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">316</span>)]
+
+<span class="kw">save</span>(real.values.val, <span class="dt">file =</span> <span class="st">&quot;real_values_validation.Rdata&quot;</span>)
+<span class="kw">save</span>(df.train, <span class="dt">file =</span> <span class="st">&quot;training.Rdata&quot;</span>)
+<span class="kw">save</span>(df.val, <span class="dt">file =</span> <span class="st">&quot;validation.Rdata&quot;</span>)</code></pre></div>
+</div>
+</div>
+
+
+</div>
+
+<div id="postamble" data-toggle="wy-nav-shift" class="status">
+<p class="author"><span class="glyphicon glyphicon-user"></span> David Gibert Bosque</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> January 4th, 2019</p>
+</div>
+
+
+<script>
+$(document).ready(function () {
+ 	 	$('#content img')
+ 	  .addClass("image-thumb");
+      $('#content img')
+ 	  .addClass("image-lb");
+  $('#content').magnificPopup({
+	      type:'image',
+	      closeOnContentClick: false,
+	      delegate: 'img',
+	      gallery: {enabled: true },
+	      image: {
+	        verticalFit: true,
+          titleSrc: 'alt'
+	      }
+ 	    });
+ 	});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

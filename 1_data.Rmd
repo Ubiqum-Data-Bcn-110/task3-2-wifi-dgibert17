@@ -1,8 +1,14 @@
 ---
-title: "Wifi location"
+title: "Wi-Fi positioning system"
 author: "David Gibert Bosque"
-date: "December 3, 2018"
-output: html_document
+date: "January 4th, 2019"
+output:
+  rmdformats::readthedown:
+    self_contained: false
+    thumbnails: true
+    lightbox: true
+    gallery: true
+    highlight: tango
 ---
 ```{r include=FALSE}
 rm(list = ls())
@@ -20,6 +26,7 @@ library(elasticnet)
 library(lars)
 library(caret)
 library(AppliedPredictiveModeling)
+library(RColorBrewer)
 library(e1071)
 library(pls)
 library(plotly)
@@ -32,39 +39,43 @@ setwd("C:/Users/David/Google Drive/Github/task3-2-wifi-dgibert17")
 df.train = read.csv("training.csv")
 df.val = read.csv("validation.csv")
 
-sum(names(df.train) == names(df.val))
+# sum(names(df.train) == names(df.val)) #Check if attribute names are the same for both data frames
 ```
-*Ambos DF tienen los mismos atributos, aunque en el validation no hay registros para SPACEID, RELATIVEPOSITION ni USERID.*
 
-## Juntamos atributos Building y Floor en una sola columna para posteriores comprobaciones en TRAINING y VALIDATION.
+**Bold text in English.**
+
+*Texto en cursiva en Español.*
+
+## Number of captures by BUILDING
 ```{r}
 df.train$BF = paste0("B",df.train$BUILDINGID,"F",df.train$FLOOR)
 df.train$BF = as.factor(df.train$BF)
-table(df.train$BF)
 
 df.val$BF = paste0("B",df.val$BUILDINGID,"F",df.val$FLOOR)
 df.val$BF = as.factor(df.val$BF)
-table(df.val$BF)
 
 
 ## DISTRIBUTION OF THE DATA ON TRAINING AND VALIDATION
-barplot(table(df.train$BUILDINGID))
-barplot(table(df.train$FLOOR))
-barplot(table(df.train$BF))
-
-barplot(table(df.val$BUILDINGID))
-barplot(table(df.val$FLOOR))
-barplot(table(df.val$BF))
+par(mfrow = c(1,2))
+barplot(table(df.train$BUILDINGID), col = c("orangered1", "mediumpurple3", "maroon4"), main = "Training\nby Building")
+barplot(table(df.val$BUILDINGID), col = c("orangered1", "mediumpurple3", "maroon4"), main = "Validation\nby Building")
+```
+```{r include=FALSE}
+par(mfrow = c(1,1))
 ```
 
-Como se quitaron WAPs, en el validation test habra WAPs cuyos valores sean todo 100, porque al no estar, obviamente no podran ser registrados por un dispositivo.
+---
 
-## Por tanto, primero quitaremos los WAPs del validation y del training que sean inutiles, mas adelante igualaremos el DF de training con los mismos atributos del validation.
+## Non detected WAP's
+
+**Locating WAP's that have not been detected by any device.**
+
+*Localizamos los WAPs que no han sido detectados por ningun dispositivo.*
 ```{r}
 WAPnotDetected.val = as.character()
 WAPnotDetected.tr = as.character()
 
-# VALIDATION DF
+# VALIDATION
 
 for (i in 1:which(names(df.val)=="WAP520")){
   if (sum(df.val[i]) == 100*nrow(df.val)){
@@ -73,7 +84,7 @@ for (i in 1:which(names(df.val)=="WAP520")){
   }
 }
 
-# TRAINING DF
+# TRAINING
 
 for (i in 1:which(names(df.train)=="WAP520")){
   if (sum(df.train[i]) == 100*nrow(df.train)){
@@ -83,29 +94,39 @@ for (i in 1:which(names(df.train)=="WAP520")){
 }
 ```
 
-## Quitamos de los DFs los WAPs que no son detectados por almenos un dispositivo.
+---
+
+**WAP's not detected in the VALIDATION set are shown below. We remove them from both datsets.**
+
+*Se muestran abajo los WAPs no detectados en el VALIDATION set. Los eliminamos de ambos datsets.*
 ```{r}
 WAPnotDetected.val
-which(names(df.val) %in% WAPnotDetected.val) #Estos son los indices de los atributos que no son detectados en el validation set, por lo que quitaremos estos atributos del validation set.
+# which(names(df.val) %in% WAPnotDetected.val) #These are the indices.
 
 df.val = df.val[, -which(names(df.val) %in% WAPnotDetected.val)]
 df.train = df.train[, -which(names(df.train) %in% WAPnotDetected.tr)]
 ```
 
-## Buscamos cuales son los atributos que comparten ambos DFs. El intersect. Asi, despues podremos coger los indices de los atributos del intersect y seleccionarlos para cada uno de los dos DFs, por lo que ambos quedaran con la misma info.
+---
+
+**Looking for the intersect of attributes appearing in both datasets. Attributes in VALIDATION that appear in TRAINING and vice versa. VALIDATION attributes that appear in TRAINING first.**
+
+*Buscamos la interseccion de los atributos que aparecen en ambos conjuntos de datos. Atributos en VALILDATION que aparecen en TRAINING y viceversa. Los atributos de VALIDATION que aparecen en TRAINING primero.*
 ```{r}
 tr.in.val.idxs = which(names(df.train) %in% names(df.val))
 df.train = df.train[, tr.in.val.idxs]
 
 val.in.tr.idxs = which(names(df.val) %in% names(df.train))
 df.val = df.val[, val.in.tr.idxs]
-
-sum(names(df.train) == names(df.val))
-
-# intersect(x = names(df.train), y = names(df.val))
 ```
 
-## Ahora vamos a buscar si hay capturas en TRAINING que no han sido detectadas por ningun WAP o si han sido detectadas unicamente por 1 WAP, las cuales quitaremos del DF y las estudiaremos para ver si tienen algo en comun.
+---
+
+## Device captures detecting WAP's.
+
+**Checking if there are any device captures that have not detected any WAP or if only one WAP was detected in TRAINING, to see if something strange happened with them. Those will be removed from the datasets.**
+
+*Comprobamos si hay capturas de dispositivos que no han detectado ningun WAP o que han detectado unicamente uno en TRAINING, para ver si ocurre algo extraño con ellas. Seran eliminadas del dataset.*
 ```{r}
 DEVICEnotDetected.tr = c()
 DEVICEdetected1WAP.tr = c()
@@ -128,10 +149,20 @@ df.DEVICEdetected1WAP.tr = df.train[DEVICEdetected1WAP.tr, 313:length(names(df.t
 DEVICESrm.tr = sort(c(DEVICEnotDetected.tr, DEVICEdetected1WAP.tr))
 
 df.train = df.train[-DEVICESrm.tr, ]
-```
-*Ahora el DF TRAINING solo contiene rows con capturas (dispositivos) que han detectado como minimo 2 WAPs.*
 
-## Ahora vamos a buscar si hay capturas en VALIDATION que no han sido detectadas por ningun WAP o si han sido detectadas unicamente por 1 WAP, las cuales podremos quitar del DF y estudiarlas en un DF diferente, para ver si tienen algo en comun.
+par(mfrow = c(1,2))
+barplot(table(df.DEVICESnotDetected.tr$BF), col = c("orangered1", "orangered1", "orangered1", "orangered1", "mediumpurple3", "mediumpurple3","mediumpurple3","mediumpurple3", "maroon4","maroon4","maroon4","maroon4","maroon4"), main = "WAP's not detected\nby device captures by building & floor")
+
+barplot(table(df.DEVICEdetected1WAP.tr$BF), col = c("orangered1", "orangered1", "orangered1", "orangered1", "mediumpurple3", "mediumpurple3","mediumpurple3","mediumpurple3", "maroon4","maroon4","maroon4","maroon4","maroon4"), main = "1 WAP detected\nby device capture by building & floor")
+```
+```{r include=FALSE}
+par(mfrow = c(1,1))
+```
+
+
+**The same operation is carried out in the VALIDATION dataset.**
+
+*La misma operacion es llevada a cabo en el dataset VALIDATION.*
 ```{r}
 DEVICEnotDetected.val = c()
 DEVICEdetected1WAP.val = c()
@@ -151,9 +182,14 @@ DEVICEdetected1WAP.val
 
 df.val = df.val[-DEVICEdetected1WAP.val, ]
 ```
-*No hay ningun dispositivo en el VALIDATION que no haya sido detectado por ningun WAP (obviamente, ya que si no es detectado por WAPs no aparecera en esta base de datos). Todos han sido detectados por almenos 1 WAP. Ademas, solo hay un dispositivo que haya sido detectado por unicamente 1 WAP, el cual tambien quitamos.*
 
-## Buscamos si en TRAINING y VALIDATION hay capturas y WAPs que tengan algun valor entre 0 y -30.
+---
+
+## Tracing wrong RSSI registry captures.
+
+**Locating WAP's and captures that have RSSI values between 0 and -30 since those records are considered anomalous and we will be removed them from the dataset.**
+
+*Localizamos WAPs y capturas que tengan valores de RSSI entre 0 y -30 ya que, a priori, esos registros son considerados anomalos y los quitaremos del dataset.*
 ```{r}
 # BUSCAMOS EN TRAINING
 
@@ -175,18 +211,26 @@ WAPs30 = unique(as.vector(WAPs30))
 df.cptr30 = df.train[cptr30,]
 df.WAPs30 = df.train[,WAPs30]
 ```
-En el DF training existen 472 capturas que tienen valores entre 0 y -30, lo cual es irreal.
-56 WAPs tienen algun valor en ese rango.
-AL BUSCAR CON UN LOOP EN EL VALIDATION, ENCONTRAMOS QUE NO HAY NINGUNA CAPTURA NI NINGUN WAP QUE TENGA VALOR ENTRE 0 Y -30. Esto nos hace pensar que algun problema ha habido al hacer el training, seguramente por los dispositivos. Estudiaremos su comportamiento y seguramente quitemos esos datos para entrenar el modelo.
 
-## Estudiamos las capturas que tienen registros de valores entre -30 y 0 RSSI.
+**In TRAINING there are 472 captures with anomalous values. There are 56 WAP's that include anomalous values, but these also include normal records, so surely the problem is not the WAP itself, but the captures.**
+
+**When exploring in VALIDATION, there is not any RSSI anomalous value record, so there is a problem with the TRAINING captures on which we will take a look next.**
+
+*En TRAINING existen 472 capturas con valores anomalos. Los WAPs que incluyen valores anomalos son un total de 56, pero estos tambien incluyen registros normales, por lo que seguramente el problema no es el WAP en si, sino las capturas.*
+
+*Al hacer la misma busqueda en el VALIDATION, no se encuentra ningun registro con vallor RSSI con valores anomalos, con lo que existe algun problema con las capturas en TRAINING que estudiaremos a continuacion.*
+
+---
+
+## Taking a glance at wrong RSSI registry captures.
 ```{r}
-# df.cptr30 = df.cptr30[,c(315:316, 319:320, 322)]
-barplot(table(df.cptr30$USERID)) #El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.
-barplot(table(df.cptr30$BF))
+par(mfrow = c(1,2))
+barplot(table(df.cptr30$USERID), col = brewer.pal(n = 4, name = "Purples"), main = "Registry errors\nby UserID") #El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.
+barplot(table(df.cptr30$BF), col = brewer.pal(n = 5, name = "Oranges"), main = "Registry errors\nby Building & Floor")
+par(mfrow = c(1,1))
 
-df.cptr30$FLOOR = as.factor(df.cptr30$FLOOR)
-df.cptr30$BUILDINGID = as.factor(df.cptr30$BUILDINGID)
+df.cptr30$FLOOR = factor(df.cptr30$FLOOR)
+df.cptr30$BUILDINGID = factor(df.cptr30$BUILDINGID)
 
 df.cptr30 %>%
   select(USERID, PHONEID, BF) %>%
@@ -198,31 +242,57 @@ df.cptr30 %>%
   filter(USERID == 14) %>%
   summary()
 ```
-El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.
-Los lugares donde ocurren estos errores de medicion en el DF training son la planta 3 y 4 del edificio 2 mayoritariamente. La planta 4 es la mas problematica.
-El USERID 14 utiliza un Samsung mini GT-S6500 con Android 2.3.6 Gingerbread, una version de Android ya muy antigua para un dispositivo moderno como era el año del estudio, lo cual podria estar produciendo errores.
-Aun asi, el USERID 6 utiliza un Google Nexus 4 con Android 4.2.2 Kitkat que era la ultima version de Android en ese momento y este movil tiene muchos problemas de registros.
-Podria ser que los moviles tuvieran problemas con el chip de Wifi. Tendremos que estudiar si hay mas observaciones en el training que pertenezcan al edificio 2 planta 3 y 4. Si las hay, ningun problema, si no hay, entonces la zona puede ser el problema (baja cobertura) si en el Validation hay registros.
 
-## Comprobamos cuantas capturas tenemos por cada planta antes y despues de quitar las 472 capturas con problemas de registro de RSSI.
+**The user who has the most measurement errors is USERID 6, followed by 14. The places where most of these measurement errors occur are the 3rd and 4th floors of Building 2.**
+
+**The USERID 14 uses a Samsung mini GT-S6500 with Android 2.3.6 Gingerbread, a very old version of Android for a modern device in the year of the study, which could be producing errors. Even so, the USERID 6 uses a Google Nexus 4 with Android 4.2.2 Kitkat that was the latest version of Android at that time and also presents registration problems, although not as many as USERID 14.**
+
+**Those captures will be removed to avoid issues.**
+
+*El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14. Los lugares donde ocurren la mayoria de estos errores de medicion son la planta 3 y 4 del edificio 2.*
+
+*El USERID 14 utiliza un Samsung mini GT-S6500 con Android 2.3.6 Gingerbread, una version de Android ya muy antigua para un dispositivo moderno en el año del estudio, lo cual podria estar produciendo errores. Aun y asi, el USERID 6 utiliza un Google Nexus 4 con Android 4.2.2 Kitkat que era la ultima version de Android en ese momento y tambien presenta problemas de registro, aunque no tantos como USERID 14.*
+
+*Las capturas seran eliminadas para evitar problemas.*
+
+---
+
+### Comprobamos cuantas capturas tenemos por cada planta antes y despues de quitar las 472 capturas con problemas de registro de RSSI.
 ```{r}
 vec.cptr30 = as.integer(row.names(df.cptr30))
 
-table(df.train$BF)
-table(df.train[-vec.cptr30,]$BF)
+barplot(table(df.train$BF) - table(df.train[-vec.cptr30,]$BF), col = brewer.pal(n = 7, name = "Purples"), main = "Number of deleted records\nby Building & Floor")
 
 df.train = df.train[-vec.cptr30, ]
 ```
-Recordamos que solo el edificio 2 tiene 4 plantas. Aunque tiene muchos menos registros que las demas plantas, puede que sean suficientes para entrenar un modelo. Esto podria afectar al kappa.
 
-## Identificamos y quitamos las filas que estan duplicadas.
+**About 450 records with registration problems will be removed, focusing on floors 4th and 5th from 2nd buiding. This could affect the kappa coefficient later on.**
+
+*Se eliminaran alrededor de 450 capturas con problemas de registro, casi todas de las plantas 4 y 5 del edifico 2. Esto podria afectar al coeficiente kappa mas adelante.*
+
+---
+
+## Duplicated rows.
+
+**Identifying and removing duplicated TRAINING rows.**
+
+*Identificamos y quitamos las filas duplicadas del TRAINING.*
 ```{r}
 duplicated.rows = df.train[duplicated(df.train), ]
+nrow(duplicated.rows)
+
+barplot(table(duplicated.rows$BF), col = brewer.pal(n = 7, name = "Purples"), main = "Number of duplicated rows\nby Building & Floor")
+
 df.train = df.train[!duplicated(df.train), ]
 ```
 
+**Removing another 219 records from building 1 floor 1 and 374 from building 2 floor 4.**
 
-## Dividiremos los datos de training por edificio, para visualizar la forma de los edificios a partir de la localizacion (latitud y longitud) de las capturas. Tambien creamos los edificios para el validation, de momento por razones de visualizacion. Mas adelante ya veremos para que mas. Si que tendra sentido visualizar la distribucion del validation sobre el training por edificio (incluso por planta) despues de hacer la prediccion de edificio y planta, para ver la distancia entre el valor real y el predicho de una manera visual.
+*Eliminamos otras 219 capturas del edificio 1 planta 1 y 374 del edificio 2 planta 4.*
+
+---
+
+### Dividiremos los datos de training por edificio, para visualizar la forma de los edificios a partir de la localizacion (latitud y longitud) de las capturas. Tambien creamos los edificios para el validation, de momento por razones de visualizacion. Mas adelante ya veremos para que mas. Si que tendra sentido visualizar la distribucion del validation sobre el training por edificio (incluso por planta) despues de hacer la prediccion de edificio y planta, para ver la distancia entre el valor real y el predicho de una manera visual.
 
 #### Podria tener sentido: Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.
 ```{r}
@@ -239,7 +309,7 @@ df.trainB2 = df.train %>%
 ```
 
 ## Obervamos la distribucion de las capturas del training que crean la forma de los edificios del campus.
-```{r warning=FALSE}
+```{r eval=FALSE, warning=FALSE, include=FALSE}
 a <- list(
 title = "",
 zeroline = FALSE,
