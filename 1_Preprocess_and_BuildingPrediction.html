@@ -13,17 +13,17 @@
 
 <title>Wi-Fi positioning system</title>
 
-<script src="1_data_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="1_Preprocess_and_BuildingPrediction_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="1_data_files/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet" />
-<script src="1_data_files/bootstrap-3.3.6/js/bootstrap.min.js"></script>
-<script src="1_data_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<script src="1_data_files/navigation-1.1/tabsets.js"></script>
-<script src="1_data_files/navigation-1.1/codefolding.js"></script>
-<link href="1_data_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
-<script src="1_data_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
-<link href="1_data_files/readthedown-0.1/readthedown.css" rel="stylesheet" />
-<script src="1_data_files/readthedown-0.1/readthedown.js"></script>
+<link href="1_Preprocess_and_BuildingPrediction_files/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+<script src="1_Preprocess_and_BuildingPrediction_files/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script src="1_Preprocess_and_BuildingPrediction_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="1_Preprocess_and_BuildingPrediction_files/navigation-1.1/tabsets.js"></script>
+<script src="1_Preprocess_and_BuildingPrediction_files/navigation-1.1/codefolding.js"></script>
+<link href="1_Preprocess_and_BuildingPrediction_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
+<script src="1_Preprocess_and_BuildingPrediction_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
+<link href="1_Preprocess_and_BuildingPrediction_files/readthedown-0.1/readthedown.css" rel="stylesheet" />
+<script src="1_Preprocess_and_BuildingPrediction_files/readthedown-0.1/readthedown.js"></script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -98,12 +98,12 @@ $(document).ready(function () {
       <ul>
       <li><a href="#number-of-captures-by-building">Number of captures by BUILDING</a></li>
       <li><a href="#non-detected-waps">Non detected WAP’s</a></li>
-      <li><a href="#device-captures-detecting-waps.">Device captures detecting WAP’s.</a></li>
-      <li><a href="#tracing-wrong-rssi-registry-captures.">Tracing wrong RSSI registry captures.</a></li>
-      <li><a href="#taking-a-glance-at-wrong-rssi-registry-captures.">Taking a glance at wrong RSSI registry captures.</a></li>
-      <li><a href="#duplicated-rows.">Duplicated rows.</a></li>
-      <li><a href="#obervamos-la-distribucion-de-las-capturas-del-training-que-crean-la-forma-de-los-edificios-del-campus.">Obervamos la distribucion de las capturas del training que crean la forma de los edificios del campus.</a></li>
-      <li><a href="#guardamos-dfs-para-usarlos-en-el-siguiente-script">Guardamos DFs para usarlos en el siguiente script</a></li>
+      <li><a href="#device-captures-detecting-waps">Device captures detecting WAP’s</a></li>
+      <li><a href="#tracing-wrong-rssi-registry-captures">Tracing wrong RSSI registry captures</a></li>
+      <li><a href="#taking-a-glance-at-wrong-rssi-registry-captures">Taking a glance at wrong RSSI registry captures</a></li>
+      <li><a href="#duplicated-rows">Duplicated rows</a></li>
+      <li><a href="#data-partition-for-building">Data partition for Building</a></li>
+      <li><a href="#building-prediction-with-random-forest">Building prediction with Random Forest</a></li>
       </ul>
     </div>
 </div>
@@ -124,7 +124,7 @@ df.val<span class="op">$</span>BF =<span class="st"> </span><span class="kw">as.
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
 <span class="kw">barplot</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BUILDINGID), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Training</span><span class="ch">\n</span><span class="st">by Building&quot;</span>)
 <span class="kw">barplot</span>(<span class="kw">table</span>(df.val<span class="op">$</span>BUILDINGID), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Validation</span><span class="ch">\n</span><span class="st">by Building&quot;</span>)</code></pre></div>
-<p><img src="1_data_files/figure-html/unnamed-chunk-4-1.png" width="768" /></p>
+<p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-4-1.png" width="768" /></p>
 <hr />
 </div>
 <div id="non-detected-waps" class="section level2">
@@ -191,8 +191,8 @@ val.in.tr.idxs =<span class="st"> </span><span class="kw">which</span>(<span cla
 df.val =<span class="st"> </span>df.val[, val.in.tr.idxs]</code></pre></div>
 <hr />
 </div>
-<div id="device-captures-detecting-waps." class="section level2">
-<h2>Device captures detecting WAP’s.</h2>
+<div id="device-captures-detecting-waps" class="section level2">
+<h2>Device captures detecting WAP’s</h2>
 <p><strong>Checking if there are any device captures that have not detected any WAP or if only one WAP was detected in TRAINING, to see if something strange happened with them. Those will be removed from the datasets.</strong></p>
 <p><em>Comprobamos si hay capturas de dispositivos que no han detectado ningun WAP o que han detectado unicamente uno en TRAINING, para ver si ocurre algo extraño con ellas. Seran eliminadas del dataset.</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DEVICEnotDetected.tr =<span class="st"> </span><span class="kw">c</span>()
@@ -221,7 +221,7 @@ df.train =<span class="st"> </span>df.train[<span class="op">-</span>DEVICESrm.t
 <span class="kw">barplot</span>(<span class="kw">table</span>(df.DEVICESnotDetected.tr<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;WAP&#39;s not detected</span><span class="ch">\n</span><span class="st">by device captures by building &amp; floor&quot;</span>)
 
 <span class="kw">barplot</span>(<span class="kw">table</span>(df.DEVICEdetected1WAP.tr<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;1 WAP detected</span><span class="ch">\n</span><span class="st">by device capture by building &amp; floor&quot;</span>)</code></pre></div>
-<p><img src="1_data_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
+<p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
 <p><strong>The same operation is carried out in the VALIDATION dataset.</strong></p>
 <p><em>La misma operacion es llevada a cabo en el dataset VALIDATION.</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DEVICEnotDetected.val =<span class="st"> </span><span class="kw">c</span>()
@@ -244,8 +244,8 @@ DEVICEnotDetected.val</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val =<span class="st"> </span>df.val[<span class="op">-</span>DEVICEdetected1WAP.val, ]</code></pre></div>
 <hr />
 </div>
-<div id="tracing-wrong-rssi-registry-captures." class="section level2">
-<h2>Tracing wrong RSSI registry captures.</h2>
+<div id="tracing-wrong-rssi-registry-captures" class="section level2">
+<h2>Tracing wrong RSSI registry captures</h2>
 <p><strong>Locating WAP’s and captures that have RSSI values between 0 and -30 since those records are considered anomalous and we will be removed them from the dataset.</strong></p>
 <p><em>Localizamos WAPs y capturas que tengan valores de RSSI entre 0 y -30 ya que, a priori, esos registros son considerados anomalos y los quitaremos del dataset.</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># BUSCAMOS EN TRAINING</span>
@@ -273,12 +273,12 @@ df.WAPs30 =<span class="st"> </span>df.train[,WAPs30]</code></pre></div>
 <p><em>Al hacer la misma busqueda en el VALIDATION, no se encuentra ningun registro con vallor RSSI con valores anomalos, con lo que existe algun problema con las capturas en TRAINING que estudiaremos a continuacion.</em></p>
 <hr />
 </div>
-<div id="taking-a-glance-at-wrong-rssi-registry-captures." class="section level2">
-<h2>Taking a glance at wrong RSSI registry captures.</h2>
+<div id="taking-a-glance-at-wrong-rssi-registry-captures" class="section level2">
+<h2>Taking a glance at wrong RSSI registry captures</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
 <span class="kw">barplot</span>(<span class="kw">table</span>(df.cptr30<span class="op">$</span>USERID), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">4</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Registry errors</span><span class="ch">\n</span><span class="st">by UserID&quot;</span>) <span class="co">#El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.</span>
 <span class="kw">barplot</span>(<span class="kw">table</span>(df.cptr30<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">5</span>, <span class="dt">name =</span> <span class="st">&quot;Oranges&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Registry errors</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
-<p><img src="1_data_files/figure-html/unnamed-chunk-13-1.png" width="768" /></p>
+<p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-13-1.png" width="768" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
 
 df.cptr30<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(df.cptr30<span class="op">$</span>FLOOR)
@@ -315,59 +315,116 @@ df.cptr30 <span class="op">%&gt;%</span>
 <p><em>El USERID 14 utiliza un Samsung mini GT-S6500 con Android 2.3.6 Gingerbread, una version de Android ya muy antigua para un dispositivo moderno en el año del estudio, lo cual podria estar produciendo errores. Aun y asi, el USERID 6 utiliza un Google Nexus 4 con Android 4.2.2 Kitkat que era la ultima version de Android en ese momento y tambien presenta problemas de registro, aunque no tantos como USERID 14.</em></p>
 <p><em>Las capturas seran eliminadas para evitar problemas.</em></p>
 <hr />
-<div id="comprobamos-cuantas-capturas-tenemos-por-cada-planta-antes-y-despues-de-quitar-las-472-capturas-con-problemas-de-registro-de-rssi." class="section level3">
-<h3>Comprobamos cuantas capturas tenemos por cada planta antes y despues de quitar las 472 capturas con problemas de registro de RSSI.</h3>
+<div id="visualizing-how-many-anomalous-captures-will-be-removed-from-each-floor" class="section level4">
+<h4>Visualizing how many anomalous captures will be removed from each floor</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vec.cptr30 =<span class="st"> </span><span class="kw">as.integer</span>(<span class="kw">row.names</span>(df.cptr30))
 
 <span class="kw">barplot</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BF) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.train[<span class="op">-</span>vec.cptr30,]<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Number of deleted records</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
-<p><img src="1_data_files/figure-html/unnamed-chunk-14-1.png" width="768" /></p>
+<p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-14-1.png" width="768" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train =<span class="st"> </span>df.train[<span class="op">-</span>vec.cptr30, ]</code></pre></div>
 <p><strong>About 450 records with registration problems will be removed, focusing on floors 4th and 5th from 2nd buiding. This could affect the kappa coefficient later on.</strong></p>
 <p><em>Se eliminaran alrededor de 450 capturas con problemas de registro, casi todas de las plantas 4 y 5 del edifico 2. Esto podria afectar al coeficiente kappa mas adelante.</em></p>
 <hr />
 </div>
 </div>
-<div id="duplicated-rows." class="section level2">
-<h2>Duplicated rows.</h2>
+<div id="duplicated-rows" class="section level2">
+<h2>Duplicated rows</h2>
 <p><strong>Identifying and removing duplicated TRAINING rows.</strong></p>
 <p><em>Identificamos y quitamos las filas duplicadas del TRAINING.</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">duplicated.rows =<span class="st"> </span>df.train[<span class="kw">duplicated</span>(df.train), ]
 <span class="kw">nrow</span>(duplicated.rows)</code></pre></div>
 <pre><code>## [1] 634</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(<span class="kw">table</span>(duplicated.rows<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Number of duplicated rows</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
-<p><img src="1_data_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
+<p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train =<span class="st"> </span>df.train[<span class="op">!</span><span class="kw">duplicated</span>(df.train), ]</code></pre></div>
 <p><strong>Removing another 219 records from building 1 floor 1 and 374 from building 2 floor 4.</strong></p>
 <p><em>Eliminamos otras 219 capturas del edificio 1 planta 1 y 374 del edificio 2 planta 4.</em></p>
 <hr />
-<div id="dividiremos-los-datos-de-training-por-edificio-para-visualizar-la-forma-de-los-edificios-a-partir-de-la-localizacion-latitud-y-longitud-de-las-capturas.-tambien-creamos-los-edificios-para-el-validation-de-momento-por-razones-de-visualizacion.-mas-adelante-ya-veremos-para-que-mas.-si-que-tendra-sentido-visualizar-la-distribucion-del-validation-sobre-el-training-por-edificio-incluso-por-planta-despues-de-hacer-la-prediccion-de-edificio-y-planta-para-ver-la-distancia-entre-el-valor-real-y-el-predicho-de-una-manera-visual." class="section level3">
-<h3>Dividiremos los datos de training por edificio, para visualizar la forma de los edificios a partir de la localizacion (latitud y longitud) de las capturas. Tambien creamos los edificios para el validation, de momento por razones de visualizacion. Mas adelante ya veremos para que mas. Si que tendra sentido visualizar la distribucion del validation sobre el training por edificio (incluso por planta) despues de hacer la prediccion de edificio y planta, para ver la distancia entre el valor real y el predicho de una manera visual.</h3>
-<div id="podria-tener-sentido-como-un-dispositivo-detecta-de-media-unos-17-waps-tiene-sentido-agrupar-por-edificio-la-informacion-ya-que-asi-podremos-eliminar-muchos-de-los-waps-ya-que-no-tiene-sentido-tener-en-info-de-waps-de-un-edificio-diferente-al-que-se-esta-tomando-la-captura.-incluso-podriamos-filtrar-por-plantas-contiguas-esto-lo-hare-mas-adelante." class="section level4">
-<h4>Podria tener sentido: Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### CREATING TRAIN BUILDINGS - PIPES <span class="al">###</span>
+<p><strong>Once the data sets have been pre-processed, the machine learning process will be carried out, predicting the building ID where a capture is located first, followed by the floor in which it is located and its latitude and longitude.</strong></p>
+<p><em>Una vez que se han pre procesado los data sets, llevaremos a cabo el proceso de machine learning, prediciendo primero el ID del edificio donde se encuentra una captura, seguido de la planta en la que se encuentras y la latitud y la longitud.</em></p>
+<div id="formatting-categorical-data" class="section level4">
+<h4>Formatting categorical data</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(df.val<span class="op">$</span>FLOOR)
+df.val<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(df.val<span class="op">$</span>BUILDINGID)
 
-df.trainB0 =<span class="st"> </span>df.train <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)
-
-df.trainB1 =<span class="st"> </span>df.train <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
-
-df.trainB2 =<span class="st"> </span>df.train <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</code></pre></div>
+df.train<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(df.train<span class="op">$</span>FLOOR)
+df.train<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(df.train<span class="op">$</span>BUILDINGID)</code></pre></div>
 </div>
 </div>
-</div>
-<div id="obervamos-la-distribucion-de-las-capturas-del-training-que-crean-la-forma-de-los-edificios-del-campus." class="section level2">
-<h2>Obervamos la distribucion de las capturas del training que crean la forma de los edificios del campus.</h2>
-</div>
-<div id="guardamos-dfs-para-usarlos-en-el-siguiente-script" class="section level2">
-<h2>Guardamos DFs para usarlos en el siguiente script</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">real.values.val =<span class="st"> </span><span class="kw">data.frame</span>(df.val)
-real.values.val =<span class="st"> </span>real.values.val[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">316</span>)]
+<div id="data-partition-for-building" class="section level2">
+<h2>Data partition for Building</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">building.vec =<span class="st"> </span><span class="kw">createDataPartition</span>(<span class="dt">y =</span> df.train<span class="op">$</span>BUILDINGID, <span class="dt">times =</span> <span class="dv">1</span>, <span class="dt">p =</span> <span class="fl">0.3</span>)
 
-<span class="kw">save</span>(real.values.val, <span class="dt">file =</span> <span class="st">&quot;real_values_validation.Rdata&quot;</span>)
-<span class="kw">save</span>(df.train, <span class="dt">file =</span> <span class="st">&quot;training.Rdata&quot;</span>)
-<span class="kw">save</span>(df.val, <span class="dt">file =</span> <span class="st">&quot;validation.Rdata&quot;</span>)</code></pre></div>
+<span class="co"># Training data</span>
+building.tr =<span class="st"> </span>df.train[building.vec<span class="op">$</span>Resample1, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.train))), <span class="kw">which</span>(<span class="kw">names</span>(df.train) <span class="op">==</span><span class="st"> &quot;BUILDINGID&quot;</span>))]
+building.tr<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(building.tr<span class="op">$</span>BUILDINGID)
+
+<span class="co">#Proporcion de datos en TRAIN y SAMPLE</span>
+<span class="kw">prop.table</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BUILDINGID))</code></pre></div>
+<pre><code>## 
+##         0         1         2 
+## 0.2793129 0.2605889 0.4600982</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(building.tr<span class="op">$</span>BUILDINGID))</code></pre></div>
+<pre><code>## 
+##         0         1         2 
+## 0.2792889 0.2606222 0.4600889</code></pre>
+<hr />
+</div>
+<div id="building-prediction-with-random-forest" class="section level2">
+<h2>Building prediction with Random Forest</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># bestmtry = tuneRF(x = building.tr, y = building.tr$BUILDINGID, ntreeTry = 200, plot = T)</span>
+
+rf.fit.building =<span class="st"> </span><span class="kw">randomForest</span>(<span class="dt">x =</span> building.tr, <span class="dt">y =</span> building.tr<span class="op">$</span>BUILDINGID, <span class="dt">ntree =</span> <span class="dv">50</span><span class="co">#, mtry = 50</span>
+                               )
+rf.pred.building =<span class="st"> </span><span class="kw">predict</span>(rf.fit.building, df.val)
+<span class="kw">confusionMatrix</span>(<span class="dt">data =</span> <span class="kw">factor</span>(rf.pred.building), <span class="dt">reference =</span> df.val<span class="op">$</span>BUILDINGID)</code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1   2
+##          0 536   0   0
+##          1   0 306   0
+##          2   0   0 268
+## 
+## Overall Statistics
+##                                      
+##                Accuracy : 1          
+##                  95% CI : (0.9967, 1)
+##     No Information Rate : 0.4829     
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16  
+##                                      
+##                   Kappa : 1          
+##  Mcnemar&#39;s Test P-Value : NA         
+## 
+## Statistics by Class:
+## 
+##                      Class: 0 Class: 1 Class: 2
+## Sensitivity            1.0000   1.0000   1.0000
+## Specificity            1.0000   1.0000   1.0000
+## Pos Pred Value         1.0000   1.0000   1.0000
+## Neg Pred Value         1.0000   1.0000   1.0000
+## Prevalence             0.4829   0.2757   0.2414
+## Detection Rate         0.4829   0.2757   0.2414
+## Detection Prevalence   0.4829   0.2757   0.2414
+## Balanced Accuracy      1.0000   1.0000   1.0000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># How many devices (captures) have been missclassified for each Building</span>
+<span class="kw">abs</span>(<span class="kw">table</span>(rf.pred.building) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.val<span class="op">$</span>BUILDINGID))</code></pre></div>
+<pre><code>## rf.pred.building
+## 0 1 2 
+## 0 0 0</code></pre>
+<p><strong>The Random Forest method fits a perfectly on the VALIDATION data. The next step is to replace the actual BUILDING ID values with the predicted ones, although in this case they are exactly the same.</strong></p>
+<p><em>El metodo Random Forest hace una clasificacion perfecta de los datos de VALIDATION. El siguiente paso es sustituir los datos de BUILDING ID reales por los predichos, aunque en este caso son exactamente los mismos.</em></p>
+<hr />
+<div id="replacing-actual-building-id-values-for-predicted-ones" class="section level4">
+<h4>Replacing actual Building ID values for predicted ones</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val<span class="op">$</span>BUILDINGID =<span class="st"> </span>rf.pred.building
+<span class="kw">str</span>(df.val<span class="op">$</span>BUILDINGID)</code></pre></div>
+<pre><code>##  Factor w/ 3 levels &quot;0&quot;,&quot;1&quot;,&quot;2&quot;: 3 3 3 1 3 3 3 3 3 3 ...</code></pre>
+<p><strong>In the 3 following scripts the prediction of FLOOR is separately carried out for each of the buildings.</strong></p>
+<p><em>En los siguientes 3 scripts se lleva a cabo la prediccion de FLOOR por cada uno de los edificos por separado.</em></p>
+<hr />
+<hr />
+</div>
 </div>
 </div>
 

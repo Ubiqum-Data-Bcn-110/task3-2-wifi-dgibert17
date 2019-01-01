@@ -23,6 +23,7 @@ library(rpart.plot)
 library(fastDummies)
 library(ggplot2)
 library(elasticnet)
+library(randomForest)
 library(lars)
 library(caret)
 library(AppliedPredictiveModeling)
@@ -30,6 +31,7 @@ library(RColorBrewer)
 library(e1071)
 library(pls)
 library(plotly)
+library(class)
 ```
 
 ```{r include=FALSE}
@@ -122,7 +124,7 @@ df.val = df.val[, val.in.tr.idxs]
 
 ---
 
-## Device captures detecting WAP's.
+## Device captures detecting WAP's
 
 **Checking if there are any device captures that have not detected any WAP or if only one WAP was detected in TRAINING, to see if something strange happened with them. Those will be removed from the datasets.**
 
@@ -185,7 +187,7 @@ df.val = df.val[-DEVICEdetected1WAP.val, ]
 
 ---
 
-## Tracing wrong RSSI registry captures.
+## Tracing wrong RSSI registry captures
 
 **Locating WAP's and captures that have RSSI values between 0 and -30 since those records are considered anomalous and we will be removed them from the dataset.**
 
@@ -222,7 +224,7 @@ df.WAPs30 = df.train[,WAPs30]
 
 ---
 
-## Taking a glance at wrong RSSI registry captures.
+## Taking a glance at wrong RSSI registry captures
 ```{r}
 par(mfrow = c(1,2))
 barplot(table(df.cptr30$USERID), col = brewer.pal(n = 4, name = "Purples"), main = "Registry errors\nby UserID") #El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.
@@ -257,7 +259,7 @@ df.cptr30 %>%
 
 ---
 
-### Comprobamos cuantas capturas tenemos por cada planta antes y despues de quitar las 472 capturas con problemas de registro de RSSI.
+#### Visualizing how many anomalous captures will be removed from each floor
 ```{r}
 vec.cptr30 = as.integer(row.names(df.cptr30))
 
@@ -272,7 +274,7 @@ df.train = df.train[-vec.cptr30, ]
 
 ---
 
-## Duplicated rows.
+## Duplicated rows
 
 **Identifying and removing duplicated TRAINING rows.**
 
@@ -292,10 +294,90 @@ df.train = df.train[!duplicated(df.train), ]
 
 ---
 
-### Dividiremos los datos de training por edificio, para visualizar la forma de los edificios a partir de la localizacion (latitud y longitud) de las capturas. Tambien creamos los edificios para el validation, de momento por razones de visualizacion. Mas adelante ya veremos para que mas. Si que tendra sentido visualizar la distribucion del validation sobre el training por edificio (incluso por planta) despues de hacer la prediccion de edificio y planta, para ver la distancia entre el valor real y el predicho de una manera visual.
+**Once the data sets have been pre-processed, the machine learning process will be carried out,  predicting the building ID where a capture is located first, followed by the floor in which it is located and its latitude and longitude.**
 
-#### Podria tener sentido: Como un dispositivo detecta de media unos 17 WAPs, tiene sentido agrupar por edificio la informacion, ya que asi podremos eliminar muchos de los WAPs, ya que no tiene sentido tener en info de WAPs de un edificio diferente al que se esta tomando la captura. Incluso podriamos filtrar por plantas contiguas, esto lo hare mas adelante.
+*Una vez que se han pre procesado los data sets, llevaremos a cabo el proceso de machine learning, prediciendo primero el ID del edificio donde se encuentra una captura, seguido de la planta en la que se encuentras y la latitud y la longitud.*
+
+#### Formatting categorical data
 ```{r}
+df.val$FLOOR = factor(df.val$FLOOR)
+df.val$BUILDINGID = factor(df.val$BUILDINGID)
+
+df.train$FLOOR = factor(df.train$FLOOR)
+df.train$BUILDINGID = factor(df.train$BUILDINGID)
+```
+
+## Data partition for Building
+```{r}
+building.vec = createDataPartition(y = df.train$BUILDINGID, times = 1, p = 0.3)
+
+# Training data
+building.tr = df.train[building.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), which(names(df.train) == "BUILDINGID"))]
+building.tr$BUILDINGID = factor(building.tr$BUILDINGID)
+
+#Proporcion de datos en TRAIN y SAMPLE
+prop.table(table(df.train$BUILDINGID))
+prop.table(table(building.tr$BUILDINGID))
+```
+
+---
+
+## Building prediction with Random Forest
+```{r}
+# bestmtry = tuneRF(x = building.tr, y = building.tr$BUILDINGID, ntreeTry = 200, plot = T)
+
+rf.fit.building = randomForest(x = building.tr, y = building.tr$BUILDINGID, ntree = 50#, mtry = 50
+                               )
+rf.pred.building = predict(rf.fit.building, df.val)
+confusionMatrix(data = factor(rf.pred.building), reference = df.val$BUILDINGID)
+
+# How many devices (captures) have been missclassified for each Building
+abs(table(rf.pred.building) - table(df.val$BUILDINGID))
+```
+
+**The Random Forest method fits a perfectly on the VALIDATION data. The next step is to replace the actual BUILDING ID values with the predicted ones, although in this case they are exactly the same.**
+
+*El metodo Random Forest hace una clasificacion perfecta de los datos de VALIDATION. El siguiente paso es sustituir los datos de BUILDING ID reales por los predichos, aunque en este caso son exactamente los mismos.*
+
+---
+
+#### Replacing actual Building ID values for predicted ones
+```{r}
+df.val$BUILDINGID = rf.pred.building
+str(df.val$BUILDINGID)
+```
+
+**In the 3 following scripts the prediction of FLOOR is separately carried out for each of the buildings.**
+
+*En los siguientes 3 scripts se lleva a cabo la prediccion de FLOOR por cada uno de los edificos por separado.*
+
+---
+
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#### Saving Dataframes for later usage ####
+
+real.values.val = data.frame(df.val)
+real.values.val = real.values.val[,c(1:316)]
+
+save(real.values.val, file = "real_values_validation.Rdata")
+save(df.train, file = "training.Rdata")
+save(df.val, file = "validation.Rdata")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+```{r eval=FALSE, include=FALSE}
 ### CREATING TRAIN BUILDINGS - PIPES ###
 
 df.trainB0 = df.train %>%
@@ -308,7 +390,6 @@ df.trainB2 = df.train %>%
   filter(BUILDINGID == 2)
 ```
 
-## Obervamos la distribucion de las capturas del training que crean la forma de los edificios del campus.
 ```{r eval=FALSE, warning=FALSE, include=FALSE}
 a <- list(
 title = "",
@@ -354,8 +435,7 @@ plot_ly(data = df.trainB2, x = ~LONGITUDE, y = ~LATITUDE, z = ~factor(FLOOR),
          )
 ```
 
-## Guardamos DFs para usarlos en el siguiente script
-```{r}
+```{r eval=FALSE, include=FALSE}
 real.values.val = data.frame(df.val)
 real.values.val = real.values.val[,c(1:316)]
 
