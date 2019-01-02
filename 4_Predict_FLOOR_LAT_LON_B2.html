@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="David Gibert Bosque" />
+
+
+<title>Wi-Fi positioning system. FLOOR/LAT/LONG predictions on Building 2</title>
+
+<script src="4_Predict_FLOOR_LAT_LON_B2_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="4_Predict_FLOOR_LAT_LON_B2_files/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+<script src="4_Predict_FLOOR_LAT_LON_B2_files/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script src="4_Predict_FLOOR_LAT_LON_B2_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="4_Predict_FLOOR_LAT_LON_B2_files/navigation-1.1/tabsets.js"></script>
+<script src="4_Predict_FLOOR_LAT_LON_B2_files/navigation-1.1/codefolding.js"></script>
+<link href="4_Predict_FLOOR_LAT_LON_B2_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
+<script src="4_Predict_FLOOR_LAT_LON_B2_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
+<link href="4_Predict_FLOOR_LAT_LON_B2_files/readthedown-0.1/readthedown.css" rel="stylesheet" />
+<script src="4_Predict_FLOOR_LAT_LON_B2_files/readthedown-0.1/readthedown.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+</head>
+
+<body>
+
+
+<div id="content" data-toggle="wy-nav-shift">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+<nav id="nav-top" role="navigation" aria-label="top navigation">
+    <a role="button" href="#" data-toggle="wy-nav-top"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
+</nav>
+
+
+<div id="header">
+<h1 class="title">Wi-Fi positioning system. FLOOR/LAT/LONG predictions on Building 2</h1>
+</div>
+
+
+<div id="table-of-contents">
+    <h2><a href="#content">Wi-Fi positioning system. FLOOR/LAT/LONG predictions on Building 2</a></h2>
+    <div id="text-table-of-contents">
+      <ul>
+      <li><a href="#validation-training-datasets-for-building-2">VALIDATION &amp; TRAINING datasets for building 2</a></li>
+      <li><a href="#non-detected-waps">Non detected WAP’s</a></li>
+      <li><a href="#removing-non-detected-waps">Removing non detected WAP’s</a></li>
+      <li><a href="#data-partition-by-floor-for-building-2">Data partition by Floor for Building 2</a></li>
+      <li><a href="#floor-prediction---knn">Floor prediction - KNN</a></li>
+      <li><a href="#floor-prediction---svm">Floor prediction - SVM</a></li>
+      <li><a href="#floor-prediction---random-forest">Floor prediction - Random Forest</a></li>
+      <li><a href="#dummifying-floor">Dummifying Floor</a></li>
+      <li><a href="#latitude-prediction---svm">Latitude prediction - SVM</a></li>
+      <li><a href="#latitude-prediction---linear-model">Latitude prediction - Linear Model</a></li>
+      <li><a href="#latitude-prediction---random-forest">Latitude prediction - Random Forest</a></li>
+      <li><a href="#latitude-prediction---knn">Latitude prediction - KNN</a></li>
+      <li><a href="#longitude-prediction---svm">Longitude prediction - SVM</a></li>
+      <li><a href="#longitude-prediction---linear-model">Longitude prediction - Linear Model</a></li>
+      <li><a href="#longitude-prediction---random-forest">Longitude prediction - Random Forest</a></li>
+      <li><a href="#longitude-prediction---knn">Longitude prediction - KNN</a></li>
+      </ul>
+    </div>
+</div>
+
+<div id="main">
+<p><strong>Bold text in English.</strong></p>
+<p><em>Texto en cursiva en Español.</em></p>
+<div id="validation-training-datasets-for-building-2" class="section level2">
+<h2>VALIDATION &amp; TRAINING datasets for building 2</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train.B0 =<span class="st"> </span>df.train <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)
+
+df.val.B0 =<span class="st"> </span>df.val <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">2</span>)</code></pre></div>
+<p><strong>Because we have filtered the data by building, we have to do once again the pre-processing carried out previously. Removing undetected WAP’s and locate the intersection of attributes of both data sets is a must before starting the machine learning process.</strong></p>
+<p><em>Debido a que hemos filtrado por edificio, tenemos que volver a hacer el pre-procesado de datos que hemos llevado a cabo anteriormente. Hay que quitar WAPs no detectados y localizar la interseccion de atributos de ambos datasets antes de empezar con el procedimiento de machine learning.</em></p>
+<hr />
+</div>
+<div id="non-detected-waps" class="section level2">
+<h2>Non detected WAP’s</h2>
+<p><strong>Locating WAP’s that have not been detected by any device.</strong></p>
+<p><em>Localizamos los WAPs que no han sido detectados por ningun dispositivo.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">WAPnotDetected.val =<span class="st"> </span><span class="kw">as.character</span>()
+WAPnotDetected.tr =<span class="st"> </span><span class="kw">as.character</span>()
+
+<span class="co"># VALIDATION DF</span>
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">which</span>(<span class="kw">names</span>(df.val.B0)<span class="op">==</span><span class="st">&quot;WAP508&quot;</span>)){
+  <span class="cf">if</span> (<span class="kw">sum</span>(df.val.B0[i]) <span class="op">==</span><span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">nrow</span>(df.val.B0)){
+    <span class="co">#cat(&quot;El&quot;, names(df.val[i]), &quot;no ha sido detectado por ningun dispositivo en el validation\n&quot;)</span>
+    WAPnotDetected.val =<span class="st"> </span><span class="kw">c</span>(WAPnotDetected.val, <span class="kw">names</span>(df.val.B0[i]))
+  }
+}
+
+<span class="co"># TRAINING DF</span>
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">which</span>(<span class="kw">names</span>(df.train.B0)<span class="op">==</span><span class="st">&quot;WAP508&quot;</span>)){
+  <span class="cf">if</span> (<span class="kw">sum</span>(df.train.B0[i]) <span class="op">==</span><span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">nrow</span>(df.train.B0)){
+    <span class="co">#cat(&quot;El&quot;, names(df.train[i]), &quot;no ha sido detectado por ningun dispositivo en el training\n&quot;)</span>
+    WAPnotDetected.tr =<span class="st"> </span><span class="kw">c</span>(WAPnotDetected.tr, <span class="kw">names</span>(df.train.B0[i]))
+  }
+}</code></pre></div>
+</div>
+<div id="removing-non-detected-waps" class="section level2">
+<h2>Removing non detected WAP’s</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">WAPnotDetected.val</code></pre></div>
+<pre><code>##   [1] &quot;WAP001&quot; &quot;WAP008&quot; &quot;WAP009&quot; &quot;WAP010&quot; &quot;WAP013&quot; &quot;WAP014&quot; &quot;WAP015&quot;
+##   [8] &quot;WAP016&quot; &quot;WAP017&quot; &quot;WAP018&quot; &quot;WAP019&quot; &quot;WAP020&quot; &quot;WAP021&quot; &quot;WAP022&quot;
+##  [15] &quot;WAP023&quot; &quot;WAP024&quot; &quot;WAP025&quot; &quot;WAP026&quot; &quot;WAP027&quot; &quot;WAP028&quot; &quot;WAP029&quot;
+##  [22] &quot;WAP030&quot; &quot;WAP031&quot; &quot;WAP032&quot; &quot;WAP033&quot; &quot;WAP034&quot; &quot;WAP035&quot; &quot;WAP036&quot;
+##  [29] &quot;WAP037&quot; &quot;WAP038&quot; &quot;WAP039&quot; &quot;WAP040&quot; &quot;WAP041&quot; &quot;WAP042&quot; &quot;WAP043&quot;
+##  [36] &quot;WAP044&quot; &quot;WAP045&quot; &quot;WAP046&quot; &quot;WAP047&quot; &quot;WAP048&quot; &quot;WAP049&quot; &quot;WAP050&quot;
+##  [43] &quot;WAP051&quot; &quot;WAP052&quot; &quot;WAP053&quot; &quot;WAP054&quot; &quot;WAP055&quot; &quot;WAP056&quot; &quot;WAP057&quot;
+##  [50] &quot;WAP058&quot; &quot;WAP071&quot; &quot;WAP072&quot; &quot;WAP075&quot; &quot;WAP076&quot; &quot;WAP080&quot; &quot;WAP081&quot;
+##  [57] &quot;WAP086&quot; &quot;WAP088&quot; &quot;WAP089&quot; &quot;WAP090&quot; &quot;WAP091&quot; &quot;WAP100&quot; &quot;WAP103&quot;
+##  [64] &quot;WAP104&quot; &quot;WAP105&quot; &quot;WAP106&quot; &quot;WAP107&quot; &quot;WAP108&quot; &quot;WAP109&quot; &quot;WAP111&quot;
+##  [71] &quot;WAP112&quot; &quot;WAP119&quot; &quot;WAP120&quot; &quot;WAP123&quot; &quot;WAP124&quot; &quot;WAP125&quot; &quot;WAP126&quot;
+##  [78] &quot;WAP129&quot; &quot;WAP130&quot; &quot;WAP134&quot; &quot;WAP135&quot; &quot;WAP136&quot; &quot;WAP137&quot; &quot;WAP140&quot;
+##  [85] &quot;WAP142&quot; &quot;WAP143&quot; &quot;WAP148&quot; &quot;WAP149&quot; &quot;WAP150&quot; &quot;WAP151&quot; &quot;WAP153&quot;
+##  [92] &quot;WAP154&quot; &quot;WAP155&quot; &quot;WAP156&quot; &quot;WAP161&quot; &quot;WAP162&quot; &quot;WAP166&quot; &quot;WAP167&quot;
+##  [99] &quot;WAP168&quot; &quot;WAP169&quot; &quot;WAP170&quot; &quot;WAP171&quot; &quot;WAP172&quot; &quot;WAP173&quot; &quot;WAP175&quot;
+## [106] &quot;WAP178&quot; &quot;WAP179&quot; &quot;WAP182&quot; &quot;WAP183&quot; &quot;WAP184&quot; &quot;WAP185&quot; &quot;WAP188&quot;
+## [113] &quot;WAP190&quot; &quot;WAP191&quot; &quot;WAP192&quot; &quot;WAP195&quot; &quot;WAP196&quot; &quot;WAP201&quot; &quot;WAP202&quot;
+## [120] &quot;WAP207&quot; &quot;WAP216&quot; &quot;WAP222&quot; &quot;WAP223&quot; &quot;WAP224&quot; &quot;WAP225&quot; &quot;WAP253&quot;
+## [127] &quot;WAP255&quot; &quot;WAP256&quot; &quot;WAP257&quot; &quot;WAP259&quot; &quot;WAP263&quot; &quot;WAP264&quot; &quot;WAP265&quot;
+## [134] &quot;WAP266&quot; &quot;WAP267&quot; &quot;WAP268&quot; &quot;WAP269&quot; &quot;WAP270&quot; &quot;WAP271&quot; &quot;WAP272&quot;
+## [141] &quot;WAP273&quot; &quot;WAP275&quot; &quot;WAP276&quot; &quot;WAP280&quot; &quot;WAP281&quot; &quot;WAP283&quot; &quot;WAP284&quot;
+## [148] &quot;WAP285&quot; &quot;WAP287&quot; &quot;WAP288&quot; &quot;WAP289&quot; &quot;WAP290&quot; &quot;WAP292&quot; &quot;WAP294&quot;
+## [155] &quot;WAP297&quot; &quot;WAP299&quot; &quot;WAP300&quot; &quot;WAP308&quot; &quot;WAP309&quot; &quot;WAP310&quot; &quot;WAP311&quot;
+## [162] &quot;WAP312&quot; &quot;WAP317&quot; &quot;WAP318&quot; &quot;WAP319&quot; &quot;WAP320&quot; &quot;WAP321&quot; &quot;WAP322&quot;
+## [169] &quot;WAP323&quot; &quot;WAP324&quot; &quot;WAP325&quot; &quot;WAP326&quot; &quot;WAP327&quot; &quot;WAP328&quot; &quot;WAP330&quot;
+## [176] &quot;WAP331&quot; &quot;WAP336&quot; &quot;WAP337&quot; &quot;WAP341&quot; &quot;WAP343&quot; &quot;WAP345&quot; &quot;WAP346&quot;
+## [183] &quot;WAP348&quot; &quot;WAP350&quot; &quot;WAP352&quot; &quot;WAP354&quot; &quot;WAP355&quot; &quot;WAP356&quot; &quot;WAP358&quot;
+## [190] &quot;WAP359&quot; &quot;WAP364&quot; &quot;WAP426&quot; &quot;WAP434&quot; &quot;WAP443&quot; &quot;WAP452&quot; &quot;WAP475&quot;
+## [197] &quot;WAP494&quot; &quot;WAP500&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># which(names(df.val.B0) %in% WAPnotDetected.val) #Estos son los indices de los atributos que no son detectados en el validation set, por lo que quitaremos estos atributos del validation set.</span>
+
+df.val.B0 =<span class="st"> </span>df.val.B0[, <span class="op">-</span><span class="kw">which</span>(<span class="kw">names</span>(df.val.B0) <span class="op">%in%</span><span class="st"> </span>WAPnotDetected.val)]
+df.train.B0 =<span class="st"> </span>df.train.B0[, <span class="op">-</span><span class="kw">which</span>(<span class="kw">names</span>(df.train.B0) <span class="op">%in%</span><span class="st"> </span>WAPnotDetected.tr)]</code></pre></div>
+<hr />
+<p><strong>Looking for the intersect of attributes appearing in both datasets. Attributes in VALIDATION that appear in TRAINING and vice versa. VALIDATION attributes that appear in TRAINING first.</strong></p>
+<p><em>Buscamos la interseccion de los atributos que aparecen en ambos conjuntos de datos. Atributos en VALILDATION que aparecen en TRAINING y viceversa. Los atributos de VALIDATION que aparecen en TRAINING primero.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr.in.val.idxs =<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(df.train.B0) <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(df.val.B0))
+df.train.B0 =<span class="st"> </span>df.train.B0[, tr.in.val.idxs]
+
+val.in.tr.idxs =<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(df.val.B0) <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(df.train.B0))
+df.val.B0 =<span class="st"> </span>df.val.B0[, val.in.tr.idxs]
+
+<span class="kw">sum</span>(<span class="kw">names</span>(df.train.B0) <span class="op">==</span><span class="st"> </span><span class="kw">names</span>(df.val.B0))</code></pre></div>
+<pre><code>## [1] 116</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># intersect(x = names(df.train), y = names(df.val))</span></code></pre></div>
+<div id="formatting-categorical-data" class="section level4">
+<h4>Formatting categorical data</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train.B0<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(df.train.B0<span class="op">$</span>FLOOR)
+df.train.B0<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(df.train.B0<span class="op">$</span>BUILDINGID)
+
+df.val.B0<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(df.val.B0<span class="op">$</span>FLOOR)
+df.val.B0<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(df.val.B0<span class="op">$</span>BUILDINGID)</code></pre></div>
+<hr />
+</div>
+</div>
+<div id="data-partition-by-floor-for-building-2" class="section level2">
+<h2>Data partition by Floor for Building 2</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">floor.vec =<span class="st"> </span><span class="kw">createDataPartition</span>(<span class="dt">y =</span> df.train.B0<span class="op">$</span>FLOOR, <span class="dt">times =</span> <span class="dv">5</span>, <span class="dt">p =</span> <span class="fl">0.1</span>)
+
+<span class="co"># Training data</span>
+floor.tr =<span class="st"> </span>df.train.B0[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.train.B0))), <span class="kw">which</span>(<span class="kw">names</span>(df.train.B0) <span class="op">==</span><span class="st"> &quot;FLOOR&quot;</span>))]
+floor.tr<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(floor.tr<span class="op">$</span>FLOOR)
+
+<span class="co">#Proporcion de datos en TRAIN y SAMPLE</span>
+<span class="kw">prop.table</span>(<span class="kw">table</span>(df.train.B0<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## 
+##          0          1          2          3          4 
+## 0.22075362 0.24962319 0.17797101 0.29043478 0.06121739</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(floor.tr<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## 
+##          0          1          2          3          4 
+## 0.22075362 0.24962319 0.17797101 0.29043478 0.06121739</code></pre>
+</div>
+<div id="floor-prediction---knn" class="section level2">
+<h2>Floor prediction - KNN</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knn.fit.floor =<span class="st"> </span><span class="kw">knn</span>(<span class="dt">train =</span> floor.tr[,<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>], <span class="dt">test =</span> df.val.B0[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>)], <span class="dt">cl =</span> floor.tr[,<span class="dv">107</span>], <span class="dt">k =</span> <span class="dv">5</span>)
+<span class="kw">confusionMatrix</span>(<span class="dt">data =</span> <span class="kw">factor</span>(knn.fit.floor), <span class="dt">reference =</span> df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1  2  3  4
+##          0 22  9  3  0  2
+##          1  2 98  4  1  0
+##          2  0  4 30  1  0
+##          3  0  0 17 37 13
+##          4  0  0  0  1 24
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.7873          
+##                  95% CI : (0.7334, 0.8347)
+##     No Information Rate : 0.4142          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.7158          
+##  Mcnemar&#39;s Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: 0 Class: 1 Class: 2 Class: 3 Class: 4
+## Sensitivity           0.91667   0.8829   0.5556   0.9250  0.61538
+## Specificity           0.94262   0.9554   0.9766   0.8684  0.99563
+## Pos Pred Value        0.61111   0.9333   0.8571   0.5522  0.96000
+## Neg Pred Value        0.99138   0.9202   0.8970   0.9851  0.93827
+## Prevalence            0.08955   0.4142   0.2015   0.1493  0.14552
+## Detection Rate        0.08209   0.3657   0.1119   0.1381  0.08955
+## Detection Prevalence  0.13433   0.3918   0.1306   0.2500  0.09328
+## Balanced Accuracy     0.92964   0.9191   0.7661   0.8967  0.80551</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cuantos dispositivos se han clasificado mal por cada edificio.</span>
+<span class="kw">abs</span>(<span class="kw">table</span>(knn.fit.floor) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.val.B0<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## knn.fit.floor
+##  0  1  2  3  4 
+## 12  6 19 27 14</code></pre>
+</div>
+<div id="floor-prediction---svm" class="section level2">
+<h2>Floor prediction - SVM</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svm.fit.floor &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">formula =</span> FLOOR <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> floor.tr)
+svm.pred.floor &lt;-<span class="st"> </span><span class="kw">predict</span>(svm.fit.floor, <span class="dt">newdata =</span> df.val.B0[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>)])
+
+<span class="kw">confusionMatrix</span>(<span class="dt">data =</span> svm.pred.floor, <span class="dt">reference =</span> df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1  2  3  4
+##          0 22  4  0  0  0
+##          1  2 96  8  0  0
+##          2  0  6 34  0  0
+##          3  0  5 12 37 15
+##          4  0  0  0  3 24
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.7948          
+##                  95% CI : (0.7414, 0.8415)
+##     No Information Rate : 0.4142          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.7243          
+##  Mcnemar&#39;s Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: 0 Class: 1 Class: 2 Class: 3 Class: 4
+## Sensitivity           0.91667   0.8649   0.6296   0.9250  0.61538
+## Specificity           0.98361   0.9363   0.9720   0.8596  0.98690
+## Pos Pred Value        0.84615   0.9057   0.8500   0.5362  0.88889
+## Neg Pred Value        0.99174   0.9074   0.9123   0.9849  0.93776
+## Prevalence            0.08955   0.4142   0.2015   0.1493  0.14552
+## Detection Rate        0.08209   0.3582   0.1269   0.1381  0.08955
+## Detection Prevalence  0.09701   0.3955   0.1493   0.2575  0.10075
+## Balanced Accuracy     0.95014   0.9006   0.8008   0.8923  0.80114</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #Cuantos dispositivos se han clasificado mal por cada edificio.</span>
+<span class="kw">abs</span>(<span class="kw">table</span>(svm.pred.floor) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.val.B0<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## svm.pred.floor
+##  0  1  2  3  4 
+##  2  5 14 29 12</code></pre>
+</div>
+<div id="floor-prediction---random-forest" class="section level2">
+<h2>Floor prediction - Random Forest</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># bestmtry = tuneRF(x = floor.tr[,1:106], y = floor.tr$FLOOR, ntreeTry = 400, plot = T,stepFactor = 1.5, improve = 1e-5)</span>
+
+rf.fit.floor =<span class="st"> </span><span class="kw">randomForest</span>(<span class="dt">x =</span> floor.tr[,<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>], <span class="dt">y =</span> floor.tr<span class="op">$</span>FLOOR, <span class="dt">ntree =</span> <span class="dv">400</span>, <span class="dt">mtry =</span> <span class="dv">15</span>)
+rf.pred.floor =<span class="st"> </span><span class="kw">predict</span>(rf.fit.floor, df.val.B0)
+<span class="kw">confusionMatrix</span>(<span class="dt">data =</span> <span class="kw">factor</span>(rf.pred.floor), <span class="dt">reference =</span> df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1   2   3   4
+##          0  21   0   0   0   0
+##          1   3 107   2   0   1
+##          2   0   3  32   0   0
+##          3   0   1  20  39  10
+##          4   0   0   0   1  28
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.847           
+##                  95% CI : (0.7982, 0.8879)
+##     No Information Rate : 0.4142          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.7925          
+##  Mcnemar&#39;s Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: 0 Class: 1 Class: 2 Class: 3 Class: 4
+## Sensitivity           0.87500   0.9640   0.5926   0.9750   0.7179
+## Specificity           1.00000   0.9618   0.9860   0.8640   0.9956
+## Pos Pred Value        1.00000   0.9469   0.9143   0.5571   0.9655
+## Neg Pred Value        0.98785   0.9742   0.9056   0.9949   0.9540
+## Prevalence            0.08955   0.4142   0.2015   0.1493   0.1455
+## Detection Rate        0.07836   0.3993   0.1194   0.1455   0.1045
+## Detection Prevalence  0.07836   0.4216   0.1306   0.2612   0.1082
+## Balanced Accuracy     0.93750   0.9629   0.7893   0.9195   0.8568</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cuantos dispositivos se han clasificado mal por cada Planta</span>
+<span class="kw">abs</span>(<span class="kw">table</span>(rf.pred.floor) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.val.B0<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## rf.pred.floor
+##  0  1  2  3  4 
+##  3  2 19 30 10</code></pre>
+<p><strong>The method that produces a prediction with less error is Random Forest.</strong></p>
+<p><em>El metodo que produce una prediccion con menor error es Random Forest.</em></p>
+<hr />
+<div id="replacing-actual-floor-values-for-predicted-ones" class="section level4">
+<h4>Replacing actual Floor values for predicted ones</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val.B0<span class="op">$</span>FLOOR =<span class="st"> </span>rf.pred.floor
+<span class="kw">str</span>(df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>##  Factor w/ 5 levels &quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,..: 5 5 5 3 4 4 4 1 4 2 ...</code></pre>
+<hr />
+<p><strong>After making different combinations, the lowest prediction error is achieved by first predicting Latitude with dummified Floor and Longitude later, using the information provided by Latitude.</strong></p>
+<p><em>Despues de realizar diferentes combinaciones, el error de prediccion mas bajo se consigue prediciendo primero Latitude con la variable ‘Dummy’ de Floor y Longitude despues, usando la informacion que proporciona la variable Latitude.</em></p>
+</div>
+</div>
+<div id="dummifying-floor" class="section level2">
+<h2>Dummifying Floor</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pacman<span class="op">::</span><span class="kw">p_load</span>(fastDummies)
+
+df.val.B0.dumm =<span class="st"> </span><span class="kw">dummy_cols</span>(<span class="dt">.data =</span> df.val.B0, <span class="dt">select_columns =</span> <span class="st">&quot;FLOOR&quot;</span>, <span class="dt">remove_first_dummy =</span> <span class="ot">FALSE</span>)
+df.val.B0.dumm =<span class="st"> </span><span class="kw">select</span>(<span class="dt">.data =</span> df.val.B0.dumm, <span class="op">-</span>FLOOR)
+
+df.train.B0.dumm =<span class="st"> </span><span class="kw">dummy_cols</span>(<span class="dt">.data =</span> df.train.B0, <span class="dt">select_columns =</span> <span class="st">&quot;FLOOR&quot;</span>, <span class="dt">remove_first_dummy =</span> <span class="ot">FALSE</span>)
+df.train.B0.dumm =<span class="st"> </span><span class="kw">select</span>(<span class="dt">.data =</span> df.train.B0.dumm, <span class="op">-</span>FLOOR)</code></pre></div>
+</div>
+<div id="latitude-prediction---svm" class="section level2">
+<h2>Latitude prediction - SVM</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svm.fit.lat &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">formula =</span> LATITUDE <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+svm.pred.lat &lt;-<span class="st"> </span><span class="kw">predict</span>(svm.fit.lat, <span class="dt">newdata =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> svm.pred.lat)</code></pre></div>
+<pre><code>## [1] 13.12633</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> svm.pred.lat)</code></pre></div>
+<pre><code>## [1] 9.164962</code></pre>
+</div>
+<div id="latitude-prediction---linear-model" class="section level2">
+<h2>Latitude prediction - Linear Model</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm.fit.lat &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> LATITUDE <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+lm.pred.lat &lt;-<span class="st"> </span><span class="kw">predict</span>(lm.fit.lat, <span class="dt">newdata =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> lm.pred.lat)</code></pre></div>
+<pre><code>## [1] 16.77805</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> lm.pred.lat)</code></pre></div>
+<pre><code>## [1] 12.77592</code></pre>
+</div>
+<div id="latitude-prediction---random-forest" class="section level2">
+<h2>Latitude prediction - Random Forest</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># bestmtry = tuneRF(x = df.train.B0.dumm[,c(1:106, 116:120)], y = df.train.B0.dumm$LATITUDE, ntreeTry = 400, plot = T,stepFactor = 1.5, improve = 1e-5)</span>
+
+rf.fit.lat =<span class="st"> </span><span class="kw">randomForest</span>(LATITUDE <span class="op">~</span>., df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)], <span class="dt">ntree =</span> <span class="dv">150</span>, <span class="dt">mtry =</span> <span class="dv">37</span>)
+
+rf.pred.lat =<span class="st"> </span><span class="kw">predict</span>(rf.fit.lat, df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> rf.pred.lat)</code></pre></div>
+<pre><code>## [1] 11.4909</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> rf.pred.lat)</code></pre></div>
+<pre><code>## [1] 7.747989</code></pre>
+</div>
+<div id="latitude-prediction---knn" class="section level2">
+<h2>Latitude prediction - KNN</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pacman<span class="op">::</span><span class="kw">p_load</span>(FNN)
+
+knn.fit.lat =<span class="st"> </span><span class="kw">knn.reg</span>(<span class="dt">train =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)], <span class="dt">test =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)],
+                       <span class="dt">y =</span> df.train.B0.dumm[, <span class="dv">108</span>], <span class="dt">k =</span> <span class="dv">5</span>,
+                       <span class="dt">algorithm =</span> <span class="kw">c</span>(<span class="st">&quot;kd_tree&quot;</span>, <span class="st">&quot;cover_tree&quot;</span>, <span class="st">&quot;brute&quot;</span>))
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> knn.fit.lat<span class="op">$</span>pred)</code></pre></div>
+<pre><code>## [1] 13.94537</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> knn.fit.lat<span class="op">$</span>pred)</code></pre></div>
+<pre><code>## [1] 9.032983</code></pre>
+<p><strong>The method that produces a prediction with less error is Random Forest.</strong></p>
+<p><em>El metodo que produce una prediccion con menor error es Random Forest.</em></p>
+<hr />
+<div id="replacing-actual-latitude-values-for-predicted-ones" class="section level4">
+<h4>Replacing actual Latitude values for predicted ones</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val.B0.dumm<span class="op">$</span>LATITUDE =<span class="st"> </span>rf.pred.lat</code></pre></div>
+<hr />
+</div>
+</div>
+<div id="longitude-prediction---svm" class="section level2">
+<h2>Longitude prediction - SVM</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svm.fit.long &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">formula =</span> LONGITUDE <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">107</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+svm.pred.long &lt;-<span class="st"> </span><span class="kw">predict</span>(svm.fit.long, <span class="dt">newdata =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> svm.pred.long)</code></pre></div>
+<pre><code>## [1] 16.26716</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> svm.pred.long)</code></pre></div>
+<pre><code>## [1] 11.58753</code></pre>
+</div>
+<div id="longitude-prediction---linear-model" class="section level2">
+<h2>Longitude prediction - Linear Model</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm.fit.long &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> LONGITUDE <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">107</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+lm.pred.long &lt;-<span class="st"> </span><span class="kw">predict</span>(lm.fit.long, <span class="dt">newdata =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> lm.pred.long)</code></pre></div>
+<pre><code>## [1] 18.627</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> lm.pred.long)</code></pre></div>
+<pre><code>## [1] 14.42674</code></pre>
+</div>
+<div id="longitude-prediction---random-forest" class="section level2">
+<h2>Longitude prediction - Random Forest</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># bestmtry = tuneRF(x = df.train.B0.dumm[,c(1:106, 108, 116:120)], y = df.train.B0.dumm$LONGITUDE, ntreeTry = 150, plot = T,stepFactor = 1.5, improve = 1e-5)</span>
+
+rf.fit.long =<span class="st"> </span><span class="kw">randomForest</span>(LONGITUDE <span class="op">~</span>., df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">107</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)], <span class="dt">ntree =</span> <span class="dv">150</span>, <span class="dt">mtry =</span> <span class="dv">82</span>)
+
+rf.pred.long =<span class="st"> </span><span class="kw">predict</span>(rf.fit.long, df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> rf.pred.long)</code></pre></div>
+<pre><code>## [1] 18.33909</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> rf.pred.long)</code></pre></div>
+<pre><code>## [1] 11.74588</code></pre>
+</div>
+<div id="longitude-prediction---knn" class="section level2">
+<h2>Longitude prediction - KNN</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pacman<span class="op">::</span><span class="kw">p_load</span>(FNN)
+
+knn.fit.long =<span class="st"> </span><span class="kw">knn.reg</span>(<span class="dt">train =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)], <span class="dt">test =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">106</span>, <span class="dv">108</span>, <span class="dv">116</span><span class="op">:</span><span class="dv">120</span>)],
+                       <span class="dt">y =</span> df.train.B0.dumm[,<span class="dv">107</span>], <span class="dt">k =</span> <span class="dv">5</span>,
+                       <span class="dt">algorithm =</span> <span class="kw">c</span>(<span class="st">&quot;kd_tree&quot;</span>, <span class="st">&quot;cover_tree&quot;</span>, <span class="st">&quot;brute&quot;</span>))
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> knn.fit.long<span class="op">$</span>pred)</code></pre></div>
+<pre><code>## [1] 16.07344</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> knn.fit.long<span class="op">$</span>pred)</code></pre></div>
+<pre><code>## [1] 10.73653</code></pre>
+<p><strong>KNN is the best predictive method in this building, in terms of error rate and computational level. It performs better and much faster than Random Forest.</strong></p>
+<p><em>KNN es el mejor metodo predictivo en este edificio, en terminos de tasa de error y nivel computacional. Su desempeño es mejor y mucho mas rapido que el de Random Forest.</em></p>
+<hr />
+<div id="replacing-actual-longitude-values-for-predicted-ones" class="section level4">
+<h4>Replacing actual Longitude values for predicted ones</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val.B0.dumm<span class="op">$</span>LONGITUDE =<span class="st"> </span>knn.fit.long<span class="op">$</span>pred</code></pre></div>
+<hr />
+</div>
+<div id="analisis-del-error-de-prediccion" class="section level4">
+<h4>ANALISIS DEL ERROR DE PREDICCION</h4>
+<p>PLOTEAR EN 3D VALIDATION Y TAL…</p>
+</div>
+</div>
+</div>
+
+
+</div>
+
+<div id="postamble" data-toggle="wy-nav-shift" class="status">
+<p class="author"><span class="glyphicon glyphicon-user"></span> David Gibert Bosque</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> January 4th, 2019</p>
+</div>
+
+
+<script>
+$(document).ready(function () {
+ 	 	$('#content img')
+ 	  .addClass("image-thumb");
+      $('#content img')
+ 	  .addClass("image-lb");
+  $('#content').magnificPopup({
+	      type:'image',
+	      closeOnContentClick: false,
+	      delegate: 'img',
+	      gallery: {enabled: true },
+	      image: {
+	        verticalFit: true,
+          titleSrc: 'alt'
+	      }
+ 	    });
+ 	});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

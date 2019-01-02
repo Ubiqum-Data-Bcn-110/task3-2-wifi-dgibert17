@@ -1,5 +1,5 @@
 ---
-title: "Wi-Fi positioning system"
+title: "Wi-Fi positioning system. Pre-processing and Building prediction"
 author: "David Gibert Bosque"
 date: "January 4th, 2019"
 output:
@@ -315,7 +315,7 @@ building.vec = createDataPartition(y = df.train$BUILDINGID, times = 1, p = 0.3)
 building.tr = df.train[building.vec$Resample1, c(1:last(grep(pattern = "WAP", names(df.train))), which(names(df.train) == "BUILDINGID"))]
 building.tr$BUILDINGID = factor(building.tr$BUILDINGID)
 
-#Proporcion de datos en TRAIN y SAMPLE
+#Data proportion from TRAINING (total) and VALIDATION (sample)
 prop.table(table(df.train$BUILDINGID))
 prop.table(table(building.tr$BUILDINGID))
 ```
