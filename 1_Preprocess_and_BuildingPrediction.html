@@ -11,7 +11,7 @@
 <meta name="author" content="David Gibert Bosque" />
 
 
-<title>Wi-Fi positioning system</title>
+<title>Wi-Fi positioning system. Pre-processing and Building prediction</title>
 
 <script src="1_Preprocess_and_BuildingPrediction_files/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -88,12 +88,12 @@ $(document).ready(function () {
 
 
 <div id="header">
-<h1 class="title">Wi-Fi positioning system</h1>
+<h1 class="title">Wi-Fi positioning system. Pre-processing and Building prediction</h1>
 </div>
 
 
 <div id="table-of-contents">
-    <h2><a href="#content">Wi-Fi positioning system</a></h2>
+    <h2><a href="#content">Wi-Fi positioning system. Pre-processing and Building prediction</a></h2>
     <div id="text-table-of-contents">
       <ul>
       <li><a href="#number-of-captures-by-building">Number of captures by BUILDING</a></li>
@@ -122,8 +122,8 @@ df.val<span class="op">$</span>BF =<span class="st"> </span><span class="kw">as.
 
 ## DISTRIBUTION OF THE DATA ON TRAINING AND VALIDATION
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-<span class="kw">barplot</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BUILDINGID), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Training</span><span class="ch">\n</span><span class="st">by Building&quot;</span>)
-<span class="kw">barplot</span>(<span class="kw">table</span>(df.val<span class="op">$</span>BUILDINGID), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Validation</span><span class="ch">\n</span><span class="st">by Building&quot;</span>)</code></pre></div>
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BUILDINGID), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Training</span><span class="ch">\n</span><span class="st">by Building&quot;</span>, <span class="dt">cex.names =</span> <span class="fl">0.5</span>)
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.val<span class="op">$</span>BUILDINGID), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Validation</span><span class="ch">\n</span><span class="st">by Building&quot;</span>, <span class="dt">cex.names =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-4-1.png" width="768" /></p>
 <hr />
 </div>
@@ -218,9 +218,9 @@ DEVICESrm.tr =<span class="st"> </span><span class="kw">sort</span>(<span class=
 df.train =<span class="st"> </span>df.train[<span class="op">-</span>DEVICESrm.tr, ]
 
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-<span class="kw">barplot</span>(<span class="kw">table</span>(df.DEVICESnotDetected.tr<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;WAP&#39;s not detected</span><span class="ch">\n</span><span class="st">by device captures by building &amp; floor&quot;</span>)
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.DEVICESnotDetected.tr<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;WAP&#39;s not detected</span><span class="ch">\n</span><span class="st">by device captures by building &amp; floor&quot;</span>, <span class="dt">cex.names =</span> <span class="fl">0.5</span>)
 
-<span class="kw">barplot</span>(<span class="kw">table</span>(df.DEVICEdetected1WAP.tr<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;1 WAP detected</span><span class="ch">\n</span><span class="st">by device capture by building &amp; floor&quot;</span>)</code></pre></div>
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.DEVICEdetected1WAP.tr<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;orangered1&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>,<span class="st">&quot;mediumpurple3&quot;</span>, <span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>,<span class="st">&quot;maroon4&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;1 WAP detected</span><span class="ch">\n</span><span class="st">by device capture by building &amp; floor&quot;</span>, <span class="dt">cex.names =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
 <p><strong>The same operation is carried out in the VALIDATION dataset.</strong></p>
 <p><em>La misma operacion es llevada a cabo en el dataset VALIDATION.</em></p>
@@ -276,8 +276,8 @@ df.WAPs30 =<span class="st"> </span>df.train[,WAPs30]</code></pre></div>
 <div id="taking-a-glance-at-wrong-rssi-registry-captures" class="section level2">
 <h2>Taking a glance at wrong RSSI registry captures</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
-<span class="kw">barplot</span>(<span class="kw">table</span>(df.cptr30<span class="op">$</span>USERID), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">4</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Registry errors</span><span class="ch">\n</span><span class="st">by UserID&quot;</span>) <span class="co">#El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.</span>
-<span class="kw">barplot</span>(<span class="kw">table</span>(df.cptr30<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">5</span>, <span class="dt">name =</span> <span class="st">&quot;Oranges&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Registry errors</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.cptr30<span class="op">$</span>USERID), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">4</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Registry errors</span><span class="ch">\n</span><span class="st">by UserID&quot;</span>, <span class="dt">cex.names =</span> <span class="fl">0.5</span>) <span class="co">#El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.</span>
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.cptr30<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">5</span>, <span class="dt">name =</span> <span class="st">&quot;Oranges&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Registry errors</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>, <span class="dt">cex.names =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-13-1.png" width="768" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
 
@@ -319,7 +319,7 @@ df.cptr30 <span class="op">%&gt;%</span>
 <h4>Visualizing how many anomalous captures will be removed from each floor</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vec.cptr30 =<span class="st"> </span><span class="kw">as.integer</span>(<span class="kw">row.names</span>(df.cptr30))
 
-<span class="kw">barplot</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BF) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.train[<span class="op">-</span>vec.cptr30,]<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Number of deleted records</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
+<span class="kw">barplot</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BF) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.train[<span class="op">-</span>vec.cptr30,]<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Number of deleted records</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>, <span class="dt">cex.names =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-14-1.png" width="768" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train =<span class="st"> </span>df.train[<span class="op">-</span>vec.cptr30, ]</code></pre></div>
 <p><strong>About 450 records with registration problems will be removed, focusing on floors 4th and 5th from 2nd buiding. This could affect the kappa coefficient later on.</strong></p>
@@ -334,7 +334,7 @@ df.cptr30 <span class="op">%&gt;%</span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">duplicated.rows =<span class="st"> </span>df.train[<span class="kw">duplicated</span>(df.train), ]
 <span class="kw">nrow</span>(duplicated.rows)</code></pre></div>
 <pre><code>## [1] 634</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(<span class="kw">table</span>(duplicated.rows<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Number of duplicated rows</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">barplot</span>(<span class="kw">table</span>(duplicated.rows<span class="op">$</span>BF), <span class="dt">col =</span> <span class="kw">brewer.pal</span>(<span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">name =</span> <span class="st">&quot;Purples&quot;</span>), <span class="dt">main =</span> <span class="st">&quot;Number of duplicated rows</span><span class="ch">\n</span><span class="st">by Building &amp; Floor&quot;</span>,<span class="dt">cex.names =</span> <span class="fl">0.5</span>)</code></pre></div>
 <p><img src="1_Preprocess_and_BuildingPrediction_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train =<span class="st"> </span>df.train[<span class="op">!</span><span class="kw">duplicated</span>(df.train), ]</code></pre></div>
 <p><strong>Removing another 219 records from building 1 floor 1 and 374 from building 2 floor 4.</strong></p>
@@ -359,7 +359,7 @@ df.train<span class="op">$</span>BUILDINGID =<span class="st"> </span><span clas
 building.tr =<span class="st"> </span>df.train[building.vec<span class="op">$</span>Resample1, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.train))), <span class="kw">which</span>(<span class="kw">names</span>(df.train) <span class="op">==</span><span class="st"> &quot;BUILDINGID&quot;</span>))]
 building.tr<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(building.tr<span class="op">$</span>BUILDINGID)
 
-<span class="co">#Proporcion de datos en TRAIN y SAMPLE</span>
+<span class="co">#Data proportion from TRAINING (total) and VALIDATION (sample)</span>
 <span class="kw">prop.table</span>(<span class="kw">table</span>(df.train<span class="op">$</span>BUILDINGID))</code></pre></div>
 <pre><code>## 
 ##         0         1         2 

@@ -119,6 +119,8 @@ sum(names(df.train.B0) == names(df.val.B0))
 df.train.B0$FLOOR = factor(df.train.B0$FLOOR)
 df.train.B0$BUILDINGID = factor(df.train.B0$BUILDINGID)
 
+real.values = data.frame(df.val.B0[,c(107:109)])
+
 df.val.B0$FLOOR = factor(df.val.B0$FLOOR)
 df.val.B0$BUILDINGID = factor(df.val.B0$BUILDINGID)
 ```

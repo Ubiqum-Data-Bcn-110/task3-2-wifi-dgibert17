@@ -59,8 +59,8 @@ df.val$BF = as.factor(df.val$BF)
 
 ## DISTRIBUTION OF THE DATA ON TRAINING AND VALIDATION
 par(mfrow = c(1,2))
-barplot(table(df.train$BUILDINGID), col = c("orangered1", "mediumpurple3", "maroon4"), main = "Training\nby Building")
-barplot(table(df.val$BUILDINGID), col = c("orangered1", "mediumpurple3", "maroon4"), main = "Validation\nby Building")
+barplot(table(df.train$BUILDINGID), col = c("orangered1", "mediumpurple3", "maroon4"), main = "Training\nby Building", cex.names = 0.5)
+barplot(table(df.val$BUILDINGID), col = c("orangered1", "mediumpurple3", "maroon4"), main = "Validation\nby Building", cex.names = 0.5)
 ```
 ```{r include=FALSE}
 par(mfrow = c(1,1))
@@ -153,9 +153,9 @@ DEVICESrm.tr = sort(c(DEVICEnotDetected.tr, DEVICEdetected1WAP.tr))
 df.train = df.train[-DEVICESrm.tr, ]
 
 par(mfrow = c(1,2))
-barplot(table(df.DEVICESnotDetected.tr$BF), col = c("orangered1", "orangered1", "orangered1", "orangered1", "mediumpurple3", "mediumpurple3","mediumpurple3","mediumpurple3", "maroon4","maroon4","maroon4","maroon4","maroon4"), main = "WAP's not detected\nby device captures by building & floor")
+barplot(table(df.DEVICESnotDetected.tr$BF), col = c("orangered1", "orangered1", "orangered1", "orangered1", "mediumpurple3", "mediumpurple3","mediumpurple3","mediumpurple3", "maroon4","maroon4","maroon4","maroon4","maroon4"), main = "WAP's not detected\nby device captures by building & floor", cex.names = 0.5)
 
-barplot(table(df.DEVICEdetected1WAP.tr$BF), col = c("orangered1", "orangered1", "orangered1", "orangered1", "mediumpurple3", "mediumpurple3","mediumpurple3","mediumpurple3", "maroon4","maroon4","maroon4","maroon4","maroon4"), main = "1 WAP detected\nby device capture by building & floor")
+barplot(table(df.DEVICEdetected1WAP.tr$BF), col = c("orangered1", "orangered1", "orangered1", "orangered1", "mediumpurple3", "mediumpurple3","mediumpurple3","mediumpurple3", "maroon4","maroon4","maroon4","maroon4","maroon4"), main = "1 WAP detected\nby device capture by building & floor", cex.names = 0.5)
 ```
 ```{r include=FALSE}
 par(mfrow = c(1,1))
@@ -227,8 +227,8 @@ df.WAPs30 = df.train[,WAPs30]
 ## Taking a glance at wrong RSSI registry captures
 ```{r}
 par(mfrow = c(1,2))
-barplot(table(df.cptr30$USERID), col = brewer.pal(n = 4, name = "Purples"), main = "Registry errors\nby UserID") #El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.
-barplot(table(df.cptr30$BF), col = brewer.pal(n = 5, name = "Oranges"), main = "Registry errors\nby Building & Floor")
+barplot(table(df.cptr30$USERID), col = brewer.pal(n = 4, name = "Purples"), main = "Registry errors\nby UserID", cex.names = 0.5) #El usuario que tiene mas errores de medicion es el USERID 6, seguido del 14.
+barplot(table(df.cptr30$BF), col = brewer.pal(n = 5, name = "Oranges"), main = "Registry errors\nby Building & Floor", cex.names = 0.5)
 par(mfrow = c(1,1))
 
 df.cptr30$FLOOR = factor(df.cptr30$FLOOR)
@@ -263,7 +263,7 @@ df.cptr30 %>%
 ```{r}
 vec.cptr30 = as.integer(row.names(df.cptr30))
 
-barplot(table(df.train$BF) - table(df.train[-vec.cptr30,]$BF), col = brewer.pal(n = 7, name = "Purples"), main = "Number of deleted records\nby Building & Floor")
+barplot(table(df.train$BF) - table(df.train[-vec.cptr30,]$BF), col = brewer.pal(n = 7, name = "Purples"), main = "Number of deleted records\nby Building & Floor", cex.names = 0.5)
 
 df.train = df.train[-vec.cptr30, ]
 ```
@@ -283,7 +283,7 @@ df.train = df.train[-vec.cptr30, ]
 duplicated.rows = df.train[duplicated(df.train), ]
 nrow(duplicated.rows)
 
-barplot(table(duplicated.rows$BF), col = brewer.pal(n = 7, name = "Purples"), main = "Number of duplicated rows\nby Building & Floor")
+barplot(table(duplicated.rows$BF), col = brewer.pal(n = 7, name = "Purples"), main = "Number of duplicated rows\nby Building & Floor",cex.names = 0.5)
 
 df.train = df.train[!duplicated(df.train), ]
 ```

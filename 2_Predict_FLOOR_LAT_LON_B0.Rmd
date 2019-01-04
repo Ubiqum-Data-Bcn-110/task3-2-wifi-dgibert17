@@ -23,7 +23,9 @@ library(fastDummies)
 library(ggplot2)
 library(elasticnet)
 library(randomForest)
+library(plot3D)
 library(lars)
+library(scatterplot3d)
 library(caret)
 library(AppliedPredictiveModeling)
 library(RColorBrewer)
@@ -121,6 +123,9 @@ df.train.B0$BUILDINGID = factor(df.train.B0$BUILDINGID)
 
 df.val.B0$FLOOR = factor(df.val.B0$FLOOR)
 df.val.B0$BUILDINGID = factor(df.val.B0$BUILDINGID)
+
+real.values = data.frame(df.val.B0[,c(140:142)])
+real.values$TYPE = "Real"
 
 str(df.train.B0[,c(140:149)])
 str(df.val.B0[,c(140:149)])
@@ -318,5 +323,66 @@ df.val.B0.dumm$LONGITUDE = rf.pred.long
 
 ---
 
-#### ANALISIS DEL ERROR DE PREDICCION
-PLOTEAR EN 3D VALIDATION Y TAL...
+############## COLUM BIND DATA ##################
+######### 3D PLOT VALORES RELES Y PREDICHOS ###########
+```{r}
+pred.values = data.frame(cbind(df.val.B0.dumm$LONGITUDE, df.val.B0.dumm$LATITUDE, as.factor(df.val.B0$FLOOR)))
+colnames(pred.values) = c("pred_LONGITUDE", "pred_LATITUDE", "pred_FLOOR")
+colnames(real.values) = c("real_LONGITUDE", "real_LATITUDE", "real_FLOOR", "TYPE")
+
+pred.values$pred_FLOOR = factor(pred.values$pred_FLOOR)
+# pred.values$TYPE = "Predicted"
+
+levels(pred.values$pred_FLOOR) = 0:3
+
+str(df.val.B0$FLOOR)
+str(pred.values$pred_FLOOR)
+
+real.pred.values = cbind(real.values[,1:3], pred.values)
+# real.pred.values$TYPE = factor(real.pred.values$TYPE)
+
+str(real.pred.values)
+
+real.pred.values$long_diff = abs(abs(real.pred.values$real_LONGITUDE) - abs(real.pred.values$pred_LONGITUDE))
+real.pred.values$lat_diff = abs(abs(real.pred.values$real_LATITUDE) - abs(real.pred.values$pred_LATITUDE))
+
+plot_ly(real.pred.values) %>%
+  add_markers(x = ~real_LONGITUDE, y = ~real_LATITUDE, z = ~real_FLOOR,
+              mode = "line", marker = list(size = 3, color = "black"), name = "Real") %>%
+  add_markers(x = ~pred_LONGITUDE, y = ~pred_LATITUDE, z = ~pred_FLOOR,
+              mode = "line", marker = list(size = 3, color = "chartreuse"), name = "Predicted")
+```
+
+
+```{r}
+summary(real.pred.values$long_diff)
+summary(real.pred.values$lat_diff)
+
+hist(real.pred.values$long_diff)
+hist(real.pred.values$lat_diff)
+```
+
+```{r warning=FALSE}
+real.pred.values$PREDICTION = "Good"
+
+
+for (i in 1:nrow(real.pred.values)) {
+  if (real.pred.values$long_diff <= 14 & real.pred.values$lat_diff <= 14) {
+    real.pred.values$PREDICTION = "VERYDOGGO"
+    
+  }
+  
+}
+
+very_good = real.pred.values[which(real.pred.values$long_diff <= 3.5 & real.pred.values$lat_diff <= 3.5),]
+
+plot_ly(very_good) %>%
+  add_markers(x = ~real_LONGITUDE, y = ~real_LATITUDE, z = ~real_FLOOR,
+              marker = list(size = 3, color = "black"), name = "Real") %>%
+  add_markers(x = ~pred_LONGITUDE, y = ~pred_LATITUDE, z = ~pred_FLOOR,
+              marker = list(size = 3, color = "chartreuse"), name = "Predicted") %>%
+  layout(title = "Very Good Predictions")
+```
+
+
+
