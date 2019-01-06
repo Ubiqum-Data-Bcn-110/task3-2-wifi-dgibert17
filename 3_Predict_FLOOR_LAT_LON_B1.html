@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="David Gibert Bosque" />
+
+
+<title>Wi-Fi positioning system. FLOOR/LAT/LONG predictions on Building 1</title>
+
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="3_Predict_FLOOR_LAT_LON_B1_files/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/navigation-1.1/tabsets.js"></script>
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/navigation-1.1/codefolding.js"></script>
+<link href="3_Predict_FLOOR_LAT_LON_B1_files/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
+<link href="3_Predict_FLOOR_LAT_LON_B1_files/readthedown-0.1/readthedown.css" rel="stylesheet" />
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/readthedown-0.1/readthedown.js"></script>
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/plotly-binding-4.8.0/plotly.js"></script>
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/typedarray-0.1/typedarray.min.js"></script>
+<link href="3_Predict_FLOOR_LAT_LON_B1_files/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="3_Predict_FLOOR_LAT_LON_B1_files/plotly-htmlwidgets-css-1.39.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="3_Predict_FLOOR_LAT_LON_B1_files/plotly-main-1.39.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code > span.dt { color: #204a87; } /* DataType */
+code > span.dv { color: #0000cf; } /* DecVal */
+code > span.bn { color: #0000cf; } /* BaseN */
+code > span.fl { color: #0000cf; } /* Float */
+code > span.ch { color: #4e9a06; } /* Char */
+code > span.st { color: #4e9a06; } /* String */
+code > span.co { color: #8f5902; font-style: italic; } /* Comment */
+code > span.ot { color: #8f5902; } /* Other */
+code > span.al { color: #ef2929; } /* Alert */
+code > span.fu { color: #000000; } /* Function */
+code > span.er { color: #a40000; font-weight: bold; } /* Error */
+code > span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #000000; } /* Constant */
+code > span.sc { color: #000000; } /* SpecialChar */
+code > span.vs { color: #4e9a06; } /* VerbatimString */
+code > span.ss { color: #4e9a06; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #000000; } /* Variable */
+code > span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code > span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code > span.ex { } /* Extension */
+code > span.at { color: #c4a000; } /* Attribute */
+code > span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code > span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+</head>
+
+<body>
+
+
+<div id="content" data-toggle="wy-nav-shift">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+<nav id="nav-top" role="navigation" aria-label="top navigation">
+    <a role="button" href="#" data-toggle="wy-nav-top"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
+</nav>
+
+
+<div id="header">
+<h1 class="title">Wi-Fi positioning system. FLOOR/LAT/LONG predictions on Building 1</h1>
+</div>
+
+
+<div id="table-of-contents">
+    <h2><a href="#content">Wi-Fi positioning system. FLOOR/LAT/LONG predictions on Building 1</a></h2>
+    <div id="text-table-of-contents">
+      <ul>
+      <li><a href="#validation-training-datasets-for-building-1">VALIDATION &amp; TRAINING datasets for building 1</a></li>
+      <li><a href="#non-detected-waps">Non detected WAP’s</a></li>
+      <li><a href="#removing-non-detected-waps">Removing non detected WAP’s</a></li>
+      <li><a href="#data-partition-by-floor-for-building-1">Data partition by Floor for Building 1</a></li>
+      <li><a href="#floor-prediction">Floor prediction</a></li>
+      <li><a href="#dummifying-floor">Dummifying Floor</a></li>
+      <li><a href="#latitude-prediction">Latitude prediction</a></li>
+      <li><a href="#longitude-prediction">Longitude prediction</a></li>
+      <li><a href="#location-error-analysis">Location error analysis</a></li>
+      </ul>
+    </div>
+</div>
+
+<div id="main">
+<p><strong>Bold text in English.</strong></p>
+<p><em>Texto en cursiva en Español.</em></p>
+<div id="validation-training-datasets-for-building-1" class="section level2">
+<h2>VALIDATION &amp; TRAINING datasets for building 1</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train.B0 =<span class="st"> </span>df.train <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+
+df.val.B0 =<span class="st"> </span>df.val <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(BUILDINGID <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)</code></pre></div>
+<p><strong>Because we have filtered the data by building, we have to do once again the pre-processing carried out previously. Removing undetected WAP’s and locate the intersection of attributes of both data sets is a must before starting the machine learning process.</strong></p>
+<p><em>Debido a que hemos filtrado por edificio, tenemos que volver a hacer el pre-procesado de datos que hemos llevado a cabo anteriormente. Hay que quitar WAPs no detectados y localizar la interseccion de atributos de ambos datasets antes de empezar con el procedimiento de machine learning.</em></p>
+<hr />
+</div>
+<div id="non-detected-waps" class="section level2">
+<h2>Non detected WAP’s</h2>
+<p><strong>Locating WAP’s that have not been detected by any device.</strong></p>
+<p><em>Localizamos los WAPs que no han sido detectados por ningun dispositivo.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">WAPnotDetected.val =<span class="st"> </span><span class="kw">as.character</span>()
+WAPnotDetected.tr =<span class="st"> </span><span class="kw">as.character</span>()
+
+<span class="co"># VALIDATION DF</span>
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">which</span>(<span class="kw">names</span>(df.val.B0)<span class="op">==</span><span class="st">&quot;WAP508&quot;</span>)){
+  <span class="cf">if</span> (<span class="kw">sum</span>(df.val.B0[i]) <span class="op">==</span><span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">nrow</span>(df.val.B0)){
+    <span class="co">#cat(&quot;El&quot;, names(df.val[i]), &quot;no ha sido detectado por ningun dispositivo en el validation\n&quot;)</span>
+    WAPnotDetected.val =<span class="st"> </span><span class="kw">c</span>(WAPnotDetected.val, <span class="kw">names</span>(df.val.B0[i]))
+  }
+}
+
+<span class="co"># TRAINING DF</span>
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">which</span>(<span class="kw">names</span>(df.train.B0)<span class="op">==</span><span class="st">&quot;WAP508&quot;</span>)){
+  <span class="cf">if</span> (<span class="kw">sum</span>(df.train.B0[i]) <span class="op">==</span><span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">nrow</span>(df.train.B0)){
+    <span class="co">#cat(&quot;El&quot;, names(df.train[i]), &quot;no ha sido detectado por ningun dispositivo en el training\n&quot;)</span>
+    WAPnotDetected.tr =<span class="st"> </span><span class="kw">c</span>(WAPnotDetected.tr, <span class="kw">names</span>(df.train.B0[i]))
+  }
+}</code></pre></div>
+</div>
+<div id="removing-non-detected-waps" class="section level2">
+<h2>Removing non detected WAP’s</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">WAPnotDetected.val</code></pre></div>
+<pre><code>##   [1] &quot;WAP001&quot; &quot;WAP009&quot; &quot;WAP013&quot; &quot;WAP014&quot; &quot;WAP017&quot; &quot;WAP018&quot; &quot;WAP023&quot;
+##   [8] &quot;WAP025&quot; &quot;WAP026&quot; &quot;WAP031&quot; &quot;WAP032&quot; &quot;WAP033&quot; &quot;WAP034&quot; &quot;WAP039&quot;
+##  [15] &quot;WAP040&quot; &quot;WAP041&quot; &quot;WAP042&quot; &quot;WAP043&quot; &quot;WAP044&quot; &quot;WAP047&quot; &quot;WAP048&quot;
+##  [22] &quot;WAP050&quot; &quot;WAP054&quot; &quot;WAP055&quot; &quot;WAP056&quot; &quot;WAP058&quot; &quot;WAP059&quot; &quot;WAP060&quot;
+##  [29] &quot;WAP061&quot; &quot;WAP062&quot; &quot;WAP063&quot; &quot;WAP064&quot; &quot;WAP065&quot; &quot;WAP066&quot; &quot;WAP067&quot;
+##  [36] &quot;WAP068&quot; &quot;WAP070&quot; &quot;WAP071&quot; &quot;WAP072&quot; &quot;WAP073&quot; &quot;WAP074&quot; &quot;WAP075&quot;
+##  [43] &quot;WAP076&quot; &quot;WAP080&quot; &quot;WAP081&quot; &quot;WAP087&quot; &quot;WAP096&quot; &quot;WAP097&quot; &quot;WAP098&quot;
+##  [50] &quot;WAP099&quot; &quot;WAP117&quot; &quot;WAP118&quot; &quot;WAP127&quot; &quot;WAP138&quot; &quot;WAP139&quot; &quot;WAP153&quot;
+##  [57] &quot;WAP154&quot; &quot;WAP155&quot; &quot;WAP161&quot; &quot;WAP162&quot; &quot;WAP201&quot; &quot;WAP202&quot; &quot;WAP203&quot;
+##  [64] &quot;WAP204&quot; &quot;WAP207&quot; &quot;WAP216&quot; &quot;WAP224&quot; &quot;WAP225&quot; &quot;WAP229&quot; &quot;WAP232&quot;
+##  [71] &quot;WAP233&quot; &quot;WAP234&quot; &quot;WAP236&quot; &quot;WAP237&quot; &quot;WAP249&quot; &quot;WAP253&quot; &quot;WAP264&quot;
+##  [78] &quot;WAP265&quot; &quot;WAP266&quot; &quot;WAP267&quot; &quot;WAP268&quot; &quot;WAP269&quot; &quot;WAP270&quot; &quot;WAP271&quot;
+##  [85] &quot;WAP272&quot; &quot;WAP273&quot; &quot;WAP275&quot; &quot;WAP276&quot; &quot;WAP277&quot; &quot;WAP280&quot; &quot;WAP281&quot;
+##  [92] &quot;WAP283&quot; &quot;WAP285&quot; &quot;WAP287&quot; &quot;WAP289&quot; &quot;WAP290&quot; &quot;WAP292&quot; &quot;WAP294&quot;
+##  [99] &quot;WAP297&quot; &quot;WAP299&quot; &quot;WAP300&quot; &quot;WAP308&quot; &quot;WAP309&quot; &quot;WAP319&quot; &quot;WAP320&quot;
+## [106] &quot;WAP321&quot; &quot;WAP322&quot; &quot;WAP324&quot; &quot;WAP325&quot; &quot;WAP326&quot; &quot;WAP327&quot; &quot;WAP328&quot;
+## [113] &quot;WAP330&quot; &quot;WAP331&quot; &quot;WAP332&quot; &quot;WAP335&quot; &quot;WAP336&quot; &quot;WAP337&quot; &quot;WAP341&quot;
+## [120] &quot;WAP343&quot; &quot;WAP345&quot; &quot;WAP346&quot; &quot;WAP348&quot; &quot;WAP350&quot; &quot;WAP352&quot; &quot;WAP354&quot;
+## [127] &quot;WAP355&quot; &quot;WAP356&quot; &quot;WAP358&quot; &quot;WAP359&quot; &quot;WAP364&quot; &quot;WAP418&quot; &quot;WAP422&quot;
+## [134] &quot;WAP426&quot; &quot;WAP434&quot; &quot;WAP449&quot; &quot;WAP452&quot; &quot;WAP456&quot; &quot;WAP475&quot; &quot;WAP481&quot;
+## [141] &quot;WAP483&quot; &quot;WAP484&quot; &quot;WAP486&quot; &quot;WAP489&quot; &quot;WAP492&quot; &quot;WAP493&quot; &quot;WAP494&quot;
+## [148] &quot;WAP495&quot; &quot;WAP496&quot; &quot;WAP498&quot; &quot;WAP499&quot; &quot;WAP500&quot; &quot;WAP501&quot; &quot;WAP502&quot;
+## [155] &quot;WAP508&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># which(names(df.val.B0) %in% WAPnotDetected.val) #Estos son los indices de los atributos que no son detectados en el validation set, por lo que quitaremos estos atributos del validation set.</span>
+
+df.val.B0 =<span class="st"> </span>df.val.B0[, <span class="op">-</span><span class="kw">which</span>(<span class="kw">names</span>(df.val.B0) <span class="op">%in%</span><span class="st"> </span>WAPnotDetected.val)]
+df.train.B0 =<span class="st"> </span>df.train.B0[, <span class="op">-</span><span class="kw">which</span>(<span class="kw">names</span>(df.train.B0) <span class="op">%in%</span><span class="st"> </span>WAPnotDetected.tr)]</code></pre></div>
+<hr />
+<p><strong>Looking for the intersect of attributes appearing in both datasets. Attributes in VALIDATION that appear in TRAINING and vice versa. VALIDATION attributes that appear in TRAINING first.</strong></p>
+<p><em>Buscamos la interseccion de los atributos que aparecen en ambos conjuntos de datos. Atributos en VALILDATION que aparecen en TRAINING y viceversa. Los atributos de VALIDATION que aparecen en TRAINING primero.</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tr.in.val.idxs =<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(df.train.B0) <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(df.val.B0))
+df.train.B0 =<span class="st"> </span>df.train.B0[, tr.in.val.idxs]
+
+val.in.tr.idxs =<span class="st"> </span><span class="kw">which</span>(<span class="kw">names</span>(df.val.B0) <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(df.train.B0))
+df.val.B0 =<span class="st"> </span>df.val.B0[, val.in.tr.idxs]
+
+<span class="kw">sum</span>(<span class="kw">names</span>(df.train.B0) <span class="op">==</span><span class="st"> </span><span class="kw">names</span>(df.val.B0))</code></pre></div>
+<pre><code>## [1] 156</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># intersect(x = names(df.train), y = names(df.val))</span></code></pre></div>
+<div id="formatting-categorical-data" class="section level4">
+<h4>Formatting categorical data</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.train.B0<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(df.train.B0<span class="op">$</span>FLOOR)
+df.train.B0<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(df.train.B0<span class="op">$</span>BUILDINGID)
+
+real.values =<span class="st"> </span><span class="kw">data.frame</span>(df.val.B0[,<span class="kw">c</span>(<span class="dv">147</span><span class="op">:</span><span class="dv">149</span>)])
+
+df.val.B0<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(df.val.B0<span class="op">$</span>FLOOR)
+df.val.B0<span class="op">$</span>BUILDINGID =<span class="st"> </span><span class="kw">factor</span>(df.val.B0<span class="op">$</span>BUILDINGID)</code></pre></div>
+<hr />
+</div>
+</div>
+<div id="data-partition-by-floor-for-building-1" class="section level2">
+<h2>Data partition by Floor for Building 1</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">floor.vec =<span class="st"> </span><span class="kw">createDataPartition</span>(<span class="dt">y =</span> df.train.B0<span class="op">$</span>FLOOR, <span class="dt">times =</span> <span class="dv">5</span>, <span class="dt">p =</span> <span class="fl">0.3</span>)
+
+<span class="co"># Training data</span>
+floor.tr =<span class="st"> </span>df.train.B0[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">last</span>(<span class="kw">grep</span>(<span class="dt">pattern =</span> <span class="st">&quot;WAP&quot;</span>, <span class="kw">names</span>(df.train.B0))), <span class="kw">which</span>(<span class="kw">names</span>(df.train.B0) <span class="op">==</span><span class="st"> &quot;FLOOR&quot;</span>))]
+floor.tr<span class="op">$</span>FLOOR =<span class="st"> </span><span class="kw">factor</span>(floor.tr<span class="op">$</span>FLOOR)
+
+<span class="co">#Proporcion de datos en TRAIN y SAMPLE</span>
+<span class="kw">prop.table</span>(<span class="kw">table</span>(df.train.B0<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## 
+##         0         1         2         3 
+## 0.2716479 0.2585466 0.2853634 0.1844422</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(floor.tr<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## 
+##         0         1         2         3 
+## 0.2716479 0.2585466 0.2853634 0.1844422</code></pre>
+</div>
+<div id="floor-prediction" class="section level2">
+<h2>Floor prediction</h2>
+<div id="knn" class="section level3">
+<h3>KNN</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knn.fit.floor =<span class="st"> </span><span class="kw">knn</span>(<span class="dt">train =</span> floor.tr[,<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>], <span class="dt">test =</span> df.val.B0[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>)], <span class="dt">cl =</span> floor.tr[,<span class="dv">147</span>], <span class="dt">k =</span> <span class="dv">5</span>)
+<span class="kw">confusionMatrix</span>(<span class="dt">data =</span> <span class="kw">factor</span>(knn.fit.floor), <span class="dt">reference =</span> df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1  2  3
+##          0 24 14  0  0
+##          1  4 83  2  0
+##          2  2 43 57  2
+##          3  0  2 28 45
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.683           
+##                  95% CI : (0.6276, 0.7348)
+##     No Information Rate : 0.4641          
+##     P-Value [Acc &gt; NIR] : 8.904e-15       
+##                                           
+##                   Kappa : 0.5589          
+##  Mcnemar&#39;s Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: 0 Class: 1 Class: 2 Class: 3
+## Sensitivity           0.80000   0.5845   0.6552   0.9574
+## Specificity           0.94928   0.9634   0.7854   0.8842
+## Pos Pred Value        0.63158   0.9326   0.5481   0.6000
+## Neg Pred Value        0.97761   0.7281   0.8515   0.9913
+## Prevalence            0.09804   0.4641   0.2843   0.1536
+## Detection Rate        0.07843   0.2712   0.1863   0.1471
+## Detection Prevalence  0.12418   0.2908   0.3399   0.2451
+## Balanced Accuracy     0.87464   0.7740   0.7203   0.9208</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cuantos dispositivos se han clasificado mal por cada edificio.</span>
+<span class="kw">abs</span>(<span class="kw">table</span>(knn.fit.floor) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.val.B0<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## knn.fit.floor
+##  0  1  2  3 
+##  8 53 17 28</code></pre>
+</div>
+<div id="svm" class="section level3">
+<h3>SVM</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svm.fit.floor &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">formula =</span> FLOOR <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> floor.tr)
+svm.pred.floor &lt;-<span class="st"> </span><span class="kw">predict</span>(svm.fit.floor, <span class="dt">newdata =</span> df.val.B0[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>)])
+
+<span class="kw">confusionMatrix</span>(<span class="dt">data =</span> svm.pred.floor, <span class="dt">reference =</span> df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1  2  3
+##          0 22 11  0  0
+##          1  5 87  1  0
+##          2  3 44 69  9
+##          3  0  0 17 38
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.7059          
+##                  95% CI : (0.6514, 0.7564)
+##     No Information Rate : 0.4641          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.5826          
+##  Mcnemar&#39;s Test P-Value : NA              
+## 
+## Statistics by Class:
+## 
+##                      Class: 0 Class: 1 Class: 2 Class: 3
+## Sensitivity           0.73333   0.6127   0.7931   0.8085
+## Specificity           0.96014   0.9634   0.7443   0.9344
+## Pos Pred Value        0.66667   0.9355   0.5520   0.6909
+## Neg Pred Value        0.97070   0.7418   0.9006   0.9641
+## Prevalence            0.09804   0.4641   0.2843   0.1536
+## Detection Rate        0.07190   0.2843   0.2255   0.1242
+## Detection Prevalence  0.10784   0.3039   0.4085   0.1797
+## Balanced Accuracy     0.84674   0.7880   0.7687   0.8714</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># #Cuantos dispositivos se han clasificado mal por cada edificio.</span>
+<span class="kw">abs</span>(<span class="kw">table</span>(svm.pred.floor) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.val.B0<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## svm.pred.floor
+##  0  1  2  3 
+##  3 49 38  8</code></pre>
+</div>
+<div id="random-forest" class="section level3">
+<h3>Random Forest</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># bestmtry = tuneRF(x = floor.tr[,1:146], y = floor.tr$FLOOR, ntreeTry = 400, plot = T,stepFactor = 1.5, improve = 1e-5)</span>
+
+rf.fit.floor =<span class="st"> </span><span class="kw">randomForest</span>(<span class="dt">x =</span> floor.tr[,<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>], <span class="dt">y =</span> floor.tr<span class="op">$</span>FLOOR, <span class="dt">ntree =</span> <span class="dv">400</span>, <span class="dt">mtry =</span> <span class="dv">18</span>)
+rf.pred.floor =<span class="st"> </span><span class="kw">predict</span>(rf.fit.floor, df.val.B0)
+<span class="kw">confusionMatrix</span>(<span class="dt">data =</span> <span class="kw">factor</span>(rf.pred.floor), <span class="dt">reference =</span> df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1  2  3
+##          0 24  2  0  0
+##          1  3 93  1  0
+##          2  2 39 80  5
+##          3  1  8  6 42
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.781           
+##                  95% CI : (0.7305, 0.8261)
+##     No Information Rate : 0.4641          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.6867          
+##  Mcnemar&#39;s Test P-Value : 1.564e-08       
+## 
+## Statistics by Class:
+## 
+##                      Class: 0 Class: 1 Class: 2 Class: 3
+## Sensitivity           0.80000   0.6549   0.9195   0.8936
+## Specificity           0.99275   0.9756   0.7900   0.9421
+## Pos Pred Value        0.92308   0.9588   0.6349   0.7368
+## Neg Pred Value        0.97857   0.7656   0.9611   0.9799
+## Prevalence            0.09804   0.4641   0.2843   0.1536
+## Detection Rate        0.07843   0.3039   0.2614   0.1373
+## Detection Prevalence  0.08497   0.3170   0.4118   0.1863
+## Balanced Accuracy     0.89638   0.8153   0.8547   0.9179</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#Cuantos dispositivos se han clasificado mal por cada Planta</span>
+<span class="kw">abs</span>(<span class="kw">table</span>(rf.pred.floor) <span class="op">-</span><span class="st"> </span><span class="kw">table</span>(df.val.B0<span class="op">$</span>FLOOR))</code></pre></div>
+<pre><code>## rf.pred.floor
+##  0  1  2  3 
+##  4 45 39 10</code></pre>
+<p><strong>The method that produces a prediction with less error is Random Forest.</strong></p>
+<p><em>El metodo que produce una prediccion con menor error es Random Forest.</em></p>
+<hr />
+<div id="replacing-actual-floor-values-for-predicted-ones" class="section level4">
+<h4>Replacing actual Floor values for predicted ones</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val.B0<span class="op">$</span>FLOOR =<span class="st"> </span>rf.pred.floor
+<span class="kw">str</span>(df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>##  Factor w/ 4 levels &quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;: 4 3 2 2 4 3 3 3 3 4 ...</code></pre>
+<hr />
+<p><strong>After making different combinations, the lowest prediction error is achieved by first predicting Latitude with dummified Floor and Longitude later, using the information provided by Latitude.</strong></p>
+<p><em>Despues de realizar diferentes combinaciones, el error de prediccion mas bajo se consigue prediciendo primero Latitude con la variable ‘Dummy’ de Floor y Longitude despues, usando la informacion que proporciona la variable Latitude.</em></p>
+</div>
+</div>
+</div>
+<div id="dummifying-floor" class="section level2">
+<h2>Dummifying Floor</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pacman<span class="op">::</span><span class="kw">p_load</span>(fastDummies)
+
+df.val.B0.dumm =<span class="st"> </span><span class="kw">dummy_cols</span>(<span class="dt">.data =</span> df.val.B0, <span class="dt">select_columns =</span> <span class="st">&quot;FLOOR&quot;</span>, <span class="dt">remove_first_dummy =</span> <span class="ot">FALSE</span>)
+df.val.B0.dumm =<span class="st"> </span><span class="kw">select</span>(<span class="dt">.data =</span> df.val.B0.dumm, <span class="op">-</span>FLOOR)
+
+df.train.B0.dumm =<span class="st"> </span><span class="kw">dummy_cols</span>(<span class="dt">.data =</span> df.train.B0, <span class="dt">select_columns =</span> <span class="st">&quot;FLOOR&quot;</span>, <span class="dt">remove_first_dummy =</span> <span class="ot">FALSE</span>)
+df.train.B0.dumm =<span class="st"> </span><span class="kw">select</span>(<span class="dt">.data =</span> df.train.B0.dumm, <span class="op">-</span>FLOOR)</code></pre></div>
+</div>
+<div id="latitude-prediction" class="section level2">
+<h2>Latitude prediction</h2>
+<div id="svm-1" class="section level3">
+<h3>SVM</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svm.fit.lat &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">formula =</span> LATITUDE <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+svm.pred.lat &lt;-<span class="st"> </span><span class="kw">predict</span>(svm.fit.lat, <span class="dt">newdata =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> svm.pred.lat)</code></pre></div>
+<pre><code>## [1] 13.1673</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> svm.pred.lat)</code></pre></div>
+<pre><code>## [1] 9.600959</code></pre>
+</div>
+<div id="linear-model" class="section level3">
+<h3>Linear Model</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm.fit.lat &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> LATITUDE <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+lm.pred.lat &lt;-<span class="st"> </span><span class="kw">predict</span>(lm.fit.lat, <span class="dt">newdata =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> lm.pred.lat)</code></pre></div>
+<pre><code>## [1] 15.49149</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> lm.pred.lat)</code></pre></div>
+<pre><code>## [1] 12.16337</code></pre>
+</div>
+<div id="random-forest-1" class="section level3">
+<h3>Random Forest</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># bestmtry = tuneRF(x = df.train.B0.dumm[,c(1:146, 156:159)], y = df.train.B0.dumm$LATITUDE, ntreeTry = 400, plot = T,stepFactor = 1.5, improve = 1e-5)</span>
+
+rf.fit.lat =<span class="st"> </span><span class="kw">randomForest</span>(LATITUDE <span class="op">~</span>., df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)], <span class="dt">ntree =</span> <span class="dv">400</span>, <span class="dt">mtry =</span> <span class="dv">34</span>)
+
+rf.pred.lat =<span class="st"> </span><span class="kw">predict</span>(rf.fit.lat, df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> rf.pred.lat)</code></pre></div>
+<pre><code>## [1] 11.01309</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> rf.pred.lat)</code></pre></div>
+<pre><code>## [1] 7.984977</code></pre>
+</div>
+<div id="knn-1" class="section level3">
+<h3>KNN</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pacman<span class="op">::</span><span class="kw">p_load</span>(FNN)
+
+knn.fit.lat =<span class="st"> </span><span class="kw">knn.reg</span>(<span class="dt">train =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)], <span class="dt">test =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)],
+                       <span class="dt">y =</span> df.train.B0.dumm[, <span class="dv">148</span>], <span class="dt">k =</span> <span class="dv">5</span>,
+                       <span class="dt">algorithm =</span> <span class="kw">c</span>(<span class="st">&quot;kd_tree&quot;</span>, <span class="st">&quot;cover_tree&quot;</span>, <span class="st">&quot;brute&quot;</span>))
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> knn.fit.lat<span class="op">$</span>pred)</code></pre></div>
+<pre><code>## [1] 13.75402</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="dt">predicted =</span> knn.fit.lat<span class="op">$</span>pred)</code></pre></div>
+<pre><code>## [1] 9.319689</code></pre>
+<p><strong>The method that produces a prediction with less error is Random Forest.</strong></p>
+<p><em>El metodo que produce una prediccion con menor error es Random Forest.</em></p>
+<hr />
+<div id="replacing-actual-latitude-values-for-predicted-ones" class="section level4">
+<h4>Replacing actual Latitude values for predicted ones</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val.B0.dumm<span class="op">$</span>LATITUDE =<span class="st"> </span>rf.pred.lat</code></pre></div>
+<hr />
+</div>
+</div>
+</div>
+<div id="longitude-prediction" class="section level2">
+<h2>Longitude prediction</h2>
+<div id="svm-2" class="section level3">
+<h3>SVM</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svm.fit.long &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">formula =</span> LONGITUDE <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">147</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+svm.pred.long &lt;-<span class="st"> </span><span class="kw">predict</span>(svm.fit.long, <span class="dt">newdata =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> svm.pred.long)</code></pre></div>
+<pre><code>## [1] 15.05879</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> svm.pred.long)</code></pre></div>
+<pre><code>## [1] 10.21979</code></pre>
+</div>
+<div id="linear-model-1" class="section level3">
+<h3>Linear Model</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm.fit.long &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> LONGITUDE <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">147</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+lm.pred.long &lt;-<span class="st"> </span><span class="kw">predict</span>(lm.fit.long, <span class="dt">newdata =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> lm.pred.long)</code></pre></div>
+<pre><code>## [1] 18.13248</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> lm.pred.long)</code></pre></div>
+<pre><code>## [1] 13.63096</code></pre>
+</div>
+<div id="random-forest-2" class="section level3">
+<h3>Random Forest</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># bestmtry = tuneRF(x = df.train.B0.dumm[,c(1:146, 148, 156:159)], y = df.train.B0.dumm$LONGITUDE, ntreeTry = 400, plot = T,stepFactor = 1.5, improve = 1e-5)</span>
+
+rf.fit.long =<span class="st"> </span><span class="kw">randomForest</span>(LONGITUDE <span class="op">~</span>., df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">147</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)], <span class="dt">ntree =</span> <span class="dv">400</span>, <span class="dt">mtry =</span> <span class="dv">50</span>)
+
+rf.pred.long =<span class="st"> </span><span class="kw">predict</span>(rf.fit.long, df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)])
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> rf.pred.long)</code></pre></div>
+<pre><code>## [1] 10.45964</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> rf.pred.long)</code></pre></div>
+<pre><code>## [1] 7.338462</code></pre>
+</div>
+<div id="knn-2" class="section level3">
+<h3>KNN</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pacman<span class="op">::</span><span class="kw">p_load</span>(FNN)
+
+knn.fit.long =<span class="st"> </span><span class="kw">knn.reg</span>(<span class="dt">train =</span> df.train.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)], <span class="dt">test =</span> df.val.B0.dumm[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">146</span>, <span class="dv">148</span>, <span class="dv">156</span><span class="op">:</span><span class="dv">159</span>)],
+                       <span class="dt">y =</span> df.train.B0.dumm[,<span class="dv">147</span>], <span class="dt">k =</span> <span class="dv">5</span>,
+                       <span class="dt">algorithm =</span> <span class="kw">c</span>(<span class="st">&quot;kd_tree&quot;</span>, <span class="st">&quot;cover_tree&quot;</span>, <span class="st">&quot;brute&quot;</span>))
+
+<span class="kw">rmse</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> knn.fit.long<span class="op">$</span>pred)</code></pre></div>
+<pre><code>## [1] 9.725849</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mae</span>(<span class="dt">actual =</span> df.val.B0.dumm<span class="op">$</span>LONGITUDE, <span class="dt">predicted =</span> knn.fit.long<span class="op">$</span>pred)</code></pre></div>
+<pre><code>## [1] 7.216587</code></pre>
+<p><strong>KNN is the best predictive method in this building, in terms of error rate and computational level. It performs better and much faster than Random Forest.</strong></p>
+<p><em>KNN es el mejor metodo predictivo en este edificio, en terminos de tasa de error y nivel computacional. Su desempeño es mejor y mucho mas rapido que el de Random Forest.</em></p>
+<hr />
+<div id="replacing-actual-longitude-values-for-predicted-ones" class="section level4">
+<h4>Replacing actual Longitude values for predicted ones</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.val.B0.dumm<span class="op">$</span>LONGITUDE =<span class="st"> </span>rf.pred.long</code></pre></div>
+<hr />
+</div>
+</div>
+</div>
+<div id="location-error-analysis" class="section level2">
+<h2>Location error analysis</h2>
+<div id="d-plot-real-predicted-values" class="section level3">
+<h3>3D Plot (Real &amp; Predicted values)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred.values =<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">cbind</span>(df.val.B0.dumm<span class="op">$</span>LONGITUDE, df.val.B0.dumm<span class="op">$</span>LATITUDE, <span class="kw">as.factor</span>(df.val.B0<span class="op">$</span>FLOOR)))
+<span class="kw">colnames</span>(pred.values) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;pred_LONGITUDE&quot;</span>, <span class="st">&quot;pred_LATITUDE&quot;</span>, <span class="st">&quot;pred_FLOOR&quot;</span>)
+<span class="kw">colnames</span>(real.values) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;real_LONGITUDE&quot;</span>, <span class="st">&quot;real_LATITUDE&quot;</span>, <span class="st">&quot;real_FLOOR&quot;</span>)
+
+pred.values<span class="op">$</span>pred_FLOOR =<span class="st"> </span><span class="kw">factor</span>(pred.values<span class="op">$</span>pred_FLOOR)
+<span class="co"># pred.values$TYPE = &quot;Predicted&quot;</span>
+
+<span class="kw">levels</span>(pred.values<span class="op">$</span>pred_FLOOR) =<span class="st"> </span><span class="dv">0</span><span class="op">:</span><span class="dv">3</span>
+
+<span class="kw">str</span>(df.val.B0<span class="op">$</span>FLOOR)</code></pre></div>
+<pre><code>##  Factor w/ 4 levels &quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;: 4 3 2 2 4 3 3 3 3 4 ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(pred.values<span class="op">$</span>pred_FLOOR)</code></pre></div>
+<pre><code>##  Factor w/ 4 levels &quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;: 4 3 2 2 4 3 3 3 3 4 ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">real.pred.values =<span class="st"> </span><span class="kw">cbind</span>(real.values[,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], pred.values)
+<span class="co"># real.pred.values$TYPE = factor(real.pred.values$TYPE)</span>
+
+<span class="kw">str</span>(real.pred.values)</code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    306 obs. of  6 variables:
+##  $ real_LONGITUDE: num  -7560 -7559 -7569 -7563 -7540 ...
+##  $ real_LATITUDE : num  4864887 4864871 4864876 4864866 4864920 ...
+##  $ real_FLOOR    : Factor w/ 5 levels &quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,..: 4 4 2 2 3 3 3 3 3 4 ...
+##  $ pred_LONGITUDE: num  -7542 -7554 -7556 -7562 -7537 ...
+##  $ pred_LATITUDE : num  4864914 4864895 4864878 4864867 4864921 ...
+##  $ pred_FLOOR    : Factor w/ 4 levels &quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;: 4 3 2 2 4 3 3 3 3 4 ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">real.pred.values<span class="op">$</span>long_diff =<span class="st"> </span><span class="kw">abs</span>(<span class="kw">abs</span>(real.pred.values<span class="op">$</span>real_LONGITUDE) <span class="op">-</span><span class="st"> </span><span class="kw">abs</span>(real.pred.values<span class="op">$</span>pred_LONGITUDE))
+real.pred.values<span class="op">$</span>lat_diff =<span class="st"> </span><span class="kw">abs</span>(<span class="kw">abs</span>(real.pred.values<span class="op">$</span>real_LATITUDE) <span class="op">-</span><span class="st"> </span><span class="kw">abs</span>(real.pred.values<span class="op">$</span>pred_LATITUDE))
+
+<span class="kw">plot_ly</span>(real.pred.values) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">x =</span> <span class="op">~</span>real_LONGITUDE, <span class="dt">y =</span> <span class="op">~</span>real_LATITUDE, <span class="dt">z =</span> <span class="op">~</span>real_FLOOR,
+              <span class="dt">mode =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">marker =</span> <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>), <span class="dt">name =</span> <span class="st">&quot;Real&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">x =</span> <span class="op">~</span>pred_LONGITUDE, <span class="dt">y =</span> <span class="op">~</span>pred_LATITUDE, <span class="dt">z =</span> <span class="op">~</span>pred_FLOOR,
+              <span class="dt">mode =</span> <span class="st">&quot;line&quot;</span>, <span class="dt">marker =</span> <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">color =</span> <span class="st">&quot;chartreuse&quot;</span>), <span class="dt">name =</span> <span class="st">&quot;Predicted&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="st">&quot;Real vs Predicted values&quot;</span>)</code></pre></div>
+<div id="htmlwidget-7ef86fc020b67ef428db" style="width:768px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7ef86fc020b67ef428db">{"x":{"visdat":{"287465c11f0":["function () ","plotlyVisDat"]},"cur_data":"287465c11f0","attrs":{"287465c11f0":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"z":{},"type":"scatter3d","mode":"markers","marker":{"size":3,"color":"black"},"name":"Real","inherit":true},"287465c11f0.1":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"z":{},"type":"scatter3d","mode":"markers","marker":{"size":3,"color":"chartreuse"},"name":"Predicted","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Real vs Predicted values","scene":{"xaxis":{"title":"real_LONGITUDE"},"yaxis":{"title":"real_LATITUDE"},"zaxis":{"title":"real_FLOOR"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false},"data":[{"x":[-7559.67807371738,-7558.85901383928,-7568.98589047076,-7562.71709999815,-7539.96081683799,-7525.3140982864,-7533.08632737537,-7521.6087665247,-7424.8123444654,-7457.36065030405,-7460.45255320895,-7460.03721595253,-7468.44811214908,-7423.09684427766,-7423.17619999871,-7538.84126157758,-7538.91807875312,-7530.75650047033,-7521.8299061726,-7555.42255038138,-7497.75571515819,-7543.76924617725,-7543.96038700257,-7516.41362123564,-7519.67280378207,-7497.42807644004,-7498.05807197719,-7505.67072260056,-7506.76269999892,-7511.46810242698,-7516.44226530518,-7522.34711532399,-7522.96598936723,-7521.06350639343,-7517.58579999954,-7511.73669999838,-7525.81812998652,-7526.74751611476,-7526.30165780731,-7535.159069866,-7523.1986086515,-7519.36675912061,-7519.58592901424,-7510.21120582148,-7510.21120582148,-7528.60806863382,-7524.48676248127,-7526.79075654755,-7540.46767945348,-7537.02489977033,-7537.57847247941,-7437.60530766964,-7424.59108070695,-7423.65697391343,-7420.12158080872,-7435.38833459042,-7424.09317684724,-7473.79119891983,-7536.82031092228,-7570.06979421266,-7570.55529300541,-7569.47773984335,-7563.28836523045,-7560.37640000135,-7559.47587581488,-7559.58899359706,-7562.74598828317,-7541.98290000111,-7559.75518112935,-7562.71709999815,-7495.66469017713,-7538.56799518442,-7554.89745110453,-7530.81823687622,-7568.73713806486,-7571.11236593423,-7522.9741666865,-7521.96922153996,-7422.6833697641,-7559.66945974418,-7418.11514654563,-7528.23176473564,-7516.7214044467,-7497.02670160218,-7496.28180468907,-7499.06323216894,-7478.17927450551,-7503.83568147845,-7488.92154064992,-7505.87757899667,-7458.72659999877,-7501.27600304133,-7470.42540000007,-7509.80545455965,-7460.28649434582,-7458.34679777797,-7514.57236937302,-7503.81544467312,-7453.81238022007,-7476.42156946556,-7533.43210000172,-7476.28334117266,-7438.84016478748,-7523.77901292883,-7470.71211429651,-7459.33246545053,-7437.55675779817,-7525.57069157763,-7434.20406574539,-7424.90538346306,-7433.1059750414,-7422.81337103459,-7419.8682793362,-7562.07136316425,-7434.27657728937,-7568.74270714577,-7432.02851100418,-7535.76300000027,-7456.64950000122,-7456.06503337203,-7524.34123983997,-7535.76300000027,-7461.28415675168,-7540.20636900866,-7554.78196819643,-7459.93945555129,-7458.84409999847,-7522.85960860366,-7459.73507910675,-7469.03278788601,-7523.82014786624,-7456.38929338787,-7537.11086158909,-7535.20951540396,-7506.96953939477,-7555.68347849491,-7507.29146111401,-7512.59364791131,-7533.88203687031,-7571.61829999834,-7503.49280241843,-7458.87629528005,-7500.99669314214,-7537.85266986421,-7506.83438298109,-7517.58579999954,-7525.17944551176,-7498.69736354088,-7455.72583416971,-7505.61595271802,-7506.84435000084,-7524.70949999988,-7536.45222842588,-7436.55759841792,-7516.16625316539,-7553.96000000089,-7524.10880000144,-7533.65762114613,-7567.17480891356,-7557.68131882798,-7536.73166805459,-7562.62688746131,-7425.03478738948,-7559.65956888308,-7506.07325618262,-7512.53907922994,-7420.4263345737,-7551.1173358295,-7501.74508250065,-7504.39731641984,-7502.17042444547,-7555.5576791444,-7545.86360472273,-7535.76300000027,-7434.58928536728,-7499.37757407321,-7498.34264409643,-7541.5332390974,-7534.86864576963,-7484.80924178599,-7432.68443307742,-7510.76613690399,-7530.67628715945,-7504.15349999815,-7512.59142772956,-7417.55512883907,-7515.94655759187,-7422.28090000153,-7452.56603653025,-7434.35310000181,-7474.03800252823,-7541.14106819888,-7479.75560000166,-7430.1165688428,-7460.60251205102,-7500.89191136453,-7431.71389999986,-7469.37200292407,-7506.96953939477,-7516.98801730685,-7505.95103847761,-7423.17619999871,-7503.86859069427,-7466.93455017713,-7565.1085101552,-7491.03063394502,-7513.38268906325,-7516.79515918055,-7513.782243633,-7512.63883428474,-7520.75047279894,-7505.09062346864,-7501.35795254238,-7435.34600197069,-7498.57744547557,-7420.7689261554,-7500.99880269608,-7422.55254575405,-7507.67060000077,-7479.54654612375,-7420.65298242728,-7438.78889728436,-7502.89131736046,-7493.3803500236,-7516.4885740581,-7424.8123444654,-7422.28090000153,-7507.82697986809,-7508.00334289535,-7512.31796745377,-7434.73639197078,-7458.72659999877,-7429.96611795025,-7422.46892011926,-7502.2851582043,-7516.65771900358,-7500.63820273299,-7516.24374802589,-7454.60759159852,-7507.64059999958,-7512.63280000165,-7458.60449999943,-7512.88887257289,-7453.85408994027,-7452.17709702667,-7517.58579999954,-7466.25206682841,-7460.99749999866,-7434.53118349697,-7502.63204468882,-7436.53342039347,-7434.35310000181,-7492.04601387236,-7425.01161002021,-7429.6090179844,-7482.15778019572,-7419.68738148794,-7435.22594210535,-7479.75560000166,-7488.80900000036,-7502.206913101,-7436.43220251869,-7434.23860000074,-7421.48609889221,-7422.28090000153,-7418.37986592064,-7435.51839999855,-7432.75504816294,-7434.92831523342,-7434.31049999967,-7535.76300000027,-7536.09291375645,-7526.60183559513,-7526.14470916499,-7513.10449071601,-7536.82660000026,-7560.59963693811,-7560.37629999965,-7539.10921258201,-7534.43217116002,-7518.69033506914,-7504.02179983115,-7472.27856232633,-7434.97046663345,-7435.97428978805,-7424.39850346013,-7423.8977483286,-7424.8123444654,-7419.78586577173,-7423.07559999824,-7427.07447905093,-7456.02104198941,-7456.71521028611,-7452.84458802272,-7436.8962738029,-7424.83356480399,-7422.10960000008,-7419.322715404,-7416.79769999906,-7530.37519690338,-7526.24587141953,-7530.04834609023,-7530.49750986185,-7537.45423347244,-7557.61585940363,-7569.85278689193],"y":[4864887.49139782,4864871.12401172,4864876.02580672,4864865.9577,4864919.93086509,4864932.94688123,4864937.62961685,4864950.6014406,4864862.99215681,4864831.44490372,4864816.03854128,4864814.48869958,4864818.48617839,4864877.84670097,4864896.14090001,4864919.72199727,4864919.89244437,4864921.51439237,4864950.57355416,4864885.77888166,4864852.28419573,4864923.90282825,4864927.21630602,4864937.65039004,4864937.76237899,4864857.61641572,4864856.55098058,4864864.85842014,4864850.7019,4864852.67851097,4864843.72336595,4864839.18486463,4864840.13741949,4864845.06408055,4864844.9147,4864841.6472,4864845.29862264,4864845.53644596,4864845.08584904,4864937.08760255,4864951.85325627,4864949.73641195,4864949.82454727,4864949.28709577,4864949.28709577,4864959.50525117,4864933.91020315,4864929.91002235,4864920.0486662,4864918.27673816,4864895.74014905,4864862.85029384,4864875.21121817,4864876.02160381,4864894.49240187,4864861.66776533,4864875.73329851,4864866.4820823,4864918.30350243,4864891.2786788,4864891.58683523,4864895.84285467,4864889.14259671,4864888.26210001,4864887.5325837,4864887.43023426,4864889.69580968,4864921.10899998,4864887.71216838,4864865.95770001,4864879.53904786,4864919.08580509,4864884.97577409,4864934.09008304,4864876.09172509,4864871.85926109,4864947.54872279,4864949.18407008,4864877.16012952,4864870.79565143,4864893.5820186,4864900.95922117,4864894.16399546,4864889.88372555,4864882.90326755,4864872.21749579,4864891.12462513,4864863.17472963,4864876.8723379,4864858.42883813,4864832.1627,4864866.91101956,4864814.6952,4864852.23113523,4864810.61321927,4864813.8675462,4864843.12704032,4864888.47590187,4864828.58242426,4864890.99663951,4864940.184,4864890.01042686,4864863.64497531,4864933.75775458,4864869.17915471,4864860.90692543,4864863.47804029,4864957.80791549,4864878.15864296,4864875.3666826,4864881.30812171,4864889.31034383,4864894.36654124,4864866.13883356,4864868.21566241,4864876.67910122,4864873.58407945,4864917.7352,4864823.1814,4864830.27408381,4864933.40124106,4864917.7352,4864820.92417907,4864920.13777408,4864885.2475042,4864811.98101602,4864852.5069,4864951.38073721,4864824.28287146,4864817.95675932,4864933.54700628,4864829.62640144,4864917.99325567,4864948.0904118,4864864.14937869,4864886.09975558,4864851.37090193,4864841.58790272,4864939.37790184,4864870.9018,4864884.68283767,4864824.62211031,4864863.13007043,4864918.35909147,4864851.06706626,4864844.91470001,4864934.43877736,4864868.41674979,4864830.19826054,4864864.53729692,4864864.37474996,4864952.5653,4864918.04950621,4864863.33191387,4864844.08977152,4864884.5715,4864935.0056,4864939.06690073,4864868.92612382,4864917.69200913,4864934.23035093,4864867.4305765,4864874.85397562,4864871.90041333,4864862.41944312,4864841.78358635,4864893.48468785,4864897.77481421,4864863.86690447,4864886.16043367,4864884.73343455,4864902.01768344,4864896.62772168,4864917.7352,4864862.49666555,4864867.72338258,4864882.48498462,4864914.66770929,4864939.48565194,4864901.95983156,4864882.77009048,4864853.12478909,4864933.70159981,4864883.87080001,4864841.90361119,4864892.83210187,4864843.77654189,4864878.4764,4864829.45451351,4864861.3035,4864891.96685719,4864914.20066476,4864895.5038,4864861.13358562,4864810.9351958,4864864.15265522,4864884.1179,4864815.9441304,4864864.14937869,4864889.15920349,4864867.06913609,4864896.1409,4864866.92547348,4864820.44418602,4864871.92161102,4864865.38593483,4864850.71902001,4864843.69725508,4864841.4376922,4864840.21493103,4864854.41564837,4864856.0344684,4864885.28976215,4864862.13591772,4864868.49078199,4864895.39272882,4864885.74575024,4864877.35295243,4864862.88730001,4864893.80469229,4864895.87743876,4864864.00407898,4864864.82647639,4864880.25790364,4864844.47100152,4864862.99215681,4864878.47640001,4864855.33946605,4864851.46302018,4864842.62307999,4864855.66360599,4864832.1627,4864889.67668548,4864895.51630088,4864860.16658217,4864894.72674274,4864864.06216758,4864894.57908299,4864860.38695715,4864862.8718,4864853.85769999,4864832.0952,4864842.37835919,4864829.53558628,4864836.02503973,4864844.9147,4864821.10988005,4864809.4587,4864867.94528182,4864861.2526387,4864843.61151497,4864861.3035,4864884.06667608,4864875.80807804,4864878.44714245,4864886.03267932,4864893.98148622,4864850.824863,4864895.5038,4864900.5181,4864884.27814346,4864838.93088482,4864861.24090001,4864894.55921288,4864878.47640001,4864893.40437628,4864877.3166,4864882.98545034,4864878.48942718,4864861.2802,4864917.7352,4864929.25138058,4864935.08431023,4864933.67130991,4864943.86961973,4864933.9358,4864888.48212282,4864888.2621,4864919.22042121,4864938.17260027,4864890.84508287,4864864.9694765,4864865.82379965,4864862.17507381,4864862.25929523,4864875.16660562,4864875.52897235,4864862.99215681,4864894.25396965,4864896.08399999,4864903.08147953,4864830.3957034,4864831.2297508,4864828.57799601,4864863.19613694,4864875.46095676,4864878.7878,4864894.81384275,4864892.6964,4864934.48165908,4864934.1835295,4864957.59275368,4864956.8820152,4864898.08896357,4864886.83221165,4864874.64736828],"z":["3","3","1","1","2","2","2","2","2","3","3","3","3","3","3","3","3","3","3","3","0","1","1","1","1","0","0","1","1","1","1","2","2","2","2","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","0","0","0","0","1","1","1","1","0","1","1","1","0","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","0","1","1","1","1","1","1","1","1","0","1","1","1","1","2","1","1","0","1","1","0","1","2","2","1","1","1","1","1","1","0","1","1","1","1","1","0","1","0","1","0","1","1","1","1","1","1","1","1","1","1","1","3","0","2","3","2","2","3","1","0","2","1","3","1","0","1","1","1","1","1","1","1","1","0","1","2","2","0","1","2","0","1","2","1","1","2","1","0","1","1","0","2","1","1","3","1","2","1","2","2","3","1","2","2","0","2","1","3","2","1","2","1","3","2","2","2","2","1","1","1","1","2","1","2","3","1","0","2","3","1","1","3","2","2","2","1","2","2","2","2","1","3","1","2","2","1","2","2","3","2","2","2","2","2","1","3","2","2","1","2","2","2","3","2","2","3","2","2","3","2","2","2","0","2","0","2","1","2","2","0","1","1","1","1","1","3","3","2","1","2","2","2","2","2","2","2","2","2","2","2","2","2","3","3","3","3","3","3","3","3","3","3","3","3","3","3","3"],"type":"scatter3d","mode":"markers","marker":{"color":"black","size":3,"line":{"color":"rgba(31,119,180,1)"}},"name":"Real","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"frame":null},{"x":[-7541.96325178346,-7553.65673096771,-7556.05105300634,-7561.51209216294,-7537.16509123113,-7530.79021469805,-7530.76556323899,-7532.19516868868,-7431.29262897293,-7457.91406806218,-7461.48014127675,-7461.90142610994,-7465.36761900059,-7429.34833098021,-7426.59211192311,-7534.78582604408,-7540.0074094015,-7534.76359543499,-7530.80867600414,-7556.90272149284,-7477.12440061221,-7540.15871694644,-7535.41842434643,-7524.91004594027,-7526.25552472387,-7485.58838748027,-7478.08265407146,-7483.63449030143,-7495.72425043481,-7507.10533906685,-7498.83564670028,-7513.09188958088,-7500.16743125484,-7500.64869325105,-7505.18579428694,-7504.93691685291,-7518.05792987714,-7515.63576142255,-7503.87608665591,-7529.38222270376,-7517.84084402637,-7530.55815334003,-7529.96792215615,-7512.62170483103,-7523.37627448452,-7526.03155471533,-7526.22190384738,-7534.72374328144,-7539.37041687691,-7534.41032638121,-7536.12311209896,-7439.95468786344,-7426.1953828208,-7420.54794599439,-7421.35519806392,-7438.47288093157,-7421.95260310822,-7473.76161532988,-7530.32857479048,-7538.36702471779,-7550.25398124243,-7557.06037242607,-7549.57755788192,-7554.26940650781,-7549.52238083215,-7554.75370535696,-7553.39232772369,-7536.55646756735,-7555.80390491396,-7561.27616483049,-7505.29984181362,-7536.13788383141,-7551.57009503471,-7529.90435920764,-7566.35341214414,-7565.37218750575,-7530.3261052216,-7534.77682150127,-7433.18837343202,-7566.05790106078,-7418.17399444837,-7532.56046342274,-7498.93934240474,-7501.09980807588,-7500.43487003316,-7504.63362361292,-7498.22569251146,-7503.51303853521,-7482.66060979416,-7499.38130228953,-7459.94909471473,-7502.20298962011,-7463.6988406677,-7496.65439379493,-7462.21781057415,-7463.32511607471,-7471.94914747338,-7476.64448986298,-7458.03861537237,-7503.48954758125,-7533.30890097337,-7485.44833799501,-7435.28483709038,-7533.04085105241,-7473.04019135144,-7457.86897817597,-7427.03543915901,-7527.62159713382,-7435.67707919926,-7427.22913135689,-7425.34661185428,-7417.30099218896,-7420.47204159585,-7562.13942866031,-7437.99039397672,-7559.86023756494,-7432.24464865944,-7538.270893997,-7455.02237354346,-7454.9275972154,-7533.64107459876,-7537.47284210519,-7457.48005825143,-7531.02912124017,-7531.72167565667,-7461.38338085164,-7452.84631662093,-7530.38363190574,-7463.34737956868,-7465.22102491407,-7534.5443434873,-7459.04665324095,-7535.84851026019,-7538.89206826861,-7504.03529866149,-7557.35359859301,-7500.14882138914,-7506.33002198495,-7532.13406143298,-7564.14852817996,-7492.43295811799,-7456.1406132289,-7501.86312923429,-7530.99916252644,-7505.49188097503,-7513.32480972891,-7531.9005474518,-7503.03152231848,-7458.22001298606,-7512.01324032642,-7504.57976753567,-7531.68189420859,-7536.29528771937,-7434.27465202972,-7509.69450503946,-7563.11606989953,-7532.5894434497,-7532.88816094333,-7560.13682231422,-7535.07050481463,-7533.54699416132,-7564.39368263585,-7431.13168152867,-7561.77502793668,-7504.30344617617,-7512.5475264485,-7427.36784951712,-7536.11920363924,-7511.67046430735,-7481.50381265135,-7501.14488795868,-7543.68751758403,-7546.75310067108,-7538.71736015361,-7435.29121251461,-7493.80510701054,-7472.12934913016,-7542.27429976046,-7535.43921062005,-7488.97641304507,-7434.54588795962,-7493.80510701054,-7537.55930990327,-7491.83264410287,-7500.90135028018,-7433.75776908624,-7494.2889019874,-7422.52317633507,-7447.9013037825,-7435.13926358093,-7513.198431866,-7548.78379157805,-7491.03721715561,-7451.53376051624,-7460.90606198569,-7503.44906356378,-7422.70479973697,-7465.32429275193,-7502.62657732342,-7486.91152185661,-7503.83206121107,-7419.46000229739,-7500.30651080758,-7466.66975058916,-7535.39534608836,-7501.41494643854,-7507.58975854126,-7502.30356569453,-7480.32473870958,-7498.91359536992,-7504.2468766696,-7496.80701317254,-7495.39244502701,-7464.81374116108,-7504.15134508094,-7439.55243818954,-7503.87456866255,-7436.69884126265,-7514.86977421327,-7491.10063848524,-7430.92267295891,-7430.08038630071,-7501.97419985332,-7500.40970314545,-7526.74132941395,-7461.48788094123,-7427.62124155105,-7507.14492032244,-7506.92361217756,-7495.29843462351,-7434.50930288244,-7458.5097547659,-7435.36250485218,-7420.34287594444,-7503.50382022081,-7496.60151479313,-7501.57314751849,-7500.98406437636,-7455.89528175849,-7505.58747674828,-7509.66492700882,-7461.55310128651,-7505.6217443448,-7461.58521736706,-7468.01196356819,-7516.4852813898,-7467.99493777861,-7465.26831413477,-7423.8218111101,-7503.84578084147,-7464.28137648184,-7437.68135771863,-7490.37152683001,-7417.76051242158,-7435.99054924213,-7490.75925310144,-7424.75332279471,-7437.00739876014,-7482.43591594919,-7484.51660281537,-7499.14877146945,-7456.45193015452,-7429.83029998716,-7425.49710122841,-7426.17238582798,-7427.11211111862,-7425.51898088989,-7423.27129463451,-7430.66753662121,-7430.69894820908,-7529.43601010284,-7544.56075960654,-7532.03711990954,-7532.96016956766,-7532.07226901673,-7529.81743973939,-7551.73646569132,-7557.00735368025,-7534.28903306739,-7531.05806011593,-7518.62679819076,-7502.88316810252,-7481.27709590348,-7437.61502395434,-7432.89443858459,-7422.26972547707,-7418.72900820095,-7425.45981281557,-7417.10043315572,-7415.63669374441,-7440.06437298121,-7459.64393251949,-7456.2149463692,-7456.99769971816,-7431.26445945361,-7452.13093164275,-7431.27651571293,-7431.29156325077,-7416.78188974273,-7534.04989427343,-7530.99415188457,-7527.20986469792,-7529.14033606701,-7536.06350393459,-7559.8586343443,-7567.54815750528],"y":[4864913.91953518,4864895.43497714,4864878.15769467,4864867.20328359,4864921.15264406,4864932.22899691,4864936.87249756,4864943.61008233,4864872.63354068,4864829.63809773,4864815.4914915,4864812.23601168,4864827.11034298,4864880.82539539,4864884.8371085,4864924.59627345,4864920.62968493,4864920.22539018,4864933.22586692,4864886.43597084,4864864.18488386,4864931.32017354,4864928.87667213,4864938.5126439,4864930.20770036,4864862.80632792,4864865.02150389,4864862.97573198,4864859.79342573,4864858.80639014,4864863.1684284,4864866.41420442,4864869.74215418,4864869.33063591,4864870.80004636,4864853.2742429,4864883.63400486,4864888.93864511,4864877.6634992,4864938.43574781,4864949.00121848,4864941.04613208,4864935.35572099,4864948.8209823,4864946.7478934,4864948.30125845,4864935.88071323,4864933.44858166,4864923.33545526,4864925.78724067,4864899.0991006,4864871.0715698,4864880.1708883,4864884.12218556,4864886.68615033,4864864.71494721,4864880.33383656,4864865.16753137,4864929.35171338,4864883.6366444,4864887.13674125,4864887.55998901,4864887.52009403,4864885.02458307,4864885.8831744,4864887.82568405,4864887.8800291,4864918.93056232,4864878.68191787,4864867.5769559,4864857.46246642,4864917.68035622,4864886.15537824,4864935.47105057,4864874.19253164,4864875.21149317,4864941.38305646,4864930.72605765,4864871.30070775,4864875.02423755,4864887.8583947,4864916.02059767,4864881.10420832,4864887.94759593,4864864.40655845,4864860.98219892,4864875.84663324,4864857.93432795,4864865.09384753,4864861.56041026,4864827.98774886,4864862.80977553,4864829.526038,4864858.24633492,4864825.06116158,4864830.32348179,4864854.06313186,4864885.33734058,4864828.36955498,4864888.06151257,4864940.08696443,4864881.84178512,4864878.39620068,4864939.7997027,4864864.68913024,4864849.40560624,4864878.62276225,4864946.55833847,4864867.06763333,4864879.82208527,4864877.91032287,4864885.79364119,4864895.73773845,4864887.50346749,4864866.24181977,4864882.82813927,4864876.90654024,4864923.10818167,4864824.13616864,4864835.24885335,4864933.37160212,4864912.11875912,4864822.91130077,4864910.5539501,4864887.23986406,4864823.20465835,4864850.16783048,4864937.43984189,4864827.44872386,4864829.83993223,4864927.12628737,4864830.70028635,4864920.05829922,4864911.47158479,4864857.34709803,4864880.98526383,4864859.21609394,4864855.35569356,4864939.69408842,4864874.38971581,4864887.99677957,4864833.33876303,4864863.39784303,4864926.85700098,4864857.42220548,4864846.98120261,4864934.88436682,4864866.5179426,4864827.91741046,4864850.90038101,4864858.74232323,4864939.16192366,4864925.01550062,4864874.6103408,4864857.85412362,4864889.97647444,4864933.42714959,4864938.46639744,4864878.18424952,4864910.09292466,4864937.46982546,4864873.15109004,4864872.98124141,4864867.96642406,4864861.30313848,4864846.7704593,4864880.41719047,4864910.37337086,4864849.47575248,4864879.86441287,4864885.77406119,4864896.97470058,4864892.8990167,4864924.04207153,4864862.36121228,4864866.53406068,4864874.08195543,4864898.34144861,4864935.66154427,4864870.97939852,4864864.26806576,4864866.53406068,4864912.42984152,4864886.60983011,4864847.79450766,4864863.95954227,4864861.33361618,4864880.52684017,4864839.77471141,4864865.22798612,4864890.42643429,4864896.10192285,4864892.20150997,4864870.10132992,4864824.65435556,4864860.25561588,4864887.09293461,4864821.21570749,4864859.39826322,4864882.34206289,4864860.36987157,4864887.773266,4864880.30874972,4864815.67520965,4864894.62617678,4864865.17047863,4864856.87024038,4864858.31804557,4864854.59018287,4864857.78453557,4864853.48169762,4864854.96788873,4864891.6382706,4864827.29912534,4864858.39133691,4864873.87879003,4864886.5218327,4864867.8855031,4864856.9383106,4864892.20530092,4864884.70529059,4864876.03701465,4864869.71684481,4864881.78561754,4864861.39583254,4864865.81217829,4864876.93844529,4864858.95580948,4864858.87469947,4864860.55215459,4864867.13715879,4864831.26453067,4864874.8251118,4864884.87257728,4864857.52904677,4864855.21148241,4864863.85829438,4864886.57576713,4864859.12427505,4864860.17570488,4864854.95316036,4864840.34981406,4864857.53314033,4864834.02153294,4864847.42936198,4864856.70874729,4864822.91852625,4864827.43778973,4864882.15512927,4864863.10503645,4864849.55157463,4864858.39022574,4864894.72778104,4864882.50249858,4864867.5430125,4864890.2915733,4864881.39314305,4864859.85177759,4864893.93641377,4864886.68298267,4864892.52848716,4864849.22882291,4864884.27584869,4864887.75418703,4864880.55679327,4864882.68958196,4864882.43819604,4864881.2125074,4864877.45119048,4864874.63269413,4864910.73018282,4864901.43762847,4864932.82757287,4864935.19342515,4864930.12901214,4864928.0953258,4864894.2066944,4864893.05680374,4864925.2724122,4864938.40912666,4864889.01854881,4864863.7346734,4864871.65960243,4864875.6108558,4864879.52196443,4864883.86928837,4864883.23071301,4864880.97793507,4864887.22636911,4864892.85765637,4864897.57396527,4864841.7616296,4864832.94890963,4864831.42734783,4864869.1202807,4864881.38643686,4864883.93565485,4864883.01404097,4864892.74488145,4864940.65447036,4864935.39533856,4864946.47570012,4864948.36615754,4864893.97962451,4864886.66102161,4864875.51212848],"z":["3","2","1","1","3","2","2","2","2","3","3","3","2","3","3","3","3","3","3","3","0","1","1","1","1","0","0","2","2","2","2","2","2","3","2","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","0","0","0","0","3","1","1","1","0","2","0","1","0","1","1","2","1","1","1","1","1","1","1","1","1","1","1","3","3","2","2","2","2","2","2","1","2","1","2","1","1","2","1","1","2","1","3","3","1","1","0","1","1","0","1","2","2","0","1","1","1","1","1","0","1","1","1","1","1","0","1","0","1","0","1","1","1","1","1","2","1","2","2","1","1","3","0","2","3","2","2","3","2","0","2","2","3","1","0","2","1","1","1","1","1","1","1","0","1","2","2","0","1","2","3","2","1","2","1","2","2","1","1","1","2","2","2","1","2","2","2","3","2","2","3","2","2","2","0","2","2","3","2","2","2","2","3","2","2","2","2","2","3","3","2","2","2","2","2","2","0","2","3","2","2","3","2","2","2","3","2","2","2","2","2","3","1","2","2","2","2","2","3","2","2","2","2","2","2","2","2","2","1","2","2","2","3","2","2","3","2","2","3","2","3","2","1","3","0","2","1","2","2","0","1","1","1","1","1","3","3","2","1","2","2","3","2","2","2","2","2","2","2","2","2","2","3","3","3","3","3","3","3","3","3","3","3","3","3","3","3"],"type":"scatter3d","mode":"markers","marker":{"color":"chartreuse","size":3,"line":{"color":"rgba(255,127,14,1)"}},"name":"Predicted","error_y":{"color":"rgba(255,127,14,1)"},"error_x":{"color":"rgba(255,127,14,1)"},"line":{"color":"rgba(255,127,14,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script>
+</div>
+<div id="floor-prediction-analysis" class="section level3">
+<h3>Floor prediction analysis</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">real.pred.values<span class="op">$</span>WHERE_SHOULD_BE =<span class="st"> &quot;None&quot;</span>
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(real.pred.values)) {
+  <span class="cf">if</span> (real.pred.values[i,<span class="st">&quot;real_FLOOR&quot;</span>] <span class="op">!=</span><span class="st"> </span>real.pred.values[i,<span class="st">&quot;pred_FLOOR&quot;</span>]) {
+    real.pred.values[i,<span class="st">&quot;WHERE_SHOULD_BE&quot;</span>] =<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;Should be floor&quot;</span>, real.pred.values[i, <span class="st">&quot;real_FLOOR&quot;</span>])
+  } <span class="cf">else</span> <span class="cf">if</span> (real.pred.values[i,<span class="st">&quot;real_FLOOR&quot;</span>] <span class="op">==</span><span class="st"> </span>real.pred.values[i,<span class="st">&quot;pred_FLOOR&quot;</span>]) {
+    real.pred.values[i,<span class="st">&quot;WHERE_SHOULD_BE&quot;</span>] =<span class="st"> &quot;Good Prediction&quot;</span>
+  }
+}
+
+real.pred.values<span class="op">$</span>WHERE_SHOULD_BE =<span class="st"> </span><span class="kw">factor</span>(real.pred.values<span class="op">$</span>WHERE_SHOULD_BE)
+<span class="kw">summary</span>(real.pred.values<span class="op">$</span>WHERE_SHOULD_BE)</code></pre></div>
+<pre><code>##   Good Prediction Should be floor 0 Should be floor 1 Should be floor 2 
+##               239                 6                49                 7 
+## Should be floor 3 
+##                 5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(real.pred.values) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">x =</span> <span class="op">~</span>pred_LONGITUDE, <span class="dt">y =</span> <span class="op">~</span>pred_LATITUDE, <span class="dt">z =</span> <span class="op">~</span>pred_FLOOR, <span class="dt">color =</span> <span class="op">~</span>WHERE_SHOULD_BE, <span class="dt">marker =</span> <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">5</span>)) <span class="op">%&gt;%</span>
+<span class="st">                </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="st">&quot;Which floor should each capture be in?&quot;</span>)</code></pre></div>
+<div id="htmlwidget-b209c76b3607247a9fac" style="width:768px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b209c76b3607247a9fac">{"x":{"visdat":{"28745c5e332b":["function () ","plotlyVisDat"]},"cur_data":"28745c5e332b","attrs":{"28745c5e332b":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"z":{},"type":"scatter3d","mode":"markers","color":{},"marker":{"size":5},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Which floor should each capture be in?","scene":{"xaxis":{"title":"pred_LONGITUDE"},"yaxis":{"title":"pred_LATITUDE"},"zaxis":{"title":"pred_FLOOR"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false},"data":[{"x":[-7541.96325178346,-7556.05105300634,-7561.51209216294,-7530.79021469805,-7530.76556323899,-7532.19516868868,-7431.29262897293,-7457.91406806218,-7461.48014127675,-7461.90142610994,-7429.34833098021,-7426.59211192311,-7534.78582604408,-7540.0074094015,-7534.76359543499,-7530.80867600414,-7556.90272149284,-7477.12440061221,-7540.15871694644,-7535.41842434643,-7524.91004594027,-7526.25552472387,-7485.58838748027,-7478.08265407146,-7513.09188958088,-7500.16743125484,-7505.18579428694,-7504.93691685291,-7518.05792987714,-7515.63576142255,-7503.87608665591,-7529.38222270376,-7517.84084402637,-7530.55815334003,-7529.96792215615,-7512.62170483103,-7523.37627448452,-7526.03155471533,-7526.22190384738,-7534.72374328144,-7539.37041687691,-7534.41032638121,-7536.12311209896,-7439.95468786344,-7426.1953828208,-7420.54794599439,-7421.35519806392,-7438.47288093157,-7421.95260310822,-7473.76161532988,-7530.32857479048,-7550.25398124243,-7557.06037242607,-7549.57755788192,-7554.26940650781,-7553.39232772369,-7536.55646756735,-7555.80390491396,-7561.27616483049,-7536.13788383141,-7551.57009503471,-7529.90435920764,-7566.35341214414,-7565.37218750575,-7530.3261052216,-7534.77682150127,-7433.18837343202,-7566.05790106078,-7418.17399444837,-7532.56046342274,-7459.94909471473,-7463.6988406677,-7462.21781057415,-7463.32511607471,-7458.03861537237,-7533.30890097337,-7533.04085105241,-7473.04019135144,-7457.86897817597,-7427.03543915901,-7527.62159713382,-7435.67707919926,-7427.22913135689,-7425.34661185428,-7417.30099218896,-7562.13942866031,-7437.99039397672,-7559.86023756494,-7432.24464865944,-7538.270893997,-7455.02237354346,-7454.9275972154,-7533.64107459876,-7537.47284210519,-7457.48005825143,-7531.02912124017,-7531.72167565667,-7461.38338085164,-7452.84631662093,-7530.38363190574,-7463.34737956868,-7465.22102491407,-7534.5443434873,-7459.04665324095,-7535.84851026019,-7538.89206826861,-7557.35359859301,-7532.13406143298,-7564.14852817996,-7492.43295811799,-7456.1406132289,-7501.86312923429,-7530.99916252644,-7505.49188097503,-7513.32480972891,-7531.9005474518,-7458.22001298606,-7512.01324032642,-7531.68189420859,-7536.29528771937,-7434.27465202972,-7563.11606989953,-7532.5894434497,-7532.88816094333,-7560.13682231422,-7535.07050481463,-7533.54699416132,-7564.39368263585,-7431.13168152867,-7561.77502793668,-7504.30344617617,-7512.5475264485,-7427.36784951712,-7536.11920363924,-7511.67046430735,-7538.71736015361,-7435.29121251461,-7542.27429976046,-7535.43921062005,-7434.54588795962,-7537.55930990327,-7433.75776908624,-7422.52317633507,-7447.9013037825,-7435.13926358093,-7548.78379157805,-7491.03721715561,-7451.53376051624,-7460.90606198569,-7422.70479973697,-7465.32429275193,-7486.91152185661,-7419.46000229739,-7500.30651080758,-7466.66975058916,-7535.39534608836,-7501.41494643854,-7504.2468766696,-7495.39244502701,-7439.55243818954,-7503.87456866255,-7436.69884126265,-7430.92267295891,-7430.08038630071,-7501.97419985332,-7500.40970314545,-7461.48788094123,-7427.62124155105,-7507.14492032244,-7506.92361217756,-7434.50930288244,-7458.5097547659,-7435.36250485218,-7420.34287594444,-7496.60151479313,-7501.57314751849,-7500.98406437636,-7455.89528175849,-7505.58747674828,-7509.66492700882,-7461.55310128651,-7505.6217443448,-7516.4852813898,-7467.99493777861,-7465.26831413477,-7423.8218111101,-7503.84578084147,-7464.28137648184,-7437.68135771863,-7490.37152683001,-7417.76051242158,-7435.99054924213,-7490.75925310144,-7424.75332279471,-7437.00739876014,-7482.43591594919,-7499.14877146945,-7425.49710122841,-7426.17238582798,-7427.11211111862,-7425.51898088989,-7423.27129463451,-7430.66753662121,-7430.69894820908,-7529.43601010284,-7544.56075960654,-7532.03711990954,-7532.96016956766,-7532.07226901673,-7529.81743973939,-7551.73646569132,-7557.00735368025,-7534.28903306739,-7531.05806011593,-7502.88316810252,-7481.27709590348,-7437.61502395434,-7432.89443858459,-7422.26972547707,-7418.72900820095,-7425.45981281557,-7417.10043315572,-7415.63669374441,-7440.06437298121,-7459.64393251949,-7456.2149463692,-7456.99769971816,-7431.26445945361,-7452.13093164275,-7431.27651571293,-7431.29156325077,-7416.78188974273,-7534.04989427343,-7530.99415188457,-7527.20986469792,-7529.14033606701,-7536.06350393459,-7559.8586343443,-7567.54815750528],"y":[4864913.91953518,4864878.15769467,4864867.20328359,4864932.22899691,4864936.87249756,4864943.61008233,4864872.63354068,4864829.63809773,4864815.4914915,4864812.23601168,4864880.82539539,4864884.8371085,4864924.59627345,4864920.62968493,4864920.22539018,4864933.22586692,4864886.43597084,4864864.18488386,4864931.32017354,4864928.87667213,4864938.5126439,4864930.20770036,4864862.80632792,4864865.02150389,4864866.41420442,4864869.74215418,4864870.80004636,4864853.2742429,4864883.63400486,4864888.93864511,4864877.6634992,4864938.43574781,4864949.00121848,4864941.04613208,4864935.35572099,4864948.8209823,4864946.7478934,4864948.30125845,4864935.88071323,4864933.44858166,4864923.33545526,4864925.78724067,4864899.0991006,4864871.0715698,4864880.1708883,4864884.12218556,4864886.68615033,4864864.71494721,4864880.33383656,4864865.16753137,4864929.35171338,4864887.13674125,4864887.55998901,4864887.52009403,4864885.02458307,4864887.8800291,4864918.93056232,4864878.68191787,4864867.5769559,4864917.68035622,4864886.15537824,4864935.47105057,4864874.19253164,4864875.21149317,4864941.38305646,4864930.72605765,4864871.30070775,4864875.02423755,4864887.8583947,4864916.02059767,4864827.98774886,4864829.526038,4864825.06116158,4864830.32348179,4864828.36955498,4864940.08696443,4864939.7997027,4864864.68913024,4864849.40560624,4864878.62276225,4864946.55833847,4864867.06763333,4864879.82208527,4864877.91032287,4864885.79364119,4864887.50346749,4864866.24181977,4864882.82813927,4864876.90654024,4864923.10818167,4864824.13616864,4864835.24885335,4864933.37160212,4864912.11875912,4864822.91130077,4864910.5539501,4864887.23986406,4864823.20465835,4864850.16783048,4864937.43984189,4864827.44872386,4864829.83993223,4864927.12628737,4864830.70028635,4864920.05829922,4864911.47158479,4864880.98526383,4864939.69408842,4864874.38971581,4864887.99677957,4864833.33876303,4864863.39784303,4864926.85700098,4864857.42220548,4864846.98120261,4864934.88436682,4864827.91741046,4864850.90038101,4864939.16192366,4864925.01550062,4864874.6103408,4864889.97647444,4864933.42714959,4864938.46639744,4864878.18424952,4864910.09292466,4864937.46982546,4864873.15109004,4864872.98124141,4864867.96642406,4864861.30313848,4864846.7704593,4864880.41719047,4864910.37337086,4864849.47575248,4864924.04207153,4864862.36121228,4864898.34144861,4864935.66154427,4864864.26806576,4864912.42984152,4864863.95954227,4864880.52684017,4864839.77471141,4864865.22798612,4864896.10192285,4864892.20150997,4864870.10132992,4864824.65435556,4864887.09293461,4864821.21570749,4864882.34206289,4864887.773266,4864880.30874972,4864815.67520965,4864894.62617678,4864865.17047863,4864853.48169762,4864891.6382706,4864873.87879003,4864886.5218327,4864867.8855031,4864884.70529059,4864876.03701465,4864869.71684481,4864881.78561754,4864865.81217829,4864876.93844529,4864858.95580948,4864858.87469947,4864867.13715879,4864831.26453067,4864874.8251118,4864884.87257728,4864855.21148241,4864863.85829438,4864886.57576713,4864859.12427505,4864860.17570488,4864854.95316036,4864840.34981406,4864857.53314033,4864856.70874729,4864822.91852625,4864827.43778973,4864882.15512927,4864863.10503645,4864849.55157463,4864858.39022574,4864894.72778104,4864882.50249858,4864867.5430125,4864890.2915733,4864881.39314305,4864859.85177759,4864893.93641377,4864892.52848716,4864887.75418703,4864880.55679327,4864882.68958196,4864882.43819604,4864881.2125074,4864877.45119048,4864874.63269413,4864910.73018282,4864901.43762847,4864932.82757287,4864935.19342515,4864930.12901214,4864928.0953258,4864894.2066944,4864893.05680374,4864925.2724122,4864938.40912666,4864863.7346734,4864871.65960243,4864875.6108558,4864879.52196443,4864883.86928837,4864883.23071301,4864880.97793507,4864887.22636911,4864892.85765637,4864897.57396527,4864841.7616296,4864832.94890963,4864831.42734783,4864869.1202807,4864881.38643686,4864883.93565485,4864883.01404097,4864892.74488145,4864940.65447036,4864935.39533856,4864946.47570012,4864948.36615754,4864893.97962451,4864886.66102161,4864875.51212848],"z":["3","1","1","2","2","2","2","3","3","3","3","3","3","3","3","3","3","0","1","1","1","1","0","0","2","2","2","2","2","2","2","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","0","0","0","0","1","1","1","0","1","0","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","0","1","1","0","1","2","2","1","1","1","1","1","0","1","1","1","1","1","0","1","0","1","0","1","1","1","1","1","1","1","1","3","0","2","3","2","2","3","0","2","3","1","0","1","1","1","1","1","1","1","0","1","2","2","0","1","2","1","2","1","1","2","1","2","2","2","3","2","2","0","2","3","2","2","3","2","2","2","2","2","2","0","2","3","3","2","2","2","2","2","2","2","3","1","2","2","2","2","3","2","2","2","2","2","2","2","1","2","2","2","3","2","2","3","2","2","3","2","2","0","2","1","2","2","0","1","1","1","1","1","3","3","2","1","2","2","2","2","2","2","2","2","2","2","2","2","3","3","3","3","3","3","3","3","3","3","3","3","3","3","3"],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(102,194,165,1)","size":5,"line":{"color":"rgba(102,194,165,1)"}},"name":"Good Prediction","textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"frame":null},{"x":[-7482.66060979416,-7476.64448986298,-7481.50381265135,-7472.12934913016,-7488.97641304507,-7456.45193015452],"y":[4864865.09384753,4864885.33734058,4864879.86441287,4864874.08195543,4864870.97939852,4864849.22882291],"z":["2","1","3","1","2","1"],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(252,141,98,1)","size":5,"line":{"color":"rgba(252,141,98,1)"}},"name":"Should be floor 0","textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"line":{"color":"rgba(252,141,98,1)"},"frame":null},{"x":[-7483.63449030143,-7495.72425043481,-7507.10533906685,-7498.83564670028,-7538.36702471779,-7549.52238083215,-7554.75370535696,-7505.29984181362,-7498.93934240474,-7501.09980807588,-7500.43487003316,-7504.63362361292,-7498.22569251146,-7503.51303853521,-7499.38130228953,-7502.20298962011,-7496.65439379493,-7471.94914747338,-7503.48954758125,-7485.44833799501,-7420.47204159585,-7504.03529866149,-7500.14882138914,-7506.33002198495,-7503.03152231848,-7504.57976753567,-7509.69450503946,-7501.14488795868,-7546.75310067108,-7493.80510701054,-7493.80510701054,-7500.90135028018,-7494.2889019874,-7513.198431866,-7503.44906356378,-7502.62657732342,-7503.83206121107,-7507.58975854126,-7502.30356569453,-7480.32473870958,-7498.91359536992,-7496.80701317254,-7504.15134508094,-7514.86977421327,-7491.10063848524,-7526.74132941395,-7495.29843462351,-7503.50382022081,-7461.58521736706],"y":[4864862.97573198,4864859.79342573,4864858.80639014,4864863.1684284,4864883.6366444,4864885.8831744,4864887.82568405,4864857.46246642,4864881.10420832,4864887.94759593,4864864.40655845,4864860.98219892,4864875.84663324,4864857.93432795,4864861.56041026,4864862.80977553,4864858.24633492,4864854.06313186,4864888.06151257,4864881.84178512,4864895.73773845,4864857.34709803,4864859.21609394,4864855.35569356,4864866.5179426,4864858.74232323,4864857.85412362,4864885.77406119,4864892.8990167,4864866.53406068,4864866.53406068,4864847.79450766,4864861.33361618,4864890.42643429,4864860.25561588,4864859.39826322,4864860.36987157,4864856.87024038,4864858.31804557,4864854.59018287,4864857.78453557,4864854.96788873,4864858.39133691,4864856.9383106,4864892.20530092,4864861.39583254,4864860.55215459,4864857.52904677,4864834.02153294],"z":["2","2","2","2","3","2","0","2","3","3","2","2","2","2","2","2","2","2","2","3","0","2","2","2","2","2","2","2","2","2","2","2","3","2","2","2","2","2","3","3","2","2","2","2","2","3","2","2","2"],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(141,160,203,1)","size":5,"line":{"color":"rgba(141,160,203,1)"}},"name":"Should be floor 1","textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"frame":null},{"x":[-7537.16509123113,-7500.64869325105,-7435.28483709038,-7543.68751758403,-7484.51660281537,-7429.83029998716,-7518.62679819076],"y":[4864921.15264406,4864869.33063591,4864878.39620068,4864896.97470058,4864886.68298267,4864884.27584869,4864889.01854881],"z":["3","3","3","1","3","3","3"],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(231,138,195,1)","size":5,"line":{"color":"rgba(231,138,195,1)"}},"name":"Should be floor 2","textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"line":{"color":"rgba(231,138,195,1)"},"frame":null},{"x":[-7553.65673096771,-7465.36761900059,-7491.83264410287,-7464.81374116108,-7468.01196356819],"y":[4864895.43497714,4864827.11034298,4864886.60983011,4864827.29912534,4864847.42936198],"z":["2","2","2","2","2"],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(166,216,84,1)","size":5,"line":{"color":"rgba(166,216,84,1)"}},"name":"Should be floor 3","textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"line":{"color":"rgba(166,216,84,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script>
+<div id="summary-for-lat-long" class="section level4">
+<h4>Summary for LAT  LONG</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(real.pred.values<span class="op">$</span>long_diff)</code></pre></div>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+##  0.00845  2.24823  5.11734  7.33846  9.34020 42.62322</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(real.pred.values<span class="op">$</span>lat_diff)</code></pre></div>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+##  0.02964  2.14353  5.90752  7.98498 11.29745 43.40220</code></pre>
+</div>
+</div>
+<div id="traffic-light-for-latitude-longitude---error-distance-analysis" class="section level3">
+<h3>Traffic light for Latitude &amp; Longitude - Error distance analysis</h3>
+</div>
+<div id="good-idea-joe" class="section level3">
+<h3>Good idea, Joe :]</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">real.pred.values<span class="op">$</span>PREDICTION =<span class="st"> &quot;None&quot;</span>
+
+
+<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(real.pred.values)) {
+  <span class="cf">if</span> (real.pred.values[i,<span class="st">&quot;long_diff&quot;</span>] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">9</span> <span class="op">&amp;</span><span class="st"> </span>real.pred.values[i,<span class="st">&quot;lat_diff&quot;</span>] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">9</span>) {
+    real.pred.values[i,<span class="st">&quot;PREDICTION&quot;</span>] =<span class="st"> &quot;Awesome! :D&quot;</span>
+  } <span class="cf">else</span> <span class="cf">if</span> (real.pred.values[i,<span class="st">&quot;long_diff&quot;</span>] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">20</span> <span class="op">&amp;</span><span class="st"> </span>real.pred.values[i,<span class="st">&quot;lat_diff&quot;</span>] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">20</span>) {
+    real.pred.values[i,<span class="st">&quot;PREDICTION&quot;</span>] =<span class="st"> &quot;Meh :|&quot;</span>
+  } <span class="cf">else</span> <span class="cf">if</span> (real.pred.values[i,<span class="st">&quot;long_diff&quot;</span>] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span> <span class="op">&amp;</span><span class="st"> </span>real.pred.values[i,<span class="st">&quot;lat_diff&quot;</span>] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>) {
+    real.pred.values[i,<span class="st">&quot;PREDICTION&quot;</span>] =<span class="st"> &quot;Awfull :(&quot;</span>
+  } <span class="cf">else</span> {
+    real.pred.values[i,<span class="st">&quot;PREDICTION&quot;</span>] =<span class="st"> &quot;Weird :S&quot;</span>
+  }
+}
+
+real.pred.values<span class="op">$</span>PREDICTION =<span class="st"> </span><span class="kw">as.factor</span>(<span class="dt">x =</span> real.pred.values<span class="op">$</span>PREDICTION)
+<span class="kw">summary</span>(real.pred.values<span class="op">$</span>PREDICTION)</code></pre></div>
+<pre><code>## Awesome! :D   Awfull :(      Meh :| 
+##         159          42         105</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(real.pred.values) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">x =</span> <span class="op">~</span>pred_LONGITUDE, <span class="dt">y =</span> <span class="op">~</span>pred_LATITUDE, <span class="dt">z =</span> <span class="op">~</span>pred_FLOOR, <span class="dt">color =</span> <span class="op">~</span>PREDICTION, <span class="dt">colors =</span> <span class="kw">c</span>(<span class="st">&quot;chartreuse&quot;</span>, <span class="st">&quot;firebrick1&quot;</span>, <span class="st">&quot;yellow1&quot;</span>), <span class="dt">marker =</span> <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">5</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="st">&quot;Distance analysis&quot;</span>)</code></pre></div>
+<div id="htmlwidget-ffdcf1205cf029d5bbb6" style="width:768px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ffdcf1205cf029d5bbb6">{"x":{"visdat":{"28741b8d725f":["function () ","plotlyVisDat"]},"cur_data":"28741b8d725f","attrs":{"28741b8d725f":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"x":{},"y":{},"z":{},"type":"scatter3d","mode":"markers","color":{},"colors":["chartreuse","firebrick1","yellow1"],"marker":{"size":5},"inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Distance analysis","scene":{"xaxis":{"title":"pred_LONGITUDE"},"yaxis":{"title":"pred_LATITUDE"},"zaxis":{"title":"pred_FLOOR"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false},"data":[{"x":[-7561.51209216294,-7537.16509123113,-7530.79021469805,-7530.76556323899,-7457.91406806218,-7461.48014127675,-7461.90142610994,-7465.36761900059,-7429.34833098021,-7534.78582604408,-7540.0074094015,-7534.76359543499,-7556.90272149284,-7540.15871694644,-7535.41842434643,-7524.91004594027,-7526.25552472387,-7507.10533906685,-7529.38222270376,-7517.84084402637,-7512.62170483103,-7526.22190384738,-7534.72374328144,-7539.37041687691,-7534.41032638121,-7536.12311209896,-7439.95468786344,-7426.1953828208,-7420.54794599439,-7421.35519806392,-7438.47288093157,-7421.95260310822,-7473.76161532988,-7554.26940650781,-7554.75370535696,-7536.55646756735,-7561.27616483049,-7536.13788383141,-7551.57009503471,-7529.90435920764,-7566.35341214414,-7565.37218750575,-7530.3261052216,-7566.05790106078,-7418.17399444837,-7501.09980807588,-7503.51303853521,-7499.38130228953,-7459.94909471473,-7502.20298962011,-7458.03861537237,-7533.30890097337,-7473.04019135144,-7427.22913135689,-7425.34661185428,-7417.30099218896,-7420.47204159585,-7437.99039397672,-7559.86023756494,-7432.24464865944,-7538.270893997,-7455.02237354346,-7454.9275972154,-7537.47284210519,-7457.48005825143,-7452.84631662093,-7463.34737956868,-7459.04665324095,-7535.84851026019,-7504.03529866149,-7557.35359859301,-7500.14882138914,-7532.13406143298,-7564.14852817996,-7456.1406132289,-7501.86312923429,-7530.99916252644,-7505.49188097503,-7513.32480972891,-7531.9005474518,-7503.03152231848,-7458.22001298606,-7504.57976753567,-7536.29528771937,-7532.5894434497,-7532.88816094333,-7533.54699416132,-7564.39368263585,-7431.13168152867,-7561.77502793668,-7504.30344617617,-7512.5475264485,-7501.14488795868,-7546.75310067108,-7538.71736015361,-7435.29121251461,-7493.80510701054,-7535.43921062005,-7422.52317633507,-7435.13926358093,-7503.44906356378,-7465.32429275193,-7502.62657732342,-7503.83206121107,-7419.46000229739,-7466.66975058916,-7507.58975854126,-7496.80701317254,-7495.39244502701,-7503.87456866255,-7514.86977421327,-7501.97419985332,-7500.40970314545,-7427.62124155105,-7507.14492032244,-7506.92361217756,-7458.5097547659,-7503.50382022081,-7501.57314751849,-7455.89528175849,-7505.58747674828,-7509.66492700882,-7461.55310128651,-7461.58521736706,-7467.99493777861,-7503.84578084147,-7437.68135771863,-7417.76051242158,-7490.75925310144,-7482.43591594919,-7499.14877146945,-7425.49710122841,-7426.17238582798,-7430.66753662121,-7529.43601010284,-7532.03711990954,-7532.96016956766,-7529.81743973939,-7551.73646569132,-7557.00735368025,-7534.28903306739,-7531.05806011593,-7518.62679819076,-7502.88316810252,-7481.27709590348,-7422.26972547707,-7418.72900820095,-7417.10043315572,-7415.63669374441,-7456.2149463692,-7456.99769971816,-7431.26445945361,-7416.78188974273,-7534.04989427343,-7530.99415188457,-7529.14033606701,-7536.06350393459,-7559.8586343443,-7567.54815750528],"y":[4864867.20328359,4864921.15264406,4864932.22899691,4864936.87249756,4864829.63809773,4864815.4914915,4864812.23601168,4864827.11034298,4864880.82539539,4864924.59627345,4864920.62968493,4864920.22539018,4864886.43597084,4864931.32017354,4864928.87667213,4864938.5126439,4864930.20770036,4864858.80639014,4864938.43574781,4864949.00121848,4864948.8209823,4864935.88071323,4864933.44858166,4864923.33545526,4864925.78724067,4864899.0991006,4864871.0715698,4864880.1708883,4864884.12218556,4864886.68615033,4864864.71494721,4864880.33383656,4864865.16753137,4864885.02458307,4864887.82568405,4864918.93056232,4864867.5769559,4864917.68035622,4864886.15537824,4864935.47105057,4864874.19253164,4864875.21149317,4864941.38305646,4864875.02423755,4864887.8583947,4864887.94759593,4864857.93432795,4864861.56041026,4864827.98774886,4864862.80977553,4864828.36955498,4864940.08696443,4864864.68913024,4864879.82208527,4864877.91032287,4864885.79364119,4864895.73773845,4864866.24181977,4864882.82813927,4864876.90654024,4864923.10818167,4864824.13616864,4864835.24885335,4864912.11875912,4864822.91130077,4864850.16783048,4864827.44872386,4864830.70028635,4864920.05829922,4864857.34709803,4864880.98526383,4864859.21609394,4864939.69408842,4864874.38971581,4864833.33876303,4864863.39784303,4864926.85700098,4864857.42220548,4864846.98120261,4864934.88436682,4864866.5179426,4864827.91741046,4864858.74232323,4864925.01550062,4864933.42714959,4864938.46639744,4864937.46982546,4864873.15109004,4864872.98124141,4864867.96642406,4864861.30313848,4864846.7704593,4864885.77406119,4864892.8990167,4864924.04207153,4864862.36121228,4864866.53406068,4864935.66154427,4864880.52684017,4864865.22798612,4864860.25561588,4864821.21570749,4864859.39826322,4864860.36987157,4864887.773266,4864815.67520965,4864856.87024038,4864854.96788873,4864891.6382706,4864886.5218327,4864856.9383106,4864869.71684481,4864881.78561754,4864876.93844529,4864858.95580948,4864858.87469947,4864831.26453067,4864857.52904677,4864863.85829438,4864859.12427505,4864860.17570488,4864854.95316036,4864840.34981406,4864834.02153294,4864822.91852625,4864863.10503645,4864858.39022574,4864882.50249858,4864890.2915733,4864893.93641377,4864892.52848716,4864887.75418703,4864880.55679327,4864877.45119048,4864910.73018282,4864932.82757287,4864935.19342515,4864928.0953258,4864894.2066944,4864893.05680374,4864925.2724122,4864938.40912666,4864889.01854881,4864863.7346734,4864871.65960243,4864883.86928837,4864883.23071301,4864887.22636911,4864892.85765637,4864832.94890963,4864831.42734783,4864869.1202807,4864892.74488145,4864940.65447036,4864935.39533856,4864948.36615754,4864893.97962451,4864886.66102161,4864875.51212848],"z":["1","3","2","2","3","3","3","2","3","3","3","3","3","1","1","1","1","2","1","1","1","1","1","1","1","1","1","1","1","1","0","0","0","0","0","0","1","1","1","1","1","1","1","1","1","3","2","2","1","2","1","1","1","1","2","2","0","1","1","1","1","0","1","1","1","0","0","1","1","2","1","2","1","1","0","2","3","2","2","3","2","0","2","1","1","1","1","1","0","1","2","2","2","2","1","2","2","1","2","3","2","2","2","2","3","2","2","2","2","2","2","2","2","2","2","2","1","2","2","2","2","2","2","2","2","2","3","2","2","2","2","0","2","0","1","1","1","3","2","1","2","2","3","2","2","2","2","2","2","3","3","3","3","3","3","3","3","3","3"],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(127,255,0,1)","size":5,"line":{"color":"rgba(127,255,0,1)"}},"name":"Awesome! :D","textfont":{"color":"rgba(127,255,0,1)"},"error_y":{"color":"rgba(127,255,0,1)"},"error_x":{"color":"rgba(127,255,0,1)"},"line":{"color":"rgba(127,255,0,1)"},"frame":null},{"x":[-7541.96325178346,-7553.65673096771,-7477.12440061221,-7483.63449030143,-7513.09188958088,-7500.16743125484,-7500.64869325105,-7505.18579428694,-7518.05792987714,-7515.63576142255,-7503.87608665591,-7538.36702471779,-7550.25398124243,-7505.29984181362,-7498.22569251146,-7471.94914747338,-7476.64448986298,-7503.48954758125,-7562.13942866031,-7531.72167565667,-7538.89206826861,-7535.07050481463,-7481.50381265135,-7472.12934913016,-7488.97641304507,-7537.55930990327,-7433.75776908624,-7494.2889019874,-7513.198431866,-7451.53376051624,-7486.91152185661,-7535.39534608836,-7480.32473870958,-7464.81374116108,-7439.55243818954,-7461.48788094123,-7496.60151479313,-7464.28137648184,-7456.45193015452,-7429.83029998716,-7544.56075960654,-7452.13093164275],"y":[4864913.91953518,4864895.43497714,4864864.18488386,4864862.97573198,4864866.41420442,4864869.74215418,4864869.33063591,4864870.80004636,4864883.63400486,4864888.93864511,4864877.6634992,4864883.6366444,4864887.13674125,4864857.46246642,4864875.84663324,4864854.06313186,4864885.33734058,4864888.06151257,4864887.50346749,4864887.23986406,4864911.47158479,4864910.09292466,4864879.86441287,4864874.08195543,4864870.97939852,4864912.42984152,4864863.95954227,4864861.33361618,4864890.42643429,4864870.10132992,4864882.34206289,4864894.62617678,4864854.59018287,4864827.29912534,4864873.87879003,4864865.81217829,4864855.21148241,4864849.55157463,4864849.22882291,4864884.27584869,4864901.43762847,4864881.38643686],"z":["3","2","0","2","2","2","3","2","2","2","2","3","1","2","2","2","1","2","1","0","1","1","3","1","2","1","2","3","2","0","2","2","3","2","0","2","2","2","1","3","1","3"],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(255,48,48,1)","size":5,"line":{"color":"rgba(255,48,48,1)"}},"name":"Awfull :(","textfont":{"color":"rgba(255,48,48,1)"},"error_y":{"color":"rgba(255,48,48,1)"},"error_x":{"color":"rgba(255,48,48,1)"},"line":{"color":"rgba(255,48,48,1)"},"frame":null},{"x":[-7556.05105300634,-7532.19516868868,-7431.29262897293,-7426.59211192311,-7530.80867600414,-7485.58838748027,-7478.08265407146,-7495.72425043481,-7498.83564670028,-7504.93691685291,-7530.55815334003,-7529.96792215615,-7523.37627448452,-7526.03155471533,-7530.32857479048,-7557.06037242607,-7549.57755788192,-7549.52238083215,-7553.39232772369,-7555.80390491396,-7534.77682150127,-7433.18837343202,-7532.56046342274,-7498.93934240474,-7500.43487003316,-7504.63362361292,-7482.66060979416,-7463.6988406677,-7496.65439379493,-7462.21781057415,-7463.32511607471,-7485.44833799501,-7435.28483709038,-7533.04085105241,-7457.86897817597,-7427.03543915901,-7527.62159713382,-7435.67707919926,-7533.64107459876,-7531.02912124017,-7461.38338085164,-7530.38363190574,-7465.22102491407,-7534.5443434873,-7506.33002198495,-7492.43295811799,-7512.01324032642,-7531.68189420859,-7434.27465202972,-7509.69450503946,-7563.11606989953,-7560.13682231422,-7427.36784951712,-7536.11920363924,-7511.67046430735,-7543.68751758403,-7542.27429976046,-7434.54588795962,-7493.80510701054,-7491.83264410287,-7500.90135028018,-7447.9013037825,-7548.78379157805,-7491.03721715561,-7460.90606198569,-7422.70479973697,-7500.30651080758,-7501.41494643854,-7502.30356569453,-7498.91359536992,-7504.2468766696,-7504.15134508094,-7436.69884126265,-7491.10063848524,-7430.92267295891,-7430.08038630071,-7526.74132941395,-7495.29843462351,-7434.50930288244,-7435.36250485218,-7420.34287594444,-7500.98406437636,-7505.6217443448,-7468.01196356819,-7516.4852813898,-7465.26831413477,-7423.8218111101,-7490.37152683001,-7435.99054924213,-7424.75332279471,-7437.00739876014,-7484.51660281537,-7427.11211111862,-7425.51898088989,-7423.27129463451,-7430.69894820908,-7532.07226901673,-7437.61502395434,-7432.89443858459,-7425.45981281557,-7440.06437298121,-7459.64393251949,-7431.27651571293,-7431.29156325077,-7527.20986469792],"y":[4864878.15769467,4864943.61008233,4864872.63354068,4864884.8371085,4864933.22586692,4864862.80632792,4864865.02150389,4864859.79342573,4864863.1684284,4864853.2742429,4864941.04613208,4864935.35572099,4864946.7478934,4864948.30125845,4864929.35171338,4864887.55998901,4864887.52009403,4864885.8831744,4864887.8800291,4864878.68191787,4864930.72605765,4864871.30070775,4864916.02059767,4864881.10420832,4864864.40655845,4864860.98219892,4864865.09384753,4864829.526038,4864858.24633492,4864825.06116158,4864830.32348179,4864881.84178512,4864878.39620068,4864939.7997027,4864849.40560624,4864878.62276225,4864946.55833847,4864867.06763333,4864933.37160212,4864910.5539501,4864823.20465835,4864937.43984189,4864829.83993223,4864927.12628737,4864855.35569356,4864887.99677957,4864850.90038101,4864939.16192366,4864874.6103408,4864857.85412362,4864889.97647444,4864878.18424952,4864880.41719047,4864910.37337086,4864849.47575248,4864896.97470058,4864898.34144861,4864864.26806576,4864866.53406068,4864886.60983011,4864847.79450766,4864839.77471141,4864896.10192285,4864892.20150997,4864824.65435556,4864887.09293461,4864880.30874972,4864865.17047863,4864858.31804557,4864857.78453557,4864853.48169762,4864858.39133691,4864867.8855031,4864892.20530092,4864884.70529059,4864876.03701465,4864861.39583254,4864860.55215459,4864867.13715879,4864874.8251118,4864884.87257728,4864886.57576713,4864857.53314033,4864847.42936198,4864856.70874729,4864827.43778973,4864882.15512927,4864894.72778104,4864867.5430125,4864881.39314305,4864859.85177759,4864886.68298267,4864882.68958196,4864882.43819604,4864881.2125074,4864874.63269413,4864930.12901214,4864875.6108558,4864879.52196443,4864880.97793507,4864897.57396527,4864841.7616296,4864883.93565485,4864883.01404097,4864946.47570012],"z":["1","2","2","3","3","0","0","2","2","2","1","1","1","1","0","1","1","2","1","1","1","1","1","3","2","2","2","1","2","1","1","3","3","1","0","1","1","0","1","1","1","1","1","1","2","3","2","3","0","2","1","1","0","1","2","1","1","2","2","2","2","2","2","2","2","3","2","2","3","2","2","2","3","2","3","2","3","2","3","2","2","3","2","2","2","1","2","2","3","2","3","3","1","2","2","1","3","2","2","2","2","3","3","3","3"],"type":"scatter3d","mode":"markers","marker":{"color":"rgba(255,255,0,1)","size":5,"line":{"color":"rgba(255,255,0,1)"}},"name":"Meh :|","textfont":{"color":"rgba(255,255,0,1)"},"error_y":{"color":"rgba(255,255,0,1)"},"error_x":{"color":"rgba(255,255,0,1)"},"line":{"color":"rgba(255,255,0,1)"},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+
+
+</div>
+
+<div id="postamble" data-toggle="wy-nav-shift" class="status">
+<p class="author"><span class="glyphicon glyphicon-user"></span> David Gibert Bosque</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> January 7th, 2019</p>
+</div>
+
+
+<script>
+$(document).ready(function () {
+ 	 	$('#content img')
+ 	  .addClass("image-thumb");
+      $('#content img')
+ 	  .addClass("image-lb");
+  $('#content').magnificPopup({
+	      type:'image',
+	      closeOnContentClick: false,
+	      delegate: 'img',
+	      gallery: {enabled: true },
+	      image: {
+	        verticalFit: true,
+          titleSrc: 'alt'
+	      }
+ 	    });
+ 	});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

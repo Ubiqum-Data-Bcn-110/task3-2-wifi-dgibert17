@@ -1,7 +1,7 @@
 ---
 title: "Wi-Fi positioning system. FLOOR/LAT/LONG predictions on Building 2"
 author: "David Gibert Bosque"
-date: "January 4th, 2019"
+date: "January 7th, 2019"
 output:
   rmdformats::readthedown:
     self_contained: false
@@ -140,7 +140,9 @@ prop.table(table(df.train.B0$FLOOR))
 prop.table(table(floor.tr$FLOOR))
 ```
 
-## Floor prediction - KNN
+## Floor prediction
+
+### KNN
 ```{r warning=FALSE}
 knn.fit.floor = knn(train = floor.tr[,1:106], test = df.val.B0[,c(1:106)], cl = floor.tr[,107], k = 5)
 confusionMatrix(data = factor(knn.fit.floor), reference = df.val.B0$FLOOR)
@@ -149,7 +151,7 @@ confusionMatrix(data = factor(knn.fit.floor), reference = df.val.B0$FLOOR)
 abs(table(knn.fit.floor) - table(df.val.B0$FLOOR))
 ```
 
-## Floor prediction - SVM
+### SVM
 ```{r warning=FALSE}
 svm.fit.floor <- svm(formula = FLOOR ~ ., data = floor.tr)
 svm.pred.floor <- predict(svm.fit.floor, newdata = df.val.B0[,c(1:106)])
@@ -160,7 +162,7 @@ confusionMatrix(data = svm.pred.floor, reference = df.val.B0$FLOOR)
 abs(table(svm.pred.floor) - table(df.val.B0$FLOOR))
 ```
 
-## Floor prediction - Random Forest
+### Random Forest
 ```{r}
 # bestmtry = tuneRF(x = floor.tr[,1:106], y = floor.tr$FLOOR, ntreeTry = 400, plot = T,stepFactor = 1.5, improve = 1e-5)
 
@@ -201,7 +203,9 @@ df.train.B0.dumm = dummy_cols(.data = df.train.B0, select_columns = "FLOOR", rem
 df.train.B0.dumm = select(.data = df.train.B0.dumm, -FLOOR)
 ```
 
-## Latitude prediction - SVM
+## Latitude prediction
+
+### SVM
 ```{r warning=FALSE}
 svm.fit.lat <- svm(formula = LATITUDE ~ ., data = df.train.B0.dumm[,c(1:106, 108, 116:120)])
 svm.pred.lat <- predict(svm.fit.lat, newdata = df.val.B0.dumm[,c(1:106, 116:120)])
@@ -210,7 +214,7 @@ rmse(actual = df.val.B0.dumm$LATITUDE, predicted = svm.pred.lat)
 mae(actual = df.val.B0.dumm$LATITUDE, predicted = svm.pred.lat)
 ```
 
-## Latitude prediction - Linear Model
+### Linear Model
 ```{r warning=FALSE}
 lm.fit.lat <- lm(formula = LATITUDE ~ ., data = df.train.B0.dumm[,c(1:106, 108, 116:120)])
 lm.pred.lat <- predict(lm.fit.lat, newdata = df.val.B0.dumm[,c(1:106, 116:120)])
@@ -219,7 +223,7 @@ rmse(actual = df.val.B0.dumm$LATITUDE, predicted = lm.pred.lat)
 mae(actual = df.val.B0.dumm$LATITUDE, predicted = lm.pred.lat)
 ```
 
-## Latitude prediction - Random Forest
+### Random Forest
 ```{r}
 # bestmtry = tuneRF(x = df.train.B0.dumm[,c(1:106, 116:120)], y = df.train.B0.dumm$LATITUDE, ntreeTry = 400, plot = T,stepFactor = 1.5, improve = 1e-5)
 
@@ -231,7 +235,7 @@ rmse(actual = df.val.B0.dumm$LATITUDE, predicted = rf.pred.lat)
 mae(actual = df.val.B0.dumm$LATITUDE, predicted = rf.pred.lat)
 ```
 
-## Latitude prediction - KNN
+### KNN
 ```{r warning=FALSE}
 pacman::p_load(FNN)
 
@@ -256,7 +260,9 @@ df.val.B0.dumm$LATITUDE = rf.pred.lat
 
 ---
 
-## Longitude prediction - SVM
+## Longitude prediction
+
+### SVM
 ```{r warning=FALSE}
 svm.fit.long <- svm(formula = LONGITUDE ~ ., data = df.train.B0.dumm[,c(1:106, 107, 108, 116:120)])
 svm.pred.long <- predict(svm.fit.long, newdata = df.val.B0.dumm[,c(1:106, 108, 116:120)])
@@ -265,7 +271,7 @@ rmse(actual = df.val.B0.dumm$LONGITUDE, predicted = svm.pred.long)
 mae(actual = df.val.B0.dumm$LONGITUDE, predicted = svm.pred.long)
 ```
 
-## Longitude prediction - Linear Model
+### Linear Model
 ```{r warning=FALSE}
 lm.fit.long <- lm(formula = LONGITUDE ~ ., data = df.train.B0.dumm[,c(1:106, 107, 108, 116:120)])
 lm.pred.long <- predict(lm.fit.long, newdata = df.val.B0.dumm[,c(1:106, 108, 116:120)])
@@ -274,7 +280,7 @@ rmse(actual = df.val.B0.dumm$LONGITUDE, predicted = lm.pred.long)
 mae(actual = df.val.B0.dumm$LONGITUDE, predicted = lm.pred.long)
 ```
 
-## Longitude prediction - Random Forest
+### Random Forest
 ```{r}
 # bestmtry = tuneRF(x = df.train.B0.dumm[,c(1:106, 108, 116:120)], y = df.train.B0.dumm$LONGITUDE, ntreeTry = 150, plot = T,stepFactor = 1.5, improve = 1e-5)
 
@@ -286,7 +292,7 @@ rmse(actual = df.val.B0.dumm$LONGITUDE, predicted = rf.pred.long)
 mae(actual = df.val.B0.dumm$LONGITUDE, predicted = rf.pred.long)
 ```
 
-## Longitude prediction - KNN
+### KNN
 ```{r warning=FALSE}
 pacman::p_load(FNN)
 
@@ -311,5 +317,88 @@ df.val.B0.dumm$LONGITUDE = knn.fit.long$pred
 
 ---
 
-#### ANALISIS DEL ERROR DE PREDICCION
-PLOTEAR EN 3D VALIDATION Y TAL...
+## Location error analysis
+
+### 3D Plot (Real & Predicted values)
+```{r}
+pred.values = data.frame(cbind(df.val.B0.dumm$LONGITUDE, df.val.B0.dumm$LATITUDE, as.factor(df.val.B0$FLOOR)))
+colnames(pred.values) = c("pred_LONGITUDE", "pred_LATITUDE", "pred_FLOOR")
+colnames(real.values) = c("real_LONGITUDE", "real_LATITUDE", "real_FLOOR")
+
+pred.values$pred_FLOOR = factor(pred.values$pred_FLOOR)
+# pred.values$TYPE = "Predicted"
+
+levels(pred.values$pred_FLOOR) = 0:4
+
+str(df.val.B0$FLOOR)
+str(pred.values$pred_FLOOR)
+
+real.pred.values = cbind(real.values[,1:3], pred.values)
+# real.pred.values$TYPE = factor(real.pred.values$TYPE)
+
+str(real.pred.values)
+
+real.pred.values$long_diff = abs(abs(real.pred.values$real_LONGITUDE) - abs(real.pred.values$pred_LONGITUDE))
+real.pred.values$lat_diff = abs(abs(real.pred.values$real_LATITUDE) - abs(real.pred.values$pred_LATITUDE))
+
+plot_ly(real.pred.values) %>%
+  add_markers(x = ~real_LONGITUDE, y = ~real_LATITUDE, z = ~real_FLOOR,
+              mode = "line", marker = list(size = 3, color = "black"), name = "Real") %>%
+  add_markers(x = ~pred_LONGITUDE, y = ~pred_LATITUDE, z = ~pred_FLOOR,
+              mode = "line", marker = list(size = 3, color = "chartreuse"), name = "Predicted") %>%
+  layout(title = "Real vs Predicted values")
+```
+
+### Floor prediction analysis
+```{r}
+real.pred.values$WHERE_SHOULD_BE = "None"
+
+for (i in 1:nrow(real.pred.values)) {
+  if (real.pred.values[i,"real_FLOOR"] != real.pred.values[i,"pred_FLOOR"]) {
+    real.pred.values[i,"WHERE_SHOULD_BE"] = paste("Should be floor", real.pred.values[i, "real_FLOOR"])
+  } else if (real.pred.values[i,"real_FLOOR"] == real.pred.values[i,"pred_FLOOR"]) {
+    real.pred.values[i,"WHERE_SHOULD_BE"] = "Good Prediction"
+  }
+}
+
+real.pred.values$WHERE_SHOULD_BE = factor(real.pred.values$WHERE_SHOULD_BE)
+summary(real.pred.values$WHERE_SHOULD_BE)
+
+
+plot_ly(real.pred.values) %>%
+  add_markers(x = ~pred_LONGITUDE, y = ~pred_LATITUDE, z = ~pred_FLOOR, color = ~WHERE_SHOULD_BE, marker = list(size = 5)) %>%
+                layout(title = "Which floor should each capture be in?")
+```
+
+#### Summary for LAT \ LONG
+```{r}
+summary(real.pred.values$long_diff)
+summary(real.pred.values$lat_diff)
+```
+
+### Traffic light for Latitude & Longitude - Error distance analysis
+### Good idea, Joe :]
+```{r warning=FALSE}
+real.pred.values$PREDICTION = "None"
+
+
+for (i in 1:nrow(real.pred.values)) {
+  if (real.pred.values[i,"long_diff"] <= 8 & real.pred.values[i,"lat_diff"] <= 8) {
+    real.pred.values[i,"PREDICTION"] = "Awesome! :D"
+  } else if (real.pred.values[i,"long_diff"] <= 20 & real.pred.values[i,"lat_diff"] <= 20) {
+    real.pred.values[i,"PREDICTION"] = "Meh :|"
+  } else if (real.pred.values[i,"long_diff"] <= 50 & real.pred.values[i,"lat_diff"] <= 50) {
+    real.pred.values[i,"PREDICTION"] = "Awfull :("
+  } else {
+    real.pred.values[i,"PREDICTION"] = "Weird :S"
+  }
+}
+
+real.pred.values$PREDICTION = as.factor(x = real.pred.values$PREDICTION)
+summary(real.pred.values$PREDICTION)
+
+
+plot_ly(real.pred.values) %>%
+  add_markers(x = ~pred_LONGITUDE, y = ~pred_LATITUDE, z = ~pred_FLOOR, color = ~PREDICTION, colors = c("chartreuse", "firebrick1", "yellow1", "purple"), marker = list(size = 5)) %>%
+  layout(title = "Distance analysis")
+```

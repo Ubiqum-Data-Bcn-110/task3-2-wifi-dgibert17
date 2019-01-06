@@ -1,7 +1,7 @@
 ---
 title: "Wi-Fi positioning system. Pre-processing and Building prediction"
 author: "David Gibert Bosque"
-date: "January 4th, 2019"
+date: "January 7th, 2019"
 output:
   rmdformats::readthedown:
     self_contained: false
@@ -347,9 +347,9 @@ df.val$BUILDINGID = rf.pred.building
 str(df.val$BUILDINGID)
 ```
 
-**In the 3 following scripts the prediction of FLOOR is separately carried out for each of the buildings.**
+**In the 3 following scripts the prediction of FLOOR, LATITUD and LONGITUDE is separately carried out for each of the buildings.**
 
-*En los siguientes 3 scripts se lleva a cabo la prediccion de FLOOR por cada uno de los edificos por separado.*
+*En los siguientes 3 scripts se lleva a cabo la prediccion de FLOOR, LATITUD y LONGITUDE de cada uno de los edificos por separado.*
 
 ---
 
@@ -358,84 +358,6 @@ str(df.val$BUILDINGID)
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 #### Saving Dataframes for later usage ####
 
-real.values.val = data.frame(df.val)
-real.values.val = real.values.val[,c(1:316)]
-
-save(real.values.val, file = "real_values_validation.Rdata")
-save(df.train, file = "training.Rdata")
-save(df.val, file = "validation.Rdata")
-```
-
-
-
-
-
-
-
-
-
-
-
-
-```{r eval=FALSE, include=FALSE}
-### CREATING TRAIN BUILDINGS - PIPES ###
-
-df.trainB0 = df.train %>%
-  filter(BUILDINGID == 0)
-
-df.trainB1 = df.train %>%
-  filter(BUILDINGID == 1)
-
-df.trainB2 = df.train %>%
-  filter(BUILDINGID == 2)
-```
-
-```{r eval=FALSE, warning=FALSE, include=FALSE}
-a <- list(
-title = "",
-zeroline = FALSE,
-showline = FALSE,
-showticklabels = FALSE,
-showgrid = FALSE
-)
-
-# All buildings, 2d
-plot_ly(data = df.train, x = ~LONGITUDE, y = ~LATITUDE, color = ~factor(BUILDINGID)) %>%
-  layout(xaxis = a,
-         yaxis = a)
-
-# All buildings, 3d
-plot_ly(data = df.train, x = ~LONGITUDE, y = ~LATITUDE, z = ~factor(FLOOR),
-        color = ~factor(BUILDINGID)) %>%
-  layout(xaxis = a,
-         yaxis = a)
-
-# Building 0, 3d
-plot_ly(data = df.trainB0, x = ~LONGITUDE, y = ~LATITUDE, z = ~factor(FLOOR),
-        color = ~factor(FLOOR)) %>%
-  layout(title = "Building 0",
-         xaxis = a,
-         yaxis = a
-         )
-
-# Building 1, 3d
-plot_ly(data = df.trainB1, x = ~LONGITUDE, y = ~LATITUDE, z = ~factor(FLOOR),
-        color = ~factor(FLOOR)) %>%
-  layout(title = "Building 1",
-         xaxis = a,
-         yaxis = a
-         )
-
-# Building 2, 3d
-plot_ly(data = df.trainB2, x = ~LONGITUDE, y = ~LATITUDE, z = ~factor(FLOOR),
-        color = ~factor(FLOOR)) %>%
-  layout(title = "Building 2",
-         xaxis = a,
-         yaxis = a
-         )
-```
-
-```{r eval=FALSE, include=FALSE}
 real.values.val = data.frame(df.val)
 real.values.val = real.values.val[,c(1:316)]
 
